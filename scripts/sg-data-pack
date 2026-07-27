@@ -5,6 +5,7 @@
  * Usage:
  *   sg-data-pack extract <path/to/config.js> [--check]   Extract embedded data into a Data Pack, then validate + equivalence-test
  *   sg-data-pack validate <data.json> [--strict] [--verify-hash]   Standalone Data Pack validation
+ *   sg-data-pack rules <libDir | data-rules.json> [--strict]       Execute library-level data rules
  *   sg-data-pack schema                                  Print the contract-schema path
  *   sg-data-pack loader                                  Print the runtime-validator path (copy into a library's lib/src/)
  */
@@ -27,6 +28,9 @@ switch (cmd) {
   case 'validate':
     run('sg-pack-validate.js', rest);
     break;
+  case 'rules':
+    run('sg-pack-rules.js', rest);
+    break;
   case 'schema':
     console.log(path.join(here, 'lib', 'data-pack.schema.json'));
     break;
@@ -39,6 +43,7 @@ switch (cmd) {
 Usage:
   sg-data-pack extract <path/to/config.js> [--check]        Extract embedded data into a Data Pack (validate + equivalence test)
   sg-data-pack validate <data.json> [--strict] [--verify-hash]  Standalone Data Pack validation
+  sg-data-pack rules <libDir | data-rules.json> [--strict]      Execute library-level data rules
   sg-data-pack schema                                       Print the contract-schema path
   sg-data-pack loader                                       Print the runtime-validator path (copy into lib/src/)`);
     process.exit(cmd ? 2 : 0);
