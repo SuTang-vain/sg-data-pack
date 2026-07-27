@@ -1,0 +1,45 @@
+#!/usr/bin/env node
+/*
+ * sg-data-pack — component-library data-layer normalization CLI
+ *
+ * Usage:
+ *   sg-data-pack extract <path/to/config.js> [--check]   Extract embedded data into a Data Pack, then validate + equivalence-test
+ *   sg-data-pack validate <data.json> [--strict] [--verify-hash]   Standalone Data Pack validation
+ *   sg-data-pack schema                                  Print the contract-schema path
+ *   sg-data-pack loader                                  Print the runtime-validator path (copy into a library's lib/src/)
+ */
+'use strict';
+const path = require('path');
+const { spawnSync } = require('child_process');
+
+const [, , cmd, ...rest] = process.argv;
+const here = __dirname;
+
+function run(script, args) {
+  const r = spawnSync(process.execPath, [path.join(here, script), ...args], { stdio: 'inherit' });
+  process.exit(r.status === null ? 1 : r.status);
+}
+
+switch (cmd) {
+  case 'extract':
+    run('sg-pack-extract.js', rest);
+    break;
+  case 'validate':
+    run('sg-pack-validate.js', rest);
+    break;
+  case 'schema':
+    console.log(path.join(here, 'lib', 'data-pack.schema.json'));
+    break;
+  case 'loader':
+    console.log(path.join(here, 'lib', 'sg-data-loader.js'));
+    break;
+  default:
+    console.log(`sg-data-pack — component-library data-layer normalization CLI
+
+Usage:
+  sg-data-pack extract <path/to/config.js> [--check]        Extract embedded data into a Data Pack (validate + equivalence test)
+  sg-data-pack validate <data.json> [--strict] [--verify-hash]  Standalone Data Pack validation
+  sg-data-pack schema                                       Print the contract-schema path
+  sg-data-pack loader                                       Print the runtime-validator path (copy into lib/src/)`);
+    process.exit(cmd ? 2 : 0);
+}

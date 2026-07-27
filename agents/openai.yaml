@@ -1,0 +1,4 @@
+interface:
+  display_name: "SG Data Pack"
+  short_description: "Component-library data-layer normalization: extraction, validation, and provenance in one pipeline"
+  default_prompt: "Extract this component library's embedded business data into a spec-compliant Data Pack and pass all validation checks"

@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sg.local/data-pack.schema.json",
+  "title": "SG Data Pack v1.2 — Unified Data Contract for Component Libraries",
+  "description": "The single entry point for business data of all sg-* component libraries. Globally unique entities, id references, stages that reference rather than duplicate. Runtime validation is performed by sg-data-loader.js (rules E1-E15/W1-W6 correspond one-to-one with the rules below); this file is the formal contract. v1.1 added: relations.scope, attributeTypes/attributeSources, contents, assets hash, meta.assetBase, kindNameFields. v1.2 added: sameAs (entity identity), provenance (record-level provenance as a parallel section that never invades entity bodies — zero engine changes), meta.confidenceThreshold, W6 fuzzy duplicate detection.",
+  "type": "object",
+  "required": ["schemaVersion", "meta", "entities"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "enum": ["1.0", "1.1", "1.2"] },
+    "meta": {
+      "type": "object",
+      "required": ["id", "title"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "description": "Library identifier, matching the directory name" },
+        "title": { "type": "string", "minLength": 1 },
+        "hero": { "type": "string", "description": "Core entity id (graph center / protagonist); must exist in entities" },
+        "source": { "type": "string", "description": "Data source (crawl-source annotation)" },
+        "fetchedAt": { "type": "string", "description": "Fetch date, YYYY-MM-DD" },
+        "generatedBy": { "type": "string", "description": "Extraction-script path (@generated marker)" },
+        "assetBase": { "type": "string", "description": "Resolution prefix for bare-filename assets (e.g. '../assets/'); once declared, 'x.png' in the data resolves and registers as assetBase+'x.png'" },
+        "confidenceThreshold": { "type": "number", "minimum": 0, "maximum": 1, "description": "(v1.2) Low-confidence warning threshold; default 0.7" }
+      },
+      "additionalProperties": true
+    },
+    "kindNameFields": {
+      "type": "object",
+      "description": "kind -> name-field mapping (e.g. {work: 'title'}); kinds not declared here default to the name field",
+      "additionalProperties": { "type": "string" }
+    },
+    "sameAs": {
+      "type": "array",
+      "description": "(v1.2) Entity-identity declarations: [[idA, idB], ...] means two entities refer to the same real-world subject (e.g. Ying Zheng ↔ Qin Shi Huang). Once declared, W6 no longer flags the pair; downstream dedup/aggregation relies on this.",
+      "items": {
+        "type": "array",
+        "prefixItems": [{ "type": "string" }, { "type": "string" }],
+        "minItems": 2,
+        "maxItems": 2
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "description": "(v1.2) Record-level provenance (parallel-section design: never embedded into entities/relations/contents bodies, so engines need no changes). Each group's keys point at the corresponding records; confidence below meta.confidenceThreshold triggers a W5 low-confidence warning.",
+      "properties": {
+        "entities": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/provEntry" }
+        },
+        "relations": {
+          "type": "object",
+          "description": "Key format: 'a::b' (entity-id pair)",
+          "additionalProperties": { "$ref": "#/$defs/provEntry" }
+        },
+        "contents": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/provEntry" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "entities": {
+      "type": "object",
+      "minProperties": 1,
+      "description": "Global entity table. Keys are stable ids (semantic slugs); values preserve all business fields of the entity. Referencing by name or array index is forbidden.",
+      "patternProperties": {
+        "^[a-z][a-z0-9_-]*$": {
+          "type": "object",
+          "required": ["name", "kind"],
+          "properties": {
+            "name": { "type": "string", "minLength": 1, "description": "Display name (may be Chinese; for display only, never a reference key)" },
+            "kind": { "type": "string", "minLength": 1, "description": "Entity kind: person / work / term / event / ..." }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "aliases": {
+      "type": "object",
+      "description": "Crawled name / variant spelling -> canonical id. The normalization entry point on the data-production side; resolvable at runtime via SGDataLoader.resolveId.",
+      "additionalProperties": { "type": "string", "description": "Must be an id present in entities" }
+    },
+    "relationTypes": {
+      "type": "object",
+      "description": "Relationship-type registry (enum + display attributes). Every relations[].type must be registered here.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["label"],
+        "properties": {
+          "label": { "type": "string" },
+          "color": { "type": "string", "description": "Color value or CSS variable reference" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "relations": {
+      "type": "array",
+      "description": "Master edge list; each edge is stored exactly once. Stages reference edges via {a,b}; duplication is forbidden. When multiple edges share the same (a,b) pair (relationship evolves across stages), scope or type must make references resolvable.",
+      "items": {
+        "type": "object",
+        "required": ["a", "b", "type"],
+        "properties": {
+          "a": { "type": "string", "description": "Entity id (or a crawled name from aliases, normalized during validation)" },
+          "b": { "type": "string" },
+          "type": { "type": "string", "description": "Must be registered in relationTypes" },
+          "label": { "type": "string" },
+          "scope": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1,
+            "description": "(v1.1) This edge is only active in the listed stages (values are stages[].key). Without scope, the edge is active in all stages"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "stages": {
+      "type": "array",
+      "description": "Stage/scene/event views. Carry only id references and stage-specific overlays; embedding entity fields is forbidden.",
+      "items": {
+        "type": "object",
+        "required": ["key", "name", "entities"],
+        "properties": {
+          "key": { "type": "string", "minLength": 1 },
+          "name": { "type": "string", "minLength": 1 },
+          "desc": { "type": "string" },
+          "descMobile": { "type": "string" },
+          "entities": { "type": "array", "items": { "type": "string" }, "description": "Subset of entity ids for this stage" },
+          "layout": {
+            "type": "object",
+            "description": "Normalized coordinates keyed by entity id",
+            "additionalProperties": {
+              "type": "array",
+              "prefixItems": [
+                { "type": "number", "minimum": 0, "maximum": 1 },
+                { "type": "number", "minimum": 0, "maximum": 1 }
+              ],
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "relations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["a", "b"],
+              "properties": { "a": { "type": "string" }, "b": { "type": "string" } },
+              "additionalProperties": false
+            },
+            "description": "{a,b} keys referencing master relations; type/label come from the master edge"
+          },
+          "overlay": {
+            "type": "object",
+            "description": "Stage-specific information (persona/description overrides), keyed by entity id",
+            "additionalProperties": { "type": "object" }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "attributeTypes": {
+      "type": "object",
+      "description": "(v1.1) Attribute-label registry (symmetric to relationTypes). Labels in the attribute-pair collections declared by attributeSources must be registered here.",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "label": { "type": "string" },
+          "description": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "attributeSources": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "(v1.1) Path declarations of attribute-pair collections; supports 'entities.*.<field>' and 'domain.<path>'. Every [label, value, ...] pair or {label, ...} object in the declared collections has its label checked by E10"
+    },
+    "contents": {
+      "type": "object",
+      "description": "(v1.1) Long-form content data layer: prose/timeline lifted out of template HTML. body is a restricted HTML subset; highlights declare in-text entity/annotation references (checked by E13 — a wrong entity name in prose is caught).",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["kind"],
+        "properties": {
+          "kind": { "type": "string", "description": "Content kind: timeline-item / article-section / ..." },
+          "title": { "type": "string" },
+          "body": { "type": "string", "description": "Restricted-HTML-subset string" },
+          "bodyFormat": { "type": "string", "enum": ["html-subset", "text"] },
+          "highlights": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["ref"],
+              "properties": {
+                "text": { "type": "string" },
+                "ref": { "type": "string", "description": "Entity id / alias / domain.notes annotation key" }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "domain": {
+      "type": "object",
+      "description": "Library-specific data collections (works/questions/cast/notes, etc.), constrained by each library's own data.schema.json"
+    },
+    "assets": {
+      "type": "object",
+      "description": "Asset manifest; keys are asset paths as they appear in the data",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "sourceUrl": { "type": "string" },
+          "hash": { "type": "string" },
+          "exists": { "type": "boolean" },
+          "bytes": { "type": "integer" }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "$defs": {
+    "provEntry": {
+      "type": "object",
+      "properties": {
+        "origin": { "type": "string", "description": "Data origin: engine-embedded-defaults / example-json-contract / template-html-contents / crawl:<source> etc." },
+        "sourceUrl": { "type": ["string", "null"], "description": "Original source URL (mandatory for crawl pipelines)" },
+        "fetchedAt": { "type": "string", "description": "Fetch date, YYYY-MM-DD" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1, "description": "Confidence; baseline data (original case page) is 1.0, crawled data gets actual values from the pipeline" },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  }
+}
