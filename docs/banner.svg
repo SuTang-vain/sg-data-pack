@@ -1,0 +1,113 @@
+<svg width="1200" height="300" viewBox="0 0 1200 300" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="sg-data-pack banner">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0D1120"/>
+      <stop offset="0.55" stop-color="#141A33"/>
+      <stop offset="1" stop-color="#1B2450"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(980 150) rotate(90) scale(210)">
+      <stop offset="0" stop-color="#6487FA" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#6487FA" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hero" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8AA5FF"/>
+      <stop offset="1" stop-color="#4A6EE0"/>
+    </linearGradient>
+    <linearGradient id="logo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6487FA"/>
+      <stop offset="1" stop-color="#4A6EE0"/>
+    </linearGradient>
+    <style>
+      .t1 { font: 700 54px -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; fill: #F5F7FF; letter-spacing: -1px; }
+      .t2 { font: 400 21px -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; fill: #9BA3C0; }
+      .chip { font: 600 13px -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; fill: #B9C4F5; }
+      .node-lbl { font: 600 11px -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; fill: #E7EBFF; }
+      .edge-lbl { font: 500 9.5px -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; fill: #8B93B8; }
+      @keyframes pulse { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
+      .ring { animation: pulse 2.6s ease-in-out infinite; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="300" fill="url(#bg)"/>
+  <rect width="1200" height="300" fill="url(#glow)"/>
+  <!-- faint dot grid -->
+  <g fill="#FFFFFF" opacity="0.05">
+    <circle cx="60" cy="40" r="1.6"/><circle cx="140" cy="40" r="1.6"/><circle cx="220" cy="40" r="1.6"/><circle cx="300" cy="40" r="1.6"/><circle cx="380" cy="40" r="1.6"/><circle cx="460" cy="40" r="1.6"/>
+    <circle cx="60" cy="110" r="1.6"/><circle cx="140" cy="110" r="1.6"/><circle cx="220" cy="110" r="1.6"/><circle cx="300" cy="110" r="1.6"/><circle cx="380" cy="110" r="1.6"/><circle cx="460" cy="110" r="1.6"/>
+    <circle cx="60" cy="180" r="1.6"/><circle cx="140" cy="180" r="1.6"/><circle cx="220" cy="180" r="1.6"/><circle cx="300" cy="180" r="1.6"/><circle cx="380" cy="180" r="1.6"/><circle cx="460" cy="180" r="1.6"/>
+    <circle cx="60" cy="250" r="1.6"/><circle cx="140" cy="250" r="1.6"/><circle cx="220" cy="250" r="1.6"/><circle cx="300" cy="250" r="1.6"/><circle cx="380" cy="250" r="1.6"/><circle cx="460" cy="250" r="1.6"/>
+  </g>
+
+  <!-- logo mark: hexagon + mini graph -->
+  <g transform="translate(88 88)">
+    <path d="M62 0 L124 36 V108 L62 144 L0 108 V36 Z" fill="url(#logo)" opacity="0.16"/>
+    <path d="M62 4 L120 38 V106 L62 140 L4 106 V38 Z" stroke="url(#logo)" stroke-width="3" fill="none"/>
+    <line x1="62" y1="72" x2="34" y2="46" stroke="#8AA5FF" stroke-width="2.4"/>
+    <line x1="62" y1="72" x2="92" y2="48" stroke="#8AA5FF" stroke-width="2.4"/>
+    <line x1="62" y1="72" x2="62" y2="106" stroke="#8AA5FF" stroke-width="2.4"/>
+    <circle cx="62" cy="72" r="10" fill="url(#hero)"/>
+    <circle cx="34" cy="46" r="5.5" fill="#C8A35A"/>
+    <circle cx="92" cy="48" r="5.5" fill="#4AA06E"/>
+    <circle cx="62" cy="106" r="5.5" fill="#D94B4B"/>
+  </g>
+
+  <!-- title block -->
+  <text x="248" y="122" class="t1">sg-data-pack</text>
+  <text x="250" y="162" class="t2">Component-library data-layer normalization pipeline</text>
+
+  <!-- feature chips -->
+  <g>
+    <rect x="250" y="190" width="118" height="30" rx="15" fill="#6487FA" opacity="0.14"/>
+    <rect x="250" y="190" width="118" height="30" rx="15" stroke="#6487FA" stroke-opacity="0.5"/>
+    <text x="264" y="210" class="chip">E1–E15 rules</text>
+
+    <rect x="382" y="190" width="168" height="30" rx="15" fill="#6487FA" opacity="0.14"/>
+    <rect x="382" y="190" width="168" height="30" rx="15" stroke="#6487FA" stroke-opacity="0.5"/>
+    <text x="396" y="210" class="chip">lossless equivalence</text>
+
+    <rect x="564" y="190" width="150" height="30" rx="15" fill="#6487FA" opacity="0.14"/>
+    <rect x="564" y="190" width="150" height="30" rx="15" stroke="#6487FA" stroke-opacity="0.5"/>
+    <text x="578" y="210" class="chip">record provenance</text>
+
+    <rect x="250" y="232" width="128" height="30" rx="15" fill="#4AA06E" opacity="0.13"/>
+    <rect x="250" y="232" width="128" height="30" rx="15" stroke="#4AA06E" stroke-opacity="0.5"/>
+    <text x="264" y="252" class="chip" fill="#9FD8B4">zero-dep CLI</text>
+
+    <rect x="392" y="232" width="196" height="30" rx="15" fill="#4AA06E" opacity="0.13"/>
+    <rect x="392" y="232" width="196" height="30" rx="15" stroke="#4AA06E" stroke-opacity="0.5"/>
+    <text x="406" y="252" class="chip" fill="#9FD8B4">codex · claude code · zcode</text>
+  </g>
+
+  <!-- entity-relation graph motif (right) -->
+  <g transform="translate(0 6)">
+    <!-- edges -->
+    <line x1="980" y1="144" x2="1090" y2="144" stroke="#4AA06E" stroke-width="2"/>
+    <line x1="980" y1="144" x2="1035" y2="239" stroke="#C8A35A" stroke-width="2"/>
+    <line x1="980" y1="144" x2="925" y2="239" stroke="#E07AA8" stroke-width="2"/>
+    <line x1="980" y1="144" x2="870" y2="144" stroke="#6487FA" stroke-width="2"/>
+    <line x1="980" y1="144" x2="925" y2="49" stroke="#D94B4B" stroke-width="2" stroke-dasharray="5 4"/>
+    <line x1="980" y1="144" x2="1035" y2="49" stroke="#4AA06E" stroke-width="2"/>
+    <!-- one satellite-to-satellite edge with scope tag -->
+    <line x1="1090" y1="144" x2="1035" y2="239" stroke="#D94B4B" stroke-width="1.6" stroke-dasharray="4 4" opacity="0.85"/>
+    <rect x="1046" y="176" width="46" height="16" rx="8" fill="#D94B4B" opacity="0.2"/>
+    <text x="1053" y="188" class="edge-lbl" fill="#F2A9A9">scope</text>
+
+    <!-- edge labels -->
+    <text x="1032" y="134" class="edge-lbl">ally</text>
+    <text x="930" y="96" class="edge-lbl">enemy</text>
+    <text x="905" y="200" class="edge-lbl">family</text>
+
+    <!-- hero node -->
+    <circle cx="980" cy="144" r="42" stroke="#8AA5FF" stroke-width="1.5" fill="none" class="ring"/>
+    <circle cx="980" cy="144" r="32" fill="url(#hero)"/>
+    <text x="980" y="150" text-anchor="middle" style="font:700 15px -apple-system,'Segoe UI',sans-serif" fill="#FFFFFF">hero</text>
+
+    <!-- satellites -->
+    <g><circle cx="1090" cy="144" r="20" fill="#1E2547" stroke="#4AA06E" stroke-width="2"/><text x="1090" y="167" text-anchor="middle" class="node-lbl">person</text></g>
+    <g><circle cx="1035" cy="239" r="20" fill="#1E2547" stroke="#C8A35A" stroke-width="2"/><text x="1035" y="262" text-anchor="middle" class="node-lbl">work</text></g>
+    <g><circle cx="925" cy="239" r="20" fill="#1E2547" stroke="#E07AA8" stroke-width="2"/><text x="925" y="262" text-anchor="middle" class="node-lbl">term</text></g>
+    <g><circle cx="870" cy="144" r="20" fill="#1E2547" stroke="#6487FA" stroke-width="2"/><text x="870" y="167" text-anchor="middle" class="node-lbl">event</text></g>
+    <g><circle cx="925" cy="49" r="20" fill="#1E2547" stroke="#D94B4B" stroke-width="2"/><text x="925" y="72" text-anchor="middle" class="node-lbl">person</text></g>
+    <g><circle cx="1035" cy="49" r="20" fill="#1E2547" stroke="#4AA06E" stroke-width="2"/><text x="1035" y="72" text-anchor="middle" class="node-lbl">person</text></g>
+  </g>
+</svg>
