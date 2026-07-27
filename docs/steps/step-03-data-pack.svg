@@ -1,0 +1,23 @@
+<svg width="360" height="200" viewBox="0 0 360 200" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Step 03 — Data Pack">
+  <style>
+    .sans { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; }
+    .mono { font-family: 'SF Mono', 'Courier New', ui-monospace, monospace; }
+  </style>
+  <rect x="4" y="4" width="352" height="192" rx="12" fill="#EDF1FE" stroke="#6487FA" stroke-opacity="0.55"/>
+  <rect x="24" y="24" width="34" height="4" rx="2" fill="#6487FA"/>
+  <text x="24" y="48" class="mono" font-size="10" letter-spacing="2" fill="#6487FA">STEP 03</text>
+  <text x="24" y="74" class="sans" font-size="19" font-weight="700" fill="#23252B">Data Pack</text>
+  <!-- icon: node graph -->
+  <g transform="translate(296 28)">
+    <line x1="13" y1="13" x2="31" y2="5" stroke="#8FA3E8" stroke-width="1.4"/>
+    <line x1="13" y1="13" x2="33" y2="24" stroke="#8FA3E8" stroke-width="1.4"/>
+    <circle cx="13" cy="13" r="7" fill="#6487FA"/>
+    <circle cx="33" cy="5" r="4.5" fill="#FFFFFF" stroke="#6FA586" stroke-width="1.4"/>
+    <circle cx="35" cy="25" r="4.5" fill="#FFFFFF" stroke="#C2A36B" stroke-width="1.4"/>
+  </g>
+  <text x="24" y="104" class="sans" font-size="12" fill="#5A5E6B">entities · aliases · relations</text>
+  <text x="24" y="126" class="sans" font-size="12" fill="#5A5E6B">stages · contents · domain</text>
+  <text x="24" y="148" class="sans" font-size="12" fill="#5A5E6B">assets · sameAs · provenance</text>
+  <rect x="24" y="160" width="164" height="20" rx="10" fill="#FFFFFF" stroke="#CBD7FB"/>
+  <text x="36" y="174" class="mono" font-size="10" font-weight="600" fill="#4A6EE0">lib/data/data.json · v1.2</text>
+</svg>

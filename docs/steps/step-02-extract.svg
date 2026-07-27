@@ -1,0 +1,19 @@
+<svg width="360" height="200" viewBox="0 0 360 200" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Step 02 — Extract">
+  <style>
+    .sans { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; }
+    .mono { font-family: 'SF Mono', 'Courier New', ui-monospace, monospace; }
+  </style>
+  <rect x="4" y="4" width="352" height="192" rx="12" fill="#FFFFFF" stroke="#E6E3DC"/>
+  <rect x="24" y="24" width="34" height="4" rx="2" fill="#8FA3E8"/>
+  <text x="24" y="48" class="mono" font-size="10" letter-spacing="2" fill="#9A9DA8">STEP 02</text>
+  <text x="24" y="74" class="sans" font-size="19" font-weight="600" fill="#23252B">Extract</text>
+  <!-- icon: funnel -->
+  <g transform="translate(296 28)">
+    <path d="M0 0 H36 L23 17 V31 L13 27 V17 Z" fill="#8FA3E8" opacity="0.35" stroke="#8FA3E8" stroke-width="1.6"/>
+  </g>
+  <text x="24" y="104" class="sans" font-size="12" fill="#83868F">acorn literal slicing</text>
+  <text x="24" y="126" class="sans" font-size="12" fill="#83868F">config buildPack()</text>
+  <text x="24" y="148" class="sans" font-size="12" fill="#83868F">idMap + aliases</text>
+  <rect x="24" y="160" width="120" height="20" rx="10" fill="#EDF1FE" stroke="#CBD7FB"/>
+  <text x="36" y="174" class="mono" font-size="10" font-weight="600" fill="#4A6EE0">lossless by test</text>
+</svg>

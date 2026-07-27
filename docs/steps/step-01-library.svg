@@ -1,0 +1,21 @@
+<svg width="360" height="200" viewBox="0 0 360 200" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Step 01 — Library">
+  <style>
+    .sans { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; }
+    .mono { font-family: 'SF Mono', 'Courier New', ui-monospace, monospace; }
+  </style>
+  <rect x="4" y="4" width="352" height="192" rx="12" fill="#FFFFFF" stroke="#E6E3DC"/>
+  <rect x="24" y="24" width="34" height="4" rx="2" fill="#D98B8B"/>
+  <text x="24" y="48" class="mono" font-size="10" letter-spacing="2" fill="#9A9DA8">STEP 01</text>
+  <text x="24" y="74" class="sans" font-size="19" font-weight="600" fill="#23252B">Library</text>
+  <!-- icon: scattered layers -->
+  <g transform="translate(292 30)">
+    <rect x="0" y="0" width="34" height="8" rx="2" fill="#D98B8B" opacity="0.75"/>
+    <rect x="8" y="13" width="34" height="8" rx="2" fill="#D98B8B" opacity="0.45"/>
+    <rect x="3" y="26" width="34" height="8" rx="2" fill="#D98B8B" opacity="0.25"/>
+  </g>
+  <text x="24" y="104" class="sans" font-size="12" fill="#83868F">embedded JS defaults</text>
+  <text x="24" y="126" class="sans" font-size="12" fill="#83868F">TEMPLATE-hardcoded prose</text>
+  <text x="24" y="148" class="sans" font-size="12" fill="#83868F">name / index references</text>
+  <rect x="24" y="160" width="158" height="20" rx="10" fill="#FBF1F1" stroke="#EFD3D3"/>
+  <text x="36" y="174" class="mono" font-size="10" font-weight="600" fill="#C26E6E">scattered · duplicated</text>
+</svg>

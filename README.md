@@ -75,7 +75,60 @@ Works as a **Codex / Claude Code / ZCode** skill plus a zero-dependency Node CLI
 
 ## The Pipeline
 
-<img src="docs/pipeline.svg" alt="pipeline" width="100%"/>
+<img align="right" src="docs/steps/step-01-library.svg" alt="Step 01 — Library" width="330"/>
+
+### 01 · Library — where the chaos lives
+
+Every component library starts with business data scattered across embedded JS
+defaults, TEMPLATE-hardcoded prose, and name/index-based references. The first
+pass is a survey: which collections are options-overridable, which are hardcoded,
+and how entities reference each other.
+
+<br clear="all"/>
+
+<img align="left" src="docs/steps/step-02-extract.svg" alt="Step 02 — Extract" width="330"/>
+
+### 02 · Extract — normalize without losing a byte
+
+The CLI slices default-data literals straight from the engine source with acorn,
+then your config's `buildPack()` normalizes them: entities get stable slug IDs,
+crawled names become `aliases`, per-stage duplicated copies collapse into
+`{a,b}` references, and prose lifts out of templates into `contents`.
+
+<br clear="all"/>
+
+<img align="right" src="docs/steps/step-03-data-pack.svg" alt="Step 03 — Data Pack" width="330"/>
+
+### 03 · Data Pack — one file to rule the data
+
+Everything lands in `lib/data/data.json`: entities, aliases, relation registry,
+master edges, stage views, long-form contents, library-specific domain data,
+an asset manifest with sha1, entity-identity `sameAs`, and record-level
+`provenance`. Formal contract: JSON Schema v1.2.
+
+<br clear="all"/>
+
+<img align="left" src="docs/steps/step-04-validate.svg" alt="Step 04 — Validate" width="330"/>
+
+### 04 · Validate — fail loud, never silently
+
+`SGDataLoader` checks **E1–E15** on mount (dangling refs, illegal enums,
+coordinate range, asset registration, scope disambiguation…) and reports
+**W1–W6** honestly. The equivalence test proves `__fromPack(pack)` deep-equals
+the engine defaults; `--verify-hash` catches replaced assets.
+
+<br clear="all"/>
+
+<img align="right" src="docs/steps/step-05-mount.svg" alt="Step 05 — Mount" width="330"/>
+
+### 05 · Mount — injected data wins
+
+The engine prefers the injected pack through `__resolveDataOptions` — pack data
+is converted to the legacy options shape and flows through the original code
+paths. Zero rendering changes, and the embedded fallback stays intact when no
+pack is provided.
+
+<br clear="all"/>
 
 ---
 
