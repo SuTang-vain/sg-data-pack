@@ -1,0 +1,35 @@
+<svg width="760" height="330" viewBox="0 0 760 330" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="How to use — CLI session">
+  <style>
+    .mono { font-family: 'SF Mono', 'Courier New', ui-monospace, monospace; }
+    .prompt { fill: #6487FA; font-weight: 600; }
+    .cmd { fill: #23252B; }
+    .out { fill: #83868F; }
+    .ok { fill: #4E9A6F; }
+  </style>
+
+  <!-- window -->
+  <rect x="10" y="10" width="740" height="310" rx="12" fill="#FFFFFF" stroke="#E6E3DC"/>
+  <!-- title bar -->
+  <path d="M10 22 Q10 10 22 10 H738 Q750 10 750 22 V42 H10 Z" fill="#FAF9F6"/>
+  <line x1="10" y1="42" x2="750" y2="42" stroke="#EEECE6"/>
+  <circle cx="34" cy="26" r="5" fill="#E4A0A0"/>
+  <circle cx="54" cy="26" r="5" fill="#E3C98F"/>
+  <circle cx="74" cy="26" r="5" fill="#9BC7A8"/>
+  <text x="380" y="30" text-anchor="middle" class="mono" font-size="11" fill="#9A9DA8">sg-data-pack — zsh</text>
+
+  <!-- session -->
+  <g class="mono" font-size="13">
+    <text x="32" y="74"><tspan class="prompt">$</tspan><tspan class="cmd" dx="8">node $SK extract ./sandadui.config.js</tspan></text>
+    <text x="48" y="100" class="out">entities: 12 · relations: 14 · stages: 4 · assets: 12</text>
+    <text x="48" y="124" class="ok">✔ validation passed — E1–E15, 0 errors</text>
+    <text x="48" y="148" class="ok">✔ equivalence: 5 deep comparisons, lossless</text>
+
+    <text x="32" y="184"><tspan class="prompt">$</tspan><tspan class="cmd" dx="8">node $SK validate lib/data/data.json --strict --verify-hash</tspan></text>
+    <text x="48" y="210" class="ok">✔ validation passed · sha1 verified for 12 assets</text>
+
+    <text x="32" y="246"><tspan class="prompt">$</tspan><tspan class="cmd" dx="8">node $SK loader</tspan></text>
+    <text x="48" y="272" class="out">…/scripts/lib/sg-data-loader.js → copy into lib/src/</text>
+
+    <text x="32" y="304"><tspan class="prompt">$</tspan><tspan dx="8" class="cmd">▌</tspan></text>
+  </g>
+</svg>

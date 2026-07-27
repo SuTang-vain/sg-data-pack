@@ -1,0 +1,56 @@
+<svg width="1100" height="290" viewBox="0 0 1100 290" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="What is sg-data-pack — before and after">
+  <style>
+    .sans { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; }
+    .mono { font-family: 'SF Mono', 'Courier New', ui-monospace, monospace; }
+    .cap  { font-size: 11px; letter-spacing: 1.5px; fill: #9A9DA8; }
+    .card-t { font-size: 12.5px; font-weight: 600; fill: #5A5E6B; }
+    .row-t { font-size: 11px; fill: #5A5E6B; }
+  </style>
+
+  <!-- BEFORE: scattered cards -->
+  <text x="60" y="34" class="mono cap">BEFORE — SCATTERED</text>
+  <g transform="translate(60 56) rotate(-4)">
+    <rect width="210" height="58" rx="10" fill="#FFFFFF" stroke="#E6E3DC"/>
+    <rect x="14" y="14" width="26" height="3.5" rx="1.75" fill="#D98B8B"/>
+    <text x="14" y="38" class="sans card-t">embedded JS defaults</text>
+  </g>
+  <g transform="translate(180 122) rotate(3)">
+    <rect width="210" height="58" rx="10" fill="#FFFFFF" stroke="#E6E3DC"/>
+    <rect x="14" y="14" width="26" height="3.5" rx="1.75" fill="#D98B8B"/>
+    <text x="14" y="38" class="sans card-t">TEMPLATE-hardcoded prose</text>
+  </g>
+  <g transform="translate(70 190) rotate(-2)">
+    <rect width="210" height="58" rx="10" fill="#FFFFFF" stroke="#E6E3DC"/>
+    <rect x="14" y="14" width="26" height="3.5" rx="1.75" fill="#D98B8B"/>
+    <text x="14" y="38" class="sans card-t">name / index references</text>
+  </g>
+  <!-- tangle -->
+  <g stroke="#D98B8B" stroke-opacity="0.55" stroke-width="1.2" stroke-dasharray="4 4" fill="none">
+    <path d="M270 85 C 330 95, 250 140, 320 152"/>
+    <path d="M300 180 C 340 200, 240 215, 300 220"/>
+    <path d="M265 90 C 300 130, 260 190, 290 215"/>
+  </g>
+
+  <!-- arrow -->
+  <circle cx="520" cy="150" r="24" fill="#EDF1FE" stroke="#CBD7FB"/>
+  <path d="M510 142 l12 8 -12 8" fill="none" stroke="#6487FA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- AFTER: one tidy pack -->
+  <text x="620" y="34" class="mono cap">AFTER — ONE CONTRACT</text>
+  <g transform="translate(620 48)">
+    <rect width="380" height="212" rx="12" fill="#FFFFFF" stroke="#6487FA" stroke-opacity="0.45"/>
+    <rect x="18" y="16" width="10" height="10" rx="3" fill="#6487FA"/>
+    <text x="36" y="25" class="mono" font-size="12" font-weight="600" fill="#23252B">lib/data/data.json</text>
+    <line x1="18" y1="38" x2="362" y2="38" stroke="#EEECE6"/>
+    <!-- rows -->
+    <g class="mono row-t">
+      <rect x="18" y="50" width="9" height="9" rx="2.5" fill="#6487FA"/><text x="36" y="58">entities</text><text x="150" y="58" fill="#9A9DA8">globally unique, slug IDs</text>
+      <rect x="18" y="74" width="9" height="9" rx="2.5" fill="#8FA3E8"/><text x="36" y="82">aliases</text><text x="150" y="82" fill="#9A9DA8">crawled name → id</text>
+      <rect x="18" y="98" width="9" height="9" rx="2.5" fill="#6FA586"/><text x="36" y="106">relations</text><text x="150" y="106" fill="#9A9DA8">each edge stored once</text>
+      <rect x="18" y="122" width="9" height="9" rx="2.5" fill="#C2A36B"/><text x="36" y="130">stages</text><text x="150" y="130" fill="#9A9DA8">reference, never duplicate</text>
+      <rect x="18" y="146" width="9" height="9" rx="2.5" fill="#D78FAD"/><text x="36" y="154">contents</text><text x="150" y="154" fill="#9A9DA8">prose with checked refs</text>
+      <rect x="18" y="170" width="9" height="9" rx="2.5" fill="#5A5E6B"/><text x="36" y="178">provenance</text><text x="150" y="178" fill="#9A9DA8">origin · fetchedAt · confidence</text>
+    </g>
+    <rect x="18" y="188" width="344" height="1" fill="#EEECE6"/>
+  </g>
+</svg>

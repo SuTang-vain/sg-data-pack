@@ -16,7 +16,9 @@
 
 ---
 
-## Why sg-data-pack?
+## What is it?
+
+<img src="docs/what-is-it.svg" alt="Before: scattered data — After: one contract" width="100%"/>
 
 Component libraries generated from HTML case pages scatter business data everywhere —
 embedded JS defaults, template-hardcoded prose, name/index-based references, per-stage
@@ -145,6 +147,8 @@ ln -s "$PWD/sg-data-pack" ~/.claude/skills/sg-data-pack   # Claude Code
 
 ### CLI
 
+<img src="docs/how-to-use.svg" alt="CLI session: extract, validate, loader" width="760"/>
+
 ```bash
 SKILL=~/.zcode/skills/sg-data-pack/scripts/sg-data-pack
 
@@ -161,23 +165,42 @@ node $SK schema    # print contract-schema path
 
 ## The Data Pack (v1.2)
 
+<table>
+<tr>
+<td width="54%" valign="top">
+
 ```jsonc
 {
   "schemaVersion": "1.2",
-  "meta":       { "id": "…", "title": "…", "hero": "…", "assetBase": "../assets/" },
-  "entities":   { "wukong": { "name": "孙悟空", "kind": "person", … } },
-  "aliases":    { "孙悟空": "wukong" },              // crawled name → id
-  "relations":  [{ "a": "rulaifo", "b": "wukong", "type": "enemy",
-                   "label": "五行山压", "scope": ["tianting"] }],
-  "stages":     [{ "key": "tianting", "entities": ["wukong"],
-                   "relations": [{ "a": "rulaifo", "b": "wukong" }],
-                   "overlay": { "wukong": { "desc": "…" } } }],
-  "contents":   { "timeline-2016": { "kind": "timeline-item", "body": "…",
-                   "highlights": [{ "text": "白月光", "ref": "baiyueguang" }] } },
-  "sameAs":     [["yingzheng", "qinshihuang"]],      // same real-world subject
-  "provenance": { "entities": { "wukong": { "origin": "…", "confidence": 1.0 } } }
+  "meta":      { "id": "…", "title": "…",
+                 "hero": "…" },
+  "entities":  { "wukong": {
+    "name": "孙悟空", "kind": "person" } },
+  "aliases":   { "孙悟空": "wukong" },
+  "relations": [{ "a": "rulaifo",
+    "b": "wukong", "type": "enemy",
+    "label": "五行山压",
+    "scope": ["tianting"] }],
+  "stages":    [{ "key": "tianting",
+    "entities": ["wukong"],
+    "relations": [
+      { "a": "rulaifo", "b": "wukong" }
+    ] }],
+  "sameAs":    [["yingzheng",
+                 "qinshihuang"]],
+  "provenance": { "entities": {
+    "wukong": { "confidence": 1.0 } } }
 }
 ```
+
+</td>
+<td width="46%" valign="top">
+
+<img src="docs/pack-anatomy.svg" alt="Data Pack anatomy" width="100%"/>
+
+</td>
+</tr>
+</table>
 
 ### Rule cheat sheet
 
