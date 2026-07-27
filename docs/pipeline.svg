@@ -1,126 +1,119 @@
 <svg width="1200" height="330" viewBox="0 0 1200 330" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="sg-data-pack pipeline">
   <defs>
-    <linearGradient id="pbg" x1="0" y1="0" x2="1200" y2="330" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#0D1120"/>
-      <stop offset="1" stop-color="#151B36"/>
+    <linearGradient id="ppaper" x1="0" y1="0" x2="0" y2="330" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F6EFDD"/>
+      <stop offset="1" stop-color="#EFE4CC"/>
     </linearGradient>
-    <linearGradient id="heroCard" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#22306B"/>
-      <stop offset="1" stop-color="#1A2450"/>
-    </linearGradient>
+    <filter id="pgrain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.19  0 0 0 0 0.25  0 0 0 0 0.42  0 0 0 0.045 0"/>
+    </filter>
+    <filter id="pwash">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.03" numOctaves="3" seed="7" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="10"/>
+      <feGaussianBlur stdDeviation="0.8"/>
+    </filter>
     <style>
-      .title { font: 700 17px -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; }
-      .sub { font: 400 12.5px -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; fill: #9BA3C0; }
-      .badge { font: 600 11px -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; }
-      .cap { font: 500 13px -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; fill: #7E86AC; }
+      .mono  { font-family: 'Courier New', ui-monospace, monospace; fill: #31406B; }
+      .serif { font-family: Georgia, 'Times New Roman', serif; fill: #31406B; }
+      .step  { font-size: 10px; letter-spacing: 2.5px; fill: #4A5B8C; }
+      .body  { font-size: 11.5px; letter-spacing: 0.6px; fill: #4A5B8C; }
+      .hair  { stroke: #31406B; stroke-opacity: 0.45; stroke-width: 1; }
     </style>
   </defs>
 
-  <rect width="1200" height="330" rx="14" fill="url(#pbg)"/>
-  <text x="40" y="42" style="font:700 20px -apple-system,'Segoe UI',sans-serif" fill="#F5F7FF">The Pipeline</text>
-  <text x="176" y="42" class="cap">scattered embedded data → one validated, provenance-tracked Data Pack</text>
+  <rect width="1200" height="330" rx="10" fill="url(#ppaper)"/>
+  <rect width="1200" height="330" rx="10" filter="url(#pgrain)"/>
 
-  <!-- ===== Card 1: Component Library ===== -->
-  <g transform="translate(40 70)">
-    <rect width="208" height="176" rx="12" fill="#161C33" stroke="#D94B4B" stroke-opacity="0.45"/>
-    <rect width="208" height="4" rx="2" fill="#D94B4B"/>
-    <!-- icon: scattered layers -->
-    <g transform="translate(20 22)">
-      <rect x="0" y="0" width="26" height="8" rx="2" fill="#D94B4B" opacity="0.75"/>
-      <rect x="6" y="12" width="26" height="8" rx="2" fill="#D94B4B" opacity="0.5"/>
-      <rect x="2" y="24" width="26" height="8" rx="2" fill="#D94B4B" opacity="0.3"/>
+  <!-- header -->
+  <text x="48" y="46" class="mono" font-size="15" letter-spacing="4">✦ FIG. 02 — THE PIPELINE</text>
+  <line x1="330" y1="40" x2="1152" y2="40" class="hair" stroke-dasharray="3 4"/>
+  <text x="48" y="68" class="mono step">SCATTERED EMBEDDED DATA → ONE VALIDATED, PROVENANCE-TRACKED PACK</text>
+
+  <!-- STEP 01 -->
+  <g transform="translate(48 92)">
+    <rect width="200" height="158" fill="#F2EAD6" stroke="#31406B" stroke-opacity="0.55"/>
+    <rect width="200" height="3" fill="#31406B" opacity="0.7"/>
+    <text x="16" y="26" class="mono step">STEP 01</text>
+    <text x="16" y="52" class="serif" font-size="19" font-style="italic">Library</text>
+    <g transform="translate(16 64)">
+      <rect x="0" y="0" width="30" height="7" fill="#31406B" opacity="0.7"/>
+      <rect x="6" y="11" width="30" height="7" fill="#31406B" opacity="0.45"/>
+      <rect x="2" y="22" width="30" height="7" fill="#31406B" opacity="0.25"/>
     </g>
-    <text x="60" y="50" class="title" fill="#F0A3A3">Component Library</text>
-    <text x="20" y="88" class="sub">embedded JS defaults</text>
-    <text x="20" y="110" class="sub">TEMPLATE-hardcoded prose</text>
-    <text x="20" y="132" class="sub">name / index references</text>
-    <rect x="20" y="146" width="112" height="20" rx="10" fill="#D94B4B" opacity="0.15"/>
-    <text x="30" y="160" class="badge" fill="#F0A3A3">chaos in, errors in</text>
+    <text x="16" y="116" class="mono body">EMBEDDED DEFAULTS</text>
+    <text x="16" y="134" class="mono body">NAME / INDEX REFS</text>
+    <text x="16" y="152" class="mono body" fill="#8A5A3C">SCATTERED · DUPLICATED</text>
+  </g>
+  <g class="hair"><line x1="254" y1="170" x2="286" y2="170"/><path d="M286 165 l8 5 -8 5" fill="none"/><line x1="270" y1="164" x2="270" y2="176"/></g>
+
+  <!-- STEP 02 -->
+  <g transform="translate(300 92)">
+    <rect width="200" height="158" fill="#F2EAD6" stroke="#31406B" stroke-opacity="0.55"/>
+    <rect width="200" height="3" fill="#31406B" opacity="0.7"/>
+    <text x="16" y="26" class="mono step">STEP 02</text>
+    <text x="16" y="52" class="serif" font-size="19" font-style="italic">Extract</text>
+    <g transform="translate(16 64)" stroke="#31406B" stroke-width="1.6" opacity="0.75" fill="none">
+      <path d="M0 0 H34 L22 15 V28 L12 24 V15 Z" fill="#31406B" fill-opacity="0.2"/>
+    </g>
+    <text x="16" y="116" class="mono body">ACORN LITERAL SLICING</text>
+    <text x="16" y="134" class="mono body">IDMAP + ALIASES</text>
+    <text x="16" y="152" class="mono body" fill="#8A5A3C">LOSSLESS BY TEST</text>
+  </g>
+  <g class="hair"><line x1="506" y1="170" x2="538" y2="170"/><path d="M538 165 l8 5 -8 5" fill="none"/><line x1="522" y1="164" x2="522" y2="176"/></g>
+
+  <!-- STEP 03: hero -->
+  <g transform="translate(552 84)">
+    <rect width="200" height="174" fill="#F6EFDD" stroke="#C99F57" stroke-width="1.6"/>
+    <rect width="200" height="3" fill="#C99F57"/>
+    <text x="16" y="26" class="mono step">STEP 03</text>
+    <text x="16" y="52" class="serif" font-size="19" font-style="italic">Data Pack</text>
+    <g transform="translate(16 62)">
+      <line x1="13" y1="13" x2="30" y2="5" stroke="#4A5B8C" stroke-width="1.2"/>
+      <line x1="13" y1="13" x2="31" y2="23" stroke="#4A5B8C" stroke-width="1.2"/>
+      <g filter="url(#pwash)"><circle cx="13" cy="13" r="7.5" fill="#C99F57"/></g>
+      <circle cx="31" cy="5" r="4.5" fill="#F2EAD6" stroke="#31406B"/>
+      <circle cx="33" cy="24" r="4.5" fill="#F2EAD6" stroke="#31406B"/>
+    </g>
+    <text x="16" y="116" class="mono body">ENTITIES · RELATIONS</text>
+    <text x="16" y="134" class="mono body">STAGES · PROVENANCE</text>
+    <text x="16" y="156" class="mono body" font-size="10.5" font-weight="700" fill="#8A6A2C">LIB/DATA/DATA.JSON · V1.2</text>
+  </g>
+  <g class="hair"><line x1="758" y1="170" x2="790" y2="170"/><path d="M790 165 l8 5 -8 5" fill="none"/><line x1="774" y1="164" x2="774" y2="176"/></g>
+
+  <!-- STEP 04 -->
+  <g transform="translate(804 92)">
+    <rect width="200" height="158" fill="#F2EAD6" stroke="#31406B" stroke-opacity="0.55"/>
+    <rect width="200" height="3" fill="#31406B" opacity="0.7"/>
+    <text x="16" y="26" class="mono step">STEP 04</text>
+    <text x="16" y="52" class="serif" font-size="19" font-style="italic">Validate</text>
+    <g transform="translate(16 62)" fill="none" stroke="#31406B" stroke-width="1.5" opacity="0.8">
+      <path d="M16 0 L32 5 V17 C32 27 25 33 16 36 C7 33 0 27 0 17 V5 Z"/>
+      <path d="M8 17 l6 6 11 -12" stroke="#8A6A2C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <text x="16" y="116" class="mono body">E1–E15 · FAIL LOUD</text>
+    <text x="16" y="134" class="mono body">EQUIVALENCE + SHA1</text>
+    <text x="16" y="152" class="mono body" fill="#8A5A3C">NO SILENT SWALLOWING</text>
+  </g>
+  <g class="hair"><line x1="1010" y1="170" x2="1042" y2="170"/><path d="M1042 165 l8 5 -8 5" fill="none"/><line x1="1026" y1="164" x2="1026" y2="176"/></g>
+
+  <!-- STEP 05 -->
+  <g transform="translate(1056 92)">
+    <rect width="144" height="158" fill="#F2EAD6" stroke="#31406B" stroke-opacity="0.55"/>
+    <rect width="144" height="3" fill="#31406B" opacity="0.7"/>
+    <text x="14" y="26" class="mono step">STEP 05</text>
+    <text x="14" y="52" class="serif" font-size="19" font-style="italic">Mount</text>
+    <g transform="translate(14 64)" stroke="#31406B" stroke-width="1.6" opacity="0.75">
+      <rect x="2" y="6" width="20" height="14" fill="#31406B" fill-opacity="0.2"/>
+      <line x1="26" y1="10" x2="34" y2="10" stroke-linecap="round"/>
+      <line x1="26" y1="17" x2="34" y2="17" stroke-linecap="round"/>
+    </g>
+    <text x="14" y="116" class="mono body" font-size="10.5">&#123; SG_DATA_PACK &#125;</text>
+    <text x="14" y="134" class="mono body">INJECTED WINS</text>
+    <text x="14" y="152" class="mono body" fill="#8A5A3C">FALLBACK INTACT</text>
   </g>
 
-  <path d="M258 152 l18 6 -18 6 z" fill="#6487FA"/>
-  <line x1="252" y1="158" x2="272" y2="158" stroke="#6487FA" stroke-width="2"/>
-
-  <!-- ===== Card 2: Extract ===== -->
-  <g transform="translate(282 70)">
-    <rect width="208" height="176" rx="12" fill="#161C33" stroke="#6487FA" stroke-opacity="0.45"/>
-    <rect width="208" height="4" rx="2" fill="#6487FA"/>
-    <!-- icon: funnel / slicer -->
-    <g transform="translate(20 20)">
-      <path d="M0 0 H34 L22 16 V30 L12 26 V16 Z" fill="#6487FA" opacity="0.8"/>
-    </g>
-    <text x="66" y="50" class="title" fill="#B9C4F5">Extract</text>
-    <text x="20" y="88" class="sub">acorn literal slicing</text>
-    <text x="20" y="110" class="sub">config buildPack()</text>
-    <text x="20" y="132" class="sub">idMap + aliases</text>
-    <rect x="20" y="146" width="88" height="20" rx="10" fill="#6487FA" opacity="0.15"/>
-    <text x="30" y="160" class="badge" fill="#B9C4F5">lossless by test</text>
-  </g>
-
-  <path d="M500 152 l18 6 -18 6 z" fill="#6487FA"/>
-  <line x1="494" y1="158" x2="514" y2="158" stroke="#6487FA" stroke-width="2"/>
-
-  <!-- ===== Card 3: Data Pack (hero) ===== -->
-  <g transform="translate(524 62)">
-    <rect width="208" height="192" rx="12" fill="url(#heroCard)" stroke="#8AA5FF" stroke-opacity="0.8"/>
-    <rect width="208" height="4" rx="2" fill="#8AA5FF"/>
-    <!-- icon: node graph -->
-    <g transform="translate(20 20)">
-      <line x1="14" y1="14" x2="30" y2="6" stroke="#8AA5FF" stroke-width="1.8"/>
-      <line x1="14" y1="14" x2="32" y2="24" stroke="#8AA5FF" stroke-width="1.8"/>
-      <circle cx="14" cy="14" r="7" fill="#8AA5FF"/>
-      <circle cx="32" cy="6" r="4.5" fill="#4AA06E"/>
-      <circle cx="34" cy="26" r="4.5" fill="#C8A35A"/>
-    </g>
-    <text x="66" y="50" class="title" fill="#E7EBFF">Data Pack</text>
-    <text x="20" y="88" class="sub" fill="#C3CBF2">entities · aliases · relations</text>
-    <text x="20" y="110" class="sub" fill="#C3CBF2">stages · contents · domain</text>
-    <text x="20" y="132" class="sub" fill="#C3CBF2">assets · sameAs · provenance</text>
-    <rect x="20" y="152" width="152" height="22" rx="11" fill="#8AA5FF" opacity="0.2"/>
-    <text x="30" y="167" class="badge" fill="#E7EBFF">lib/data/data.json · v1.2</text>
-  </g>
-
-  <path d="M742 152 l18 6 -18 6 z" fill="#6487FA"/>
-  <line x1="736" y1="158" x2="756" y2="158" stroke="#6487FA" stroke-width="2"/>
-
-  <!-- ===== Card 4: Validate ===== -->
-  <g transform="translate(766 70)">
-    <rect width="208" height="176" rx="12" fill="#161C33" stroke="#4AA06E" stroke-opacity="0.45"/>
-    <rect width="208" height="4" rx="2" fill="#4AA06E"/>
-    <!-- icon: shield check -->
-    <g transform="translate(20 18)">
-      <path d="M17 0 L34 6 V18 C34 30 26 37 17 40 C8 37 0 30 0 18 V6 Z" fill="#4AA06E" opacity="0.25" stroke="#4AA06E" stroke-width="2"/>
-      <path d="M9 19 l6 6 11 -12" stroke="#6FCF8F" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    </g>
-    <text x="66" y="50" class="title" fill="#9FD8B4">Validate</text>
-    <text x="20" y="88" class="sub">E1–E15 errors · fail loud</text>
-    <text x="20" y="110" class="sub">W1–W6 honest warnings</text>
-    <text x="20" y="132" class="sub">equivalence + sha1 hash</text>
-    <rect x="20" y="146" width="118" height="20" rx="10" fill="#4AA06E" opacity="0.15"/>
-    <text x="30" y="160" class="badge" fill="#9FD8B4">no silent swallowing</text>
-  </g>
-
-  <path d="M984 152 l18 6 -18 6 z" fill="#6487FA"/>
-  <line x1="978" y1="158" x2="998" y2="158" stroke="#6487FA" stroke-width="2"/>
-
-  <!-- ===== Card 5: Engine Mount ===== -->
-  <g transform="translate(1008 70)">
-    <rect width="192" height="176" rx="12" fill="#161C33" stroke="#C8A35A" stroke-opacity="0.5"/>
-    <rect width="192" height="4" rx="2" fill="#C8A35A"/>
-    <!-- icon: plug -->
-    <g transform="translate(20 20)">
-      <rect x="4" y="8" width="22" height="16" rx="3" fill="#C8A35A" opacity="0.8"/>
-      <line x1="30" y1="12" x2="38" y2="12" stroke="#C8A35A" stroke-width="3" stroke-linecap="round"/>
-      <line x1="30" y1="20" x2="38" y2="20" stroke="#C8A35A" stroke-width="3" stroke-linecap="round"/>
-    </g>
-    <text x="66" y="50" class="title" fill="#EAD1A0">Engine Mount</text>
-    <text x="20" y="88" class="sub">{ data: SG_DATA_PACK }</text>
-    <text x="20" y="110" class="sub">injected data wins</text>
-    <text x="20" y="132" class="sub">legacy fallback intact</text>
-    <rect x="20" y="146" width="128" height="20" rx="10" fill="#C8A35A" opacity="0.16"/>
-    <text x="30" y="160" class="badge" fill="#EAD1A0">zero render changes</text>
-  </g>
-
-  <!-- caption -->
-  <text x="40" y="302" class="cap">crawl → aliases → data.json → validate --strict → equivalence test → --verify-hash → commit</text>
+  <!-- footer -->
+  <line x1="48" y1="292" x2="640" y2="292" class="hair"/>
+  <text x="48" y="314" class="mono step">CRAWL → ALIASES → DATA.JSON → VALIDATE --STRICT → EQUIVALENCE → --VERIFY-HASH → COMMIT</text>
 </svg>

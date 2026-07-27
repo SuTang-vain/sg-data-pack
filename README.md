@@ -5,11 +5,11 @@
 <h3>One schema for every component library's data —<br/>extracted, validated, and provenance-tracked.</h3>
 
 <p>
-  <a href="https://github.com/SuTang-vain/sg-data-pack/blob/main/SKILL.md"><img src="https://img.shields.io/badge/agent%20skill-codex%20%C2%B7%20claude%20code%20%C2%B7%20zcode-6487FA" alt="agent skill"/></a>
-  <img src="https://img.shields.io/badge/node-%E2%89%A518-4AA06E" alt="node ≥ 18"/>
-  <img src="https://img.shields.io/badge/dependencies-0-4AA06E" alt="zero dependencies"/>
-  <img src="https://img.shields.io/badge/rules-E1--E15%20%2B%20W1--W6-C8A35A" alt="validation rules"/>
-  <a href="https://github.com/SuTang-vain/sg-data-pack/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="license MIT"/></a>
+  <a href="https://github.com/SuTang-vain/sg-data-pack/blob/main/SKILL.md"><img src="https://img.shields.io/badge/agent%20skill-codex%20%C2%B7%20claude%20code%20%C2%B7%20zcode-31406B" alt="agent skill"/></a>
+  <img src="https://img.shields.io/badge/node-%E2%89%A518-4A5B8C" alt="node ≥ 18"/>
+  <img src="https://img.shields.io/badge/dependencies-0-4A5B8C" alt="zero dependencies"/>
+  <img src="https://img.shields.io/badge/rules-E1--E15%20%2B%20W1--W6-C99F57" alt="validation rules"/>
+  <a href="https://github.com/SuTang-vain/sg-data-pack/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-8A6A2C" alt="license MIT"/></a>
 </p>
 
 </div>
