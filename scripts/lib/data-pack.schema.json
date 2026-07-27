@@ -93,6 +93,20 @@
         "additionalProperties": true
       }
     },
+    "heroRelTypes": {
+      "type": "object",
+      "description": "(optional, Plan-B dual registry) Relationship-type registry for the hero-radial dimension (person -> core). When overlay.rel / heroRel and relations[].type are semantically different dimensions, register them separately here and in relationTypes, with library-level rules forbidding cross-dimension use (e.g. qinshihuang: overlay.rel in {ruler, family, enemy})",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["label"],
+        "properties": {
+          "label": { "type": "string" },
+          "color": { "type": "string" },
+          "dimension": { "type": "string", "enum": ["hero-radial", "pairwise", "both"] }
+        },
+        "additionalProperties": true
+      }
+    },
     "relations": {
       "type": "array",
       "description": "Master edge list; each edge is stored exactly once. Stages reference edges via {a,b}; duplication is forbidden. When multiple edges share the same (a,b) pair (relationship evolves across stages), scope or type must make references resolvable.",

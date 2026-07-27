@@ -23,6 +23,7 @@ SKILL=~/.zcode/skills/sg-data-pack/scripts/sg-data-pack   # or the codex/claude 
 node $SK extract <path/to/xxx.config.js>          # extract + validate + equivalence test; writes lib/data/{data.json,data.js,data.schema.json}
 node $SK extract <path/to/xxx.config.js> --check  # validate + equivalence only (no writes)
 node $SK validate <data.json> [--strict] [--verify-hash]  # standalone validation (--verify-hash detects replaced assets)
+node $SK rules <libDir> [--strict]                      # execute library-level data rules (data-rules.json)
 node $SK loader    # print runtime-validator path (copy into the library's lib/src/)
 node $SK schema    # print contract schema path
 ```
@@ -67,6 +68,15 @@ undeduplicated duplicates — fix item by item using the reported diff paths.
 Example page: `sg-data-loader.js` → engine → `../data/data.js` → `mount(root, { data: SG_DATA_PACK })`.
 Re-run `node $SK extract <config> --check` to confirm stability.
 
+### 6. Analyze: derive library-level feature rules
+
+After the pack is green, analyze the page's data characteristics (pack + engine rendering logic +
+assets) and produce `lib/data/data-rules.json` (hard/soft rules with evidence, machine-executable
+`check` expressions) + `lib/data/DATA-GUIDE.md` (human contributor guide). This serves two goals:
+(a) a contract for future page-extension development, (b) guidance for humans supplementing
+content and assets. **Follow `references/data-rules-guide.md`** (format, check-expression
+convention, evidence discipline). Verify with `node $SK rules <libDir>`.
+
 ## Rule Cheat Sheet (enforced by the validator)
 
 | Rule | Meaning |
@@ -92,3 +102,5 @@ Crawl output may only consist of: `data.json` + `assets/` + the alias table. Req
 - `references/data-pack-contract.md` — full Data Pack v1.2 contract (field level)
 - `references/extraction-config.md` — extraction-config guide with three typical patterns
 - `references/engine-integration.md` — engine-patch standard template (copy-paste grade)
+- `references/data-rules-guide.md` — library-level feature rules: format, check convention, evidence discipline
+- `references/visual-regression.md` — browser visual regression: canonical command, fixed-stability rule, scenarios fingerprint maintenance
