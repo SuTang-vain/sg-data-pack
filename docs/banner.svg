@@ -1,160 +1,98 @@
-<svg width="1200" height="320" viewBox="0 0 1200 320" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="sg-data-pack banner">
+<svg width="1200" height="300" viewBox="0 0 1200 300" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="sg-data-pack banner">
   <defs>
-    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="320" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#F6EFDD"/>
-      <stop offset="0.6" stop-color="#F2EAD6"/>
-      <stop offset="1" stop-color="#EDE2C9"/>
+    <radialGradient id="tint" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(950 150) scale(220 160)">
+      <stop offset="0" stop-color="#6487FA" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#6487FA" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="heroG" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7C96F5"/>
+      <stop offset="1" stop-color="#6487FA"/>
     </linearGradient>
-    <radialGradient id="sunHalo" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1052 74) scale(88)">
-      <stop offset="0" stop-color="#D9B36C" stop-opacity="0.45"/>
-      <stop offset="1" stop-color="#D9B36C" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="hill" cx="0.4" cy="0.2" r="1">
-      <stop offset="0" stop-color="#3D4C78" stop-opacity="0.85"/>
-      <stop offset="1" stop-color="#31406B" stop-opacity="0.35"/>
-    </radialGradient>
-    <filter id="grain">
-      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" result="n"/>
-      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.19  0 0 0 0 0.25  0 0 0 0 0.42  0 0 0 0.045 0"/>
-    </filter>
-    <filter id="wash">
-      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.03" numOctaves="3" seed="7" result="t"/>
-      <feDisplacementMap in="SourceGraphic" in2="t" scale="14"/>
-      <feGaussianBlur stdDeviation="1.2"/>
-    </filter>
+    <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
+      <circle cx="1.2" cy="1.2" r="1.2" fill="#23252B" opacity="0.05"/>
+    </pattern>
     <style>
-      .mono   { font-family: 'Courier New', ui-monospace, monospace; fill: #31406B; }
-      .serif  { font-family: Georgia, 'Times New Roman', serif; fill: #31406B; }
-      .lbl    { font-size: 13px; letter-spacing: 4px; }
-      .sub    { font-size: 13.5px; letter-spacing: 2.2px; }
-      .tiny   { font-size: 10px; letter-spacing: 1.5px; }
-      .annot  { font-size: 9.5px; letter-spacing: 1px; fill: #4A5B8C; }
-      .hair   { stroke: #31406B; stroke-opacity: 0.4; stroke-width: 1; }
+      .sans  { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; }
+      .mono  { font-family: 'SF Mono', 'Courier New', ui-monospace, monospace; }
+      .ink   { fill: #23252B; }
+      .muted { fill: #83868F; }
+      .chip  { font-size: 12.5px; font-weight: 500; fill: #5A5E6B; }
+      .lbl   { font-size: 10px; fill: #9A9DA8; letter-spacing: 0.4px; }
+      .edge  { stroke: #C9CDD8; stroke-width: 1.2; }
     </style>
   </defs>
 
-  <!-- paper -->
-  <rect width="1200" height="320" fill="url(#paper)"/>
-  <rect width="1200" height="320" filter="url(#grain)"/>
+  <!-- ground -->
+  <rect width="1200" height="300" fill="#FAF9F6"/>
+  <rect width="1200" height="300" fill="url(#dots)"/>
+  <rect width="1200" height="300" fill="url(#tint)"/>
 
-  <!-- registration marks -->
-  <g class="hair">
-    <path d="M18 30 V18 H30"/><path d="M1170 18 H1182 V30"/>
-    <path d="M18 290 V302 H30"/><path d="M1182 290 V302 H1170"/>
-    <line x1="42" y1="19" x2="58" y2="19"/><line x1="50" y1="11" x2="50" y2="27"/>
-    <line x1="1142" y1="301" x2="1158" y2="301"/><line x1="1150" y1="293" x2="1150" y2="309"/>
+  <!-- logo mark -->
+  <g transform="translate(80 96)">
+    <rect width="52" height="52" rx="13" fill="#FFFFFF" stroke="#E3E1DB"/>
+    <line x1="26" y1="26" x2="14" y2="14" stroke="#B9BEDA" stroke-width="1.6"/>
+    <line x1="26" y1="26" x2="39" y2="15" stroke="#B9BEDA" stroke-width="1.6"/>
+    <line x1="26" y1="26" x2="26" y2="40" stroke="#B9BEDA" stroke-width="1.6"/>
+    <circle cx="26" cy="26" r="7" fill="url(#heroG)"/>
+    <circle cx="14" cy="14" r="3.6" fill="#FFFFFF" stroke="#C2A36B" stroke-width="1.4"/>
+    <circle cx="39" cy="15" r="3.6" fill="#FFFFFF" stroke="#6FA586" stroke-width="1.4"/>
+    <circle cx="26" cy="40" r="3.6" fill="#FFFFFF" stroke="#D98B8B" stroke-width="1.4"/>
   </g>
 
-  <!-- figure label + dashed rule -->
-  <text x="52" y="50" class="mono lbl">✦ FIG. 01</text>
-  <line x1="150" y1="44" x2="430" y2="44" class="hair" stroke-dasharray="3 4"/>
-  <line x1="150" y1="44" x2="430" y2="44" stroke="#31406B" stroke-opacity="0.15"/>
+  <!-- wordmark -->
+  <text x="152" y="124" class="sans ink" font-size="46" font-weight="700" letter-spacing="-1.2">sg-data-pack</text>
+  <text x="153" y="158" class="sans muted" font-size="17">Component-library data-layer normalization pipeline</text>
 
-  <!-- moon -->
-  <g filter="url(#wash)" opacity="0.9">
-    <circle cx="228" cy="86" r="24" fill="#4A5B8C"/>
-    <circle cx="238" cy="80" r="21" fill="#F2EAD6"/>
+  <!-- chips -->
+  <g class="sans">
+    <rect x="152" y="184" width="110" height="28" rx="14" fill="#FFFFFF" stroke="#E3E1DB"/>
+    <text x="168" y="202" class="chip">E1–E15 rules</text>
+    <rect x="274" y="184" width="158" height="28" rx="14" fill="#FFFFFF" stroke="#E3E1DB"/>
+    <text x="290" y="202" class="chip">lossless equivalence</text>
+    <rect x="444" y="184" width="142" height="28" rx="14" fill="#FFFFFF" stroke="#E3E1DB"/>
+    <text x="460" y="202" class="chip">record provenance</text>
+    <rect x="598" y="184" width="112" height="28" rx="14" fill="#EDF1FE" stroke="#CBD7FB"/>
+    <text x="614" y="202" class="chip" fill="#4A6EE0">zero-dep CLI</text>
   </g>
-  <path d="M282 112 l3.5 7 7 3.5 -7 3.5 -3.5 7 -3.5 -7 -7 -3.5 7 -3.5 z" fill="#C99F57" opacity="0.9"/>
+  <text x="153" y="244" class="mono muted" font-size="11.5" letter-spacing="1.5">CODEX · CLAUDE CODE · ZCODE</text>
 
-  <!-- sun -->
-  <circle cx="1052" cy="74" r="88" fill="url(#sunHalo)"/>
-  <g stroke="#C99F57" stroke-width="1" opacity="0.75">
-    <line x1="1052" y1="6" x2="1052" y2="30"/><line x1="1052" y1="118" x2="1052" y2="142"/>
-    <line x1="984" y1="74" x2="1008" y2="74"/><line x1="1096" y1="74" x2="1120" y2="74"/>
-    <line x1="1004" y1="26" x2="1021" y2="43"/><line x1="1083" y1="105" x2="1100" y2="122"/>
-    <line x1="1100" y1="26" x2="1083" y2="43"/><line x1="1021" y1="105" x2="1004" y2="122"/>
-    <line x1="1018" y1="12" x2="1027" y2="35"/><line x1="1086" y1="13" x2="1077" y2="36"/>
-    <line x1="990" y1="46" x2="1013" y2="55"/><line x1="1114" y1="47" x2="1091" y2="56"/>
-    <line x1="990" y1="102" x2="1013" y2="93"/><line x1="1114" y1="101" x2="1091" y2="92"/>
-    <line x1="1018" y1="136" x2="1027" y2="113"/><line x1="1086" y1="135" x2="1077" y2="112"/>
-  </g>
-  <g filter="url(#wash)">
-    <circle cx="1052" cy="74" r="30" fill="#D9B36C" opacity="0.95"/>
-    <circle cx="1052" cy="74" r="17" fill="#F2EAD6" opacity="0.9"/>
-  </g>
-
-  <!-- color swatches -->
-  <g transform="translate(1170 96)">
-    <rect x="0" y="0" width="11" height="11" fill="#C99F57"/>
-    <rect x="0" y="18" width="11" height="11" fill="#31406B"/>
-    <rect x="0" y="36" width="11" height="11" fill="#4A5B8C"/>
-    <rect x="0" y="54" width="11" height="11" fill="#8A9BC6"/>
-    <rect x="0" y="72" width="11" height="11" fill="#31406B" opacity="0.55"/>
-    <rect x="0" y="90" width="11" height="11" fill="#C9BFA6"/>
-  </g>
-
-  <!-- mountains + dither shore (bottom-right) -->
-  <g filter="url(#wash)" opacity="0.75">
-    <path d="M860 320 L940 226 L986 262 L1044 198 L1112 258 L1160 220 L1200 246 V320 Z" fill="url(#hill)"/>
-    <path d="M1010 320 L1078 252 L1124 288 L1176 244 L1200 262 V320 Z" fill="#31406B" opacity="0.5"/>
-  </g>
-  <g opacity="0.85">
-    <rect x="1128" y="252" width="14" height="14" fill="#31406B" opacity="0.75"/>
-    <rect x="1142" y="266" width="14" height="14" fill="#31406B" opacity="0.55"/>
-    <rect x="1156" y="252" width="14" height="14" fill="#31406B" opacity="0.4"/>
-    <rect x="1128" y="280" width="14" height="14" fill="#31406B" opacity="0.45"/>
-    <rect x="1170" y="266" width="14" height="14" fill="#31406B" opacity="0.7"/>
-    <rect x="1156" y="280" width="14" height="14" fill="#31406B" opacity="0.3"/>
-    <rect x="1184" y="252" width="14" height="14" fill="#31406B" opacity="0.55"/>
-    <rect x="1170" y="294" width="14" height="14" fill="#31406B" opacity="0.4"/>
-    <rect x="1184" y="280" width="14" height="14" fill="#31406B" opacity="0.25"/>
-    <rect x="1128" y="308" width="14" height="12" fill="#31406B" opacity="0.25"/>
-    <rect x="1156" y="308" width="14" height="12" fill="#31406B" opacity="0.5"/>
-    <rect x="1184" y="308" width="14" height="12" fill="#31406B" opacity="0.6"/>
-  </g>
-
-  <!-- FIG. 1A: entity-graph plate (center-right) -->
+  <!-- entity graph (right) -->
   <g>
-    <text x="700" y="128" class="mono tiny" letter-spacing="2">FIG. 1A — ENTITY GRAPH</text>
-    <line x1="700" y1="136" x2="836" y2="136" class="hair" stroke-dasharray="2 3"/>
-    <g stroke="#4A5B8C" stroke-width="1.1" opacity="0.85">
-      <line x1="770" y1="196" x2="724" y2="166"/>
-      <line x1="770" y1="196" x2="822" y2="168"/>
-      <line x1="770" y1="196" x2="726" y2="232"/>
-      <line x1="770" y1="196" x2="818" y2="230"/>
-      <line x1="822" y1="168" x2="818" y2="230" stroke-dasharray="4 3" stroke="#C99F57"/>
+    <!-- edges -->
+    <line x1="950" y1="150" x2="1062" y2="150" class="edge"/>
+    <line x1="950" y1="150" x2="1006" y2="247" class="edge"/>
+    <line x1="950" y1="150" x2="894" y2="247" class="edge"/>
+    <line x1="950" y1="150" x2="838" y2="150" class="edge"/>
+    <line x1="950" y1="150" x2="894" y2="53" class="edge"/>
+    <line x1="950" y1="150" x2="1006" y2="53" class="edge"/>
+    <line x1="1062" y1="150" x2="1006" y2="247" stroke="#D98B8B" stroke-width="1.2" stroke-dasharray="4 4"/>
+    <rect x="1022" y="186" width="44" height="16" rx="8" fill="#FFFFFF" stroke="#E4B9B9"/>
+    <text x="1031" y="197" class="mono" font-size="9" fill="#C26E6E">scope</text>
+
+    <!-- hero -->
+    <circle cx="950" cy="150" r="30" fill="url(#heroG)"/>
+    <circle cx="950" cy="150" r="38" fill="none" stroke="#CBD7FB" stroke-width="1.2"/>
+    <text x="950" y="155" text-anchor="middle" class="sans" font-size="12" font-weight="600" fill="#FFFFFF">hero</text>
+
+    <!-- satellites -->
+    <g class="mono lbl" text-anchor="middle">
+      <circle cx="1062" cy="150" r="17" fill="#FFFFFF" stroke="#6FA586" stroke-width="1.6"/>
+      <text x="1062" y="184">person</text>
+      <circle cx="1006" cy="247" r="17" fill="#FFFFFF" stroke="#C2A36B" stroke-width="1.6"/>
+      <text x="1006" y="281">work</text>
+      <circle cx="894" cy="247" r="17" fill="#FFFFFF" stroke="#D78FAD" stroke-width="1.6"/>
+      <text x="894" y="281">term</text>
+      <circle cx="838" cy="150" r="17" fill="#FFFFFF" stroke="#8FA3E8" stroke-width="1.6"/>
+      <text x="838" y="184">event</text>
+      <circle cx="894" cy="53" r="17" fill="#FFFFFF" stroke="#D98B8B" stroke-width="1.6"/>
+      <text x="894" y="87">person</text>
+      <circle cx="1006" cy="53" r="17" fill="#FFFFFF" stroke="#6FA586" stroke-width="1.6"/>
+      <text x="1006" y="87">person</text>
     </g>
-    <g filter="url(#wash)"><circle cx="770" cy="196" r="21" fill="#C99F57" opacity="0.9"/></g>
-    <circle cx="770" cy="196" r="21" fill="none" stroke="#31406B" stroke-opacity="0.5"/>
-    <text x="770" y="200" text-anchor="middle" class="mono" font-size="10" fill="#F6EFDD">hero</text>
-    <g fill="#F2EAD6" stroke="#31406B" stroke-width="1.2">
-      <circle cx="724" cy="166" r="9"/><circle cx="822" cy="168" r="9"/>
-      <circle cx="726" cy="232" r="9"/><circle cx="818" cy="230" r="9"/>
-    </g>
-    <!-- annotations -->
-    <line x1="733" y1="162" x2="758" y2="148" class="hair" stroke-dasharray="2 2"/>
-    <text x="762" y="146" class="mono annot">entity</text>
-    <line x1="800" y1="182" x2="830" y2="150" class="hair" stroke-dasharray="2 2"/>
-    <text x="832" y="148" class="mono annot">edge</text>
-    <line x1="820" y1="200" x2="846" y2="200" class="hair" stroke-dasharray="2 2"/>
-    <text x="848" y="203" class="mono annot" fill="#C99F57">scope</text>
   </g>
 
-  <!-- title block -->
-  <text x="82" y="122" class="mono lbl">#0 DATA CONTRACT</text>
-  <text x="78" y="196" class="serif" font-size="68" font-style="italic" font-weight="700" letter-spacing="-1">sg-data-pack</text>
-  <path d="M84 210 C 180 204, 300 216, 420 208 S 560 212, 596 208" stroke="#C99F57" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.65" filter="url(#wash)"/>
-  <text x="84" y="242" class="mono sub">ENTITY-RELATION GRAPHS  /  VALIDATION RULES  /  PROVENANCE</text>
-
-  <!-- bottom-left manifesto -->
-  <g transform="translate(84 264)">
-    <rect x="0" y="0" width="9" height="9" fill="#31406B"/>
-    <rect x="11" y="0" width="9" height="9" fill="#31406B" opacity="0.55"/>
-    <rect x="0" y="11" width="9" height="9" fill="#31406B" opacity="0.55"/>
-    <rect x="11" y="11" width="9" height="9" fill="#C99F57"/>
-    <text x="32" y="10" class="mono" font-size="13" font-weight="700" letter-spacing="1.5">SCHEMA IS THE ARCHITECTURE</text>
-    <text x="32" y="28" class="mono tiny" fill="#4A5B8C">EXTRACT, VALIDATE, AND SHIP DATA YOU CAN TRUST.</text>
-  </g>
-  <line x1="84" y1="300" x2="520" y2="300" class="hair"/>
-  <line x1="526" y1="294" x2="526" y2="306" class="hair"/>
-  <line x1="520" y1="300" x2="532" y2="300" class="hair"/>
-
-  <!-- bottom-right url + tag -->
-  <g transform="translate(700 282)">
-    <rect x="0" y="0" width="356" height="26" fill="#F2EAD6" fill-opacity="0.72" stroke="#31406B" stroke-opacity="0.6"/>
-    <text x="12" y="17" class="mono" font-size="11" letter-spacing="0.5">GITHUB.COM/SUTANG-VAIN/SG-DATA-PACK</text>
-    <rect x="364" y="0" width="120" height="26" fill="#31406B"/>
-    <text x="376" y="17" class="mono" font-size="11" style="fill:#F2EAD6" letter-spacing="1">DITHER.BLUE ✦</text>
-  </g>
+  <!-- baseline -->
+  <line x1="80" y1="274" x2="1120" y2="274" stroke="#E3E1DB"/>
+  <text x="80" y="290" class="mono muted" font-size="10" letter-spacing="1">SCHEMA IS THE ARCHITECTURE — EXTRACT · VALIDATE · SHIP DATA YOU CAN TRUST</text>
+  <text x="1120" y="290" text-anchor="end" class="mono muted" font-size="10" letter-spacing="1">V1.2</text>
 </svg>
