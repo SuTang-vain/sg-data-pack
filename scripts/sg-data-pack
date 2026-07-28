@@ -8,6 +8,7 @@
  *   sg-data-pack rules <libDir | data-rules.json> [--strict]       Execute library-level data rules
  *   sg-data-pack diff <old.json> <new.json> [--json]               Structural diff between two Data Packs
  *   sg-data-pack templatize <instances.json> [--out dir] [--prefix n]  Derive item template from repeated HTML instances
+ *   sg-data-pack alias-candidates <data.json> <names.json|txt> [--json] [--top n]  Rank alias candidates for crawled names
  *   sg-data-pack schema                                  Print the contract-schema path
  *   sg-data-pack loader                                  Print the runtime-validator path (copy into a library's lib/src/)
  */
@@ -38,6 +39,9 @@ switch (cmd) {
     break;
   case 'templatize':
     run('sg-pack-templatize.js', rest);
+    break;
+  case 'alias-candidates':
+    run('sg-pack-alias-candidates.js', rest);
     break;
   case 'schema':
     console.log(path.join(here, 'lib', 'data-pack.schema.json'));
