@@ -137,6 +137,7 @@ lookup-rebuilt events), so data producers cannot know the blast radius of a chan
     "source": "domain.carouselTrack.entityIds", // pack path, '*' wildcard allowed (E16-checked)
     "consumers": ["components/carousel-3d-item.js"], // engine function or component file
     "affects": ["div.slot1-carousel-track"],    // optional: affected selectors/regions
+    "alsoTouches": ["entities.*"],              // optional: secondary impact sources (e.g. entity field changes also affect rendering even though `source` describes composition)
     "note": "6 milestones rendered as 12 track items for the infinite loop; editing one milestone changes both copies"
   }
 }

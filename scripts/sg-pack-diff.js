@@ -111,6 +111,62 @@ const report = {
   sameAs: diffPairs(oldPack.sameAs, newPack.sameAs),
 };
 
+/* ---------- derivations impact analysis ---------- *
+ * For each changed record, find derivations whose `source` touches the same
+ * pack section and surface them as blast-radius warnings. Sources use dotted
+ * paths with optional '*' wildcards (e.g. entities.*.points, domain.works.*.cover).
+ */
+function sourceMatches(sourcePath, section, id, field) {
+  const segs = String(sourcePath || '').split('.');
+  if (segs[0] !== section) return false;
+  // patterns we match:
+  //   <section>            -> any change in section
+  //   <section>.*          -> any record in section
+  //   <section>.*.<field>  -> specific field across all records
+  //   <section>.<id>       -> specific record
+  if (segs.length === 1) return true;
+  if (segs[1] === '*') {
+    if (segs.length === 2) return true;
+    if (segs.length === 3) return segs[2] === field;
+    return false;
+  }
+  return segs[1] === id;
+}
+function impactedDerivations(pack, section, id, field) {
+  const derivs = (pack && pack.derivations) || {};
+  const hits = [];
+  for (const [name, d] of Object.entries(derivs)) {
+    const sources = [d.source].concat(d.alsoTouches || []);
+    if (sources.some((src) => sourceMatches(src, section, id, field))) hits.push({ name, ...d });
+  }
+  return hits;
+}
+function collectImpacts(pack, report) {
+  const impacts = new Map(); // derivationName -> { name, kind, note, triggers: Set }
+  const add = (d, trigger) => {
+    if (!impacts.has(d.name)) impacts.set(d.name, { name: d.name, kind: d.kind, note: d.note, consumers: d.consumers, triggers: new Set() });
+    impacts.get(d.name).triggers.add(trigger);
+  };
+  for (const id of report.entities.added) for (const d of impactedDerivations(pack, 'entities', id)) add(d, `+entity ${id}`);
+  for (const id of report.entities.removed) for (const d of impactedDerivations(pack, 'entities', id)) add(d, `-entity ${id}`);
+  for (const c of report.entities.changed) {
+    const fields = c.fields.map((f) => f.replace(/ \(added\)| \(removed\)/g, '').split('.')[0]);
+    for (const f of [...new Set(fields)]) for (const d of impactedDerivations(pack, 'entities', c.id, f)) add(d, `~entity ${c.id}.${f}`);
+  }
+  if (count(report.relations)) for (const d of impactedDerivations(pack, 'relations')) add(d, 'relations changed');
+  for (const id of report.contents.added) for (const d of impactedDerivations(pack, 'contents', id)) add(d, `+content ${id}`);
+  for (const id of report.contents.removed) for (const d of impactedDerivations(pack, 'contents', id)) add(d, `-content ${id}`);
+  for (const c of report.contents.changed) for (const d of impactedDerivations(pack, 'contents', c.id)) add(d, `~content ${c.id}`);
+  if (count(report.stages)) for (const d of impactedDerivations(pack, 'stages')) add(d, 'stages changed');
+  // domain changes: scan derivations whose source root is 'domain'
+  const oldDomain = JSON.stringify(oldPack.domain || {});
+  const newDomain = JSON.stringify(newPack.domain || {});
+  if (oldDomain !== newDomain) for (const d of impactedDerivations(newPack, 'domain')) add(d, 'domain changed');
+  return [...impacts.values()].map((i) => ({ ...i, triggers: [...i.triggers] }));
+}
+const derivImpacts = collectImpacts(newPack, report);
+report.derivationsImpacted = derivImpacts;
+
 function count(sec) {
   return (sec.added ? sec.added.length : 0) + (sec.removed ? sec.removed.length : 0) + (sec.changed ? sec.changed.length : 0);
 }
@@ -143,5 +199,12 @@ if (asJson) {
     report.sameAs.removed.forEach((x) => console.log('  removed: ' + x));
   }
   console.log(total ? `\n${total} difference(s) found.` : '\nNo structural differences.');
+  if (derivImpacts.length) {
+    console.log('\n⚠ derivations impact (blast radius):');
+    for (const d of derivImpacts) {
+      console.log(`  • ${d.name} (${d.kind})  <- ${d.triggers.join(', ')}`);
+      if (d.note) console.log(`      ${d.note}`);
+    }
+  }
 }
 process.exit(total ? 1 : 0);

@@ -461,6 +461,13 @@
           "note": {
             "type": "string",
             "description": "人读说明：派生怎么工作、变更时的影响面"
+          },
+          "alsoTouches": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "（可选）次级影响源：除 source 外，变更这些路径也会影响此派生。用于 source 描述组合关系、但实体字段变更也影响呈现的情况（如 carouselTrack.source=domain.carouselTrack.entityIds，但 milestone.title 变更也影响渲染）。"
           }
         }
       }
