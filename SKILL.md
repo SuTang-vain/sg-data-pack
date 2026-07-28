@@ -24,6 +24,8 @@ node $SK extract <path/to/xxx.config.js>          # extract + validate + equival
 node $SK extract <path/to/xxx.config.js> --check  # validate + equivalence only (no writes)
 node $SK validate <data.json> [--strict] [--verify-hash]  # standalone validation (--verify-hash detects replaced assets)
 node $SK rules <libDir> [--strict]                      # execute library-level data rules (data-rules.json)
+node $SK diff <old.json> <new.json> [--json]            # structural diff between two packs (evolution / recrawl review)
+node $SK templatize <instances.json> [--out dir]        # derive item template from repeated HTML instances (collection pages)
 node $SK loader    # print runtime-validator path (copy into the library's lib/src/)
 node $SK schema    # print contract schema path
 ```
@@ -51,6 +53,23 @@ in `references/extraction-config.md`.
 Add `__fromPack` + `__resolveDataOptions`, hook into the first line of mount, and make
 hardcoded collections overridable. **Copy the standard template in `references/engine-integration.md`**.
 Constraint: no rendering-logic changes; behavior must be byte-identical when `options.data` is absent.
+
+### 3b. (Collection / monolith libraries only) Split + templatize
+
+If the engine is a whole-page static template with repeated item groups (card lists,
+timelines, leaderboards), first split it into component fragments with **offset-slicing**
+(never re-serialize the DOM; see `references/split-monolith.md` for the method and the
+pitfalls), then auto-derive item templates:
+
+```bash
+node $SK templatize items.json --out build/   # items.json = array of per-instance HTML strings
+```
+
+Verify group homogeneity *before* parameterizing — a "repeated item" group that templatize
+collapses into one giant slot is actually heterogeneous; split those into one-off
+components (evidence over plan). Name slots semantically, keep engine ids (Elementor eids
+etc.) as data, and extract entities as usual. Sections whose copy is not crawl-prone may
+stay static — declare the boundary in DATA-GUIDE.
 
 ### 4. Extract + validate
 
@@ -104,3 +123,4 @@ Crawl output may only consist of: `data.json` + `assets/` + the alias table. Req
 - `references/engine-integration.md` — engine-patch standard template (copy-paste grade)
 - `references/data-rules-guide.md` — library-level feature rules: format, check convention, evidence discipline
 - `references/visual-regression.md` — browser visual regression: canonical command, fixed-stability rule, scenarios fingerprint maintenance
+- `references/split-monolith.md` — byte-exact split of whole-page static libraries into fragments (offset-slicing), incl. pilot pitfalls
