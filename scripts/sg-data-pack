@@ -10,6 +10,7 @@
  *   sg-data-pack templatize <instances.json> [--out dir] [--prefix n]  Derive item template from repeated HTML instances
  *   sg-data-pack alias-candidates <data.json> <names.json|txt> [--json] [--top n]  Rank alias candidates for crawled names
  *   sg-data-pack types <data.json> [--out file.d.ts] [--name N]   Generate TypeScript declarations from a pack
+ *   sg-data-pack recrawl-skeleton <data.json> <records.json> [--out dir]  Recrawl normalization pipeline (alias hits/misses + cross-check + review report)
  *   sg-data-pack schema                                  Print the contract-schema path
  *   sg-data-pack loader                                  Print the runtime-validator path (copy into a library's lib/src/)
  */
@@ -46,6 +47,9 @@ switch (cmd) {
     break;
   case 'types':
     run('sg-pack-types.js', rest);
+    break;
+  case 'recrawl-skeleton':
+    run('sg-pack-recrawl-skeleton.js', rest);
     break;
   case 'schema':
     console.log(path.join(here, 'lib', 'data-pack.schema.json'));

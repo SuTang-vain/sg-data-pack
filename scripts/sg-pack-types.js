@@ -44,7 +44,10 @@ const outPath = flag('--out');
 const ENUM_MAX = 8;
 
 /* ---------- type inference ---------- */
-function pascal(s) { return String(s).replace(/(^|[-_])(\w)/g, (m, p, c) => c.toUpperCase()).replace(/[^A-Za-z0-9]/g, ''); }
+function pascal(s) {
+  // split on - _ and any non-alphanumeric, capitalize each part, join
+  return String(s).split(/[^A-Za-z0-9]+/).filter(Boolean).map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join('');
+}
 function tsLit(s) { return JSON.stringify(s); }
 
 function inferValueType(values, depth) {
