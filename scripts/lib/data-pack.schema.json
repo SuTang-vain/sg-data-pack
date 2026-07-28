@@ -4,36 +4,86 @@
   "title": "SG Data Pack v1.2 — Unified Data Contract for Component Libraries",
   "description": "The single entry point for business data of all sg-* component libraries. Globally unique entities, id references, stages that reference rather than duplicate. Runtime validation is performed by sg-data-loader.js (rules E1-E15/W1-W6 correspond one-to-one with the rules below); this file is the formal contract. v1.1 added: relations.scope, attributeTypes/attributeSources, contents, assets hash, meta.assetBase, kindNameFields. v1.2 added: sameAs (entity identity), provenance (record-level provenance as a parallel section that never invades entity bodies — zero engine changes), meta.confidenceThreshold, W6 fuzzy duplicate detection.",
   "type": "object",
-  "required": ["schemaVersion", "meta", "entities"],
+  "required": [
+    "schemaVersion",
+    "meta",
+    "entities"
+  ],
   "additionalProperties": false,
   "properties": {
-    "schemaVersion": { "enum": ["1.0", "1.1", "1.2"] },
+    "schemaVersion": {
+      "enum": [
+        "1.0",
+        "1.1",
+        "1.2",
+        "1.3"
+      ]
+    },
     "meta": {
       "type": "object",
-      "required": ["id", "title"],
+      "required": [
+        "id",
+        "title"
+      ],
       "properties": {
-        "id": { "type": "string", "minLength": 1, "description": "Library identifier, matching the directory name" },
-        "title": { "type": "string", "minLength": 1 },
-        "hero": { "type": "string", "description": "Core entity id (graph center / protagonist); must exist in entities" },
-        "source": { "type": "string", "description": "Data source (crawl-source annotation)" },
-        "fetchedAt": { "type": "string", "description": "Fetch date, YYYY-MM-DD" },
-        "generatedBy": { "type": "string", "description": "Extraction-script path (@generated marker)" },
-        "assetBase": { "type": "string", "description": "Resolution prefix for bare-filename assets (e.g. '../assets/'); once declared, 'x.png' in the data resolves and registers as assetBase+'x.png'" },
-        "confidenceThreshold": { "type": "number", "minimum": 0, "maximum": 1, "description": "(v1.2) Low-confidence warning threshold; default 0.7" }
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Library identifier, matching the directory name"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hero": {
+          "type": "string",
+          "description": "Core entity id (graph center / protagonist); must exist in entities"
+        },
+        "source": {
+          "type": "string",
+          "description": "Data source (crawl-source annotation)"
+        },
+        "fetchedAt": {
+          "type": "string",
+          "description": "Fetch date, YYYY-MM-DD"
+        },
+        "generatedBy": {
+          "type": "string",
+          "description": "Extraction-script path (@generated marker)"
+        },
+        "assetBase": {
+          "type": "string",
+          "description": "Resolution prefix for bare-filename assets (e.g. '../assets/'); once declared, 'x.png' in the data resolves and registers as assetBase+'x.png'"
+        },
+        "confidenceThreshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "(v1.2) Low-confidence warning threshold; default 0.7"
+        }
       },
       "additionalProperties": true
     },
     "kindNameFields": {
       "type": "object",
       "description": "kind -> name-field mapping (e.g. {work: 'title'}); kinds not declared here default to the name field",
-      "additionalProperties": { "type": "string" }
+      "additionalProperties": {
+        "type": "string"
+      }
     },
     "sameAs": {
       "type": "array",
       "description": "(v1.2) Entity-identity declarations: [[idA, idB], ...] means two entities refer to the same real-world subject (e.g. Ying Zheng ↔ Qin Shi Huang). Once declared, W6 no longer flags the pair; downstream dedup/aggregation relies on this.",
       "items": {
         "type": "array",
-        "prefixItems": [{ "type": "string" }, { "type": "string" }],
+        "prefixItems": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "string"
+          }
+        ],
         "minItems": 2,
         "maxItems": 2
       }
@@ -44,16 +94,22 @@
       "properties": {
         "entities": {
           "type": "object",
-          "additionalProperties": { "$ref": "#/$defs/provEntry" }
+          "additionalProperties": {
+            "$ref": "#/$defs/provEntry"
+          }
         },
         "relations": {
           "type": "object",
           "description": "Key format: 'a::b' (entity-id pair)",
-          "additionalProperties": { "$ref": "#/$defs/provEntry" }
+          "additionalProperties": {
+            "$ref": "#/$defs/provEntry"
+          }
         },
         "contents": {
           "type": "object",
-          "additionalProperties": { "$ref": "#/$defs/provEntry" }
+          "additionalProperties": {
+            "$ref": "#/$defs/provEntry"
+          }
         }
       },
       "additionalProperties": false
@@ -65,10 +121,21 @@
       "patternProperties": {
         "^[a-z][a-z0-9_-]*$": {
           "type": "object",
-          "required": ["name", "kind"],
+          "required": [
+            "name",
+            "kind"
+          ],
           "properties": {
-            "name": { "type": "string", "minLength": 1, "description": "Display name (may be Chinese; for display only, never a reference key)" },
-            "kind": { "type": "string", "minLength": 1, "description": "Entity kind: person / work / term / event / ..." }
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Display name (may be Chinese; for display only, never a reference key)"
+            },
+            "kind": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Entity kind: person / work / term / event / ..."
+            }
           },
           "additionalProperties": true
         }
@@ -78,17 +145,27 @@
     "aliases": {
       "type": "object",
       "description": "Crawled name / variant spelling -> canonical id. The normalization entry point on the data-production side; resolvable at runtime via SGDataLoader.resolveId.",
-      "additionalProperties": { "type": "string", "description": "Must be an id present in entities" }
+      "additionalProperties": {
+        "type": "string",
+        "description": "Must be an id present in entities"
+      }
     },
     "relationTypes": {
       "type": "object",
       "description": "Relationship-type registry (enum + display attributes). Every relations[].type must be registered here.",
       "additionalProperties": {
         "type": "object",
-        "required": ["label"],
+        "required": [
+          "label"
+        ],
         "properties": {
-          "label": { "type": "string" },
-          "color": { "type": "string", "description": "Color value or CSS variable reference" }
+          "label": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string",
+            "description": "Color value or CSS variable reference"
+          }
         },
         "additionalProperties": true
       }
@@ -98,11 +175,24 @@
       "description": "(optional, Plan-B dual registry) Relationship-type registry for the hero-radial dimension (person -> core). When overlay.rel / heroRel and relations[].type are semantically different dimensions, register them separately here and in relationTypes, with library-level rules forbidding cross-dimension use (e.g. qinshihuang: overlay.rel in {ruler, family, enemy})",
       "additionalProperties": {
         "type": "object",
-        "required": ["label"],
+        "required": [
+          "label"
+        ],
         "properties": {
-          "label": { "type": "string" },
-          "color": { "type": "string" },
-          "dimension": { "type": "string", "enum": ["hero-radial", "pairwise", "both"] }
+          "label": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          },
+          "dimension": {
+            "type": "string",
+            "enum": [
+              "hero-radial",
+              "pairwise",
+              "both"
+            ]
+          }
         },
         "additionalProperties": true
       }
@@ -112,15 +202,31 @@
       "description": "Master edge list; each edge is stored exactly once. Stages reference edges via {a,b}; duplication is forbidden. When multiple edges share the same (a,b) pair (relationship evolves across stages), scope or type must make references resolvable.",
       "items": {
         "type": "object",
-        "required": ["a", "b", "type"],
+        "required": [
+          "a",
+          "b",
+          "type"
+        ],
         "properties": {
-          "a": { "type": "string", "description": "Entity id (or a crawled name from aliases, normalized during validation)" },
-          "b": { "type": "string" },
-          "type": { "type": "string", "description": "Must be registered in relationTypes" },
-          "label": { "type": "string" },
+          "a": {
+            "type": "string",
+            "description": "Entity id (or a crawled name from aliases, normalized during validation)"
+          },
+          "b": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "description": "Must be registered in relationTypes"
+          },
+          "label": {
+            "type": "string"
+          },
           "scope": {
             "type": "array",
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "minItems": 1,
             "description": "(v1.1) This edge is only active in the listed stages (values are stages[].key). Without scope, the edge is active in all stages"
           }
@@ -133,21 +239,49 @@
       "description": "Stage/scene/event views. Carry only id references and stage-specific overlays; embedding entity fields is forbidden.",
       "items": {
         "type": "object",
-        "required": ["key", "name", "entities"],
+        "required": [
+          "key",
+          "name",
+          "entities"
+        ],
         "properties": {
-          "key": { "type": "string", "minLength": 1 },
-          "name": { "type": "string", "minLength": 1 },
-          "desc": { "type": "string" },
-          "descMobile": { "type": "string" },
-          "entities": { "type": "array", "items": { "type": "string" }, "description": "Subset of entity ids for this stage" },
+          "key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "desc": {
+            "type": "string"
+          },
+          "descMobile": {
+            "type": "string"
+          },
+          "entities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Subset of entity ids for this stage"
+          },
           "layout": {
             "type": "object",
             "description": "Normalized coordinates keyed by entity id",
             "additionalProperties": {
               "type": "array",
               "prefixItems": [
-                { "type": "number", "minimum": 0, "maximum": 1 },
-                { "type": "number", "minimum": 0, "maximum": 1 }
+                {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
               ],
               "minItems": 2,
               "maxItems": 2
@@ -157,8 +291,18 @@
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["a", "b"],
-              "properties": { "a": { "type": "string" }, "b": { "type": "string" } },
+              "required": [
+                "a",
+                "b"
+              ],
+              "properties": {
+                "a": {
+                  "type": "string"
+                },
+                "b": {
+                  "type": "string"
+                }
+              },
               "additionalProperties": false
             },
             "description": "{a,b} keys referencing master relations; type/label come from the master edge"
@@ -166,7 +310,9 @@
           "overlay": {
             "type": "object",
             "description": "Stage-specific information (persona/description overrides), keyed by entity id",
-            "additionalProperties": { "type": "object" }
+            "additionalProperties": {
+              "type": "object"
+            }
           }
         },
         "additionalProperties": true
@@ -178,15 +324,21 @@
       "additionalProperties": {
         "type": "object",
         "properties": {
-          "label": { "type": "string" },
-          "description": { "type": "string" }
+          "label": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
         },
         "additionalProperties": true
       }
     },
     "attributeSources": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "description": "(v1.1) Path declarations of attribute-pair collections; supports 'entities.*.<field>' and 'domain.<path>'. Every [label, value, ...] pair or {label, ...} object in the declared collections has its label checked by E10"
     },
     "contents": {
@@ -194,20 +346,43 @@
       "description": "(v1.1) Long-form content data layer: prose/timeline lifted out of template HTML. body is a restricted HTML subset; highlights declare in-text entity/annotation references (checked by E13 — a wrong entity name in prose is caught).",
       "additionalProperties": {
         "type": "object",
-        "required": ["kind"],
+        "required": [
+          "kind"
+        ],
         "properties": {
-          "kind": { "type": "string", "description": "Content kind: timeline-item / article-section / ..." },
-          "title": { "type": "string" },
-          "body": { "type": "string", "description": "Restricted-HTML-subset string" },
-          "bodyFormat": { "type": "string", "enum": ["html-subset", "text"] },
+          "kind": {
+            "type": "string",
+            "description": "Content kind: timeline-item / article-section / ..."
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string",
+            "description": "Restricted-HTML-subset string"
+          },
+          "bodyFormat": {
+            "type": "string",
+            "enum": [
+              "html-subset",
+              "text"
+            ]
+          },
           "highlights": {
             "type": "array",
             "items": {
               "type": "object",
-              "required": ["ref"],
+              "required": [
+                "ref"
+              ],
               "properties": {
-                "text": { "type": "string" },
-                "ref": { "type": "string", "description": "Entity id / alias / domain.notes annotation key" }
+                "text": {
+                  "type": "string"
+                },
+                "ref": {
+                  "type": "string",
+                  "description": "Entity id / alias / domain.notes annotation key"
+                }
               },
               "additionalProperties": true
             }
@@ -226,12 +401,68 @@
       "additionalProperties": {
         "type": "object",
         "properties": {
-          "sourceUrl": { "type": "string" },
-          "hash": { "type": "string" },
-          "exists": { "type": "boolean" },
-          "bytes": { "type": "integer" }
+          "sourceUrl": {
+            "type": "string"
+          },
+          "hash": {
+            "type": "string"
+          },
+          "exists": {
+            "type": "boolean"
+          },
+          "bytes": {
+            "type": "integer"
+          }
         },
         "additionalProperties": true
+      }
+    },
+    "derivations": {
+      "type": "object",
+      "description": "v1.3 派生契约：声明哪些呈现是从 pack 数据派生的、怎么派生、谁消费。文档化契约（非可执行代码），只建模非平凡派生（重复/排序/重建/消解/投影）。",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "kind",
+          "source",
+          "consumers",
+          "note"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "repeat",
+              "insertion-order",
+              "lookup-rebuild",
+              "scope-resolution",
+              "projection",
+              "reference-only"
+            ],
+            "description": "派生类型：repeat=集合重复渲染；insertion-order=键插入序即呈现序；lookup-rebuild=按字段反查重建；scope-resolution=方向/作用域消解；projection=字段直投但有重组；reference-only=仅存引用运行时重建"
+          },
+          "source": {
+            "type": "string",
+            "description": "派生源的 pack 内路径（如 domain.carouselTrack.entityIds / contents / entities.*.name）"
+          },
+          "consumers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "消费方标识：引擎函数名或组件文件"
+          },
+          "affects": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "（可选）受影响的呈现区域/选择器"
+          },
+          "note": {
+            "type": "string",
+            "description": "人读说明：派生怎么工作、变更时的影响面"
+          }
+        }
       }
     }
   },
@@ -239,11 +470,30 @@
     "provEntry": {
       "type": "object",
       "properties": {
-        "origin": { "type": "string", "description": "Data origin: engine-embedded-defaults / example-json-contract / template-html-contents / crawl:<source> etc." },
-        "sourceUrl": { "type": ["string", "null"], "description": "Original source URL (mandatory for crawl pipelines)" },
-        "fetchedAt": { "type": "string", "description": "Fetch date, YYYY-MM-DD" },
-        "confidence": { "type": "number", "minimum": 0, "maximum": 1, "description": "Confidence; baseline data (original case page) is 1.0, crawled data gets actual values from the pipeline" },
-        "note": { "type": "string" }
+        "origin": {
+          "type": "string",
+          "description": "Data origin: engine-embedded-defaults / example-json-contract / template-html-contents / crawl:<source> etc."
+        },
+        "sourceUrl": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Original source URL (mandatory for crawl pipelines)"
+        },
+        "fetchedAt": {
+          "type": "string",
+          "description": "Fetch date, YYYY-MM-DD"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Confidence; baseline data (original case page) is 1.0, crawled data gets actual values from the pipeline"
+        },
+        "note": {
+          "type": "string"
+        }
       },
       "additionalProperties": true
     }

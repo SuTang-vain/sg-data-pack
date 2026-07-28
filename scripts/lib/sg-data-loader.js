@@ -7,7 +7,7 @@
  *   3. resolveAlias(pack, name) / resolveId(pack, idOrName)  alias normalization (crawled name -> canonical id)
  *
  * Validation rules (mirrors data-pack.schema.json):
- *   E1  schemaVersion must be "1.0", "1.1", or "1.2"
+ *   E1  schemaVersion must be "1.0", "1.1", "1.2", or "1.3"
  *   E2  meta.id / meta.title must be non-empty strings
  *   E3  entities must be an object; each entity needs a name (or the kind's nameField) and a kind
  *   E4  alias targets must exist in entities; alias keys must not collide with entity ids
@@ -22,6 +22,7 @@
  *   E13 contents[].highlights[].ref must resolve to an entity/alias or domain.notes key (v1.1)
  *   E14 both sides of a sameAs pair must exist (v1.2)
  *   E15 provenance keys must point at existing entities/relations/contents (v1.2)
+ *   E16 derivations entries: valid kind enum + source path resolvable within the pack (v1.3)
  *   W1  entity never referenced by any stage/relation
  *   W2  asset marked exists:false
  *   W3  relation missing label
@@ -32,7 +33,7 @@
 (function (global) {
   'use strict';
 
-  var SCHEMA_VERSIONS = ['1.0', '1.1', '1.2'];
+  var SCHEMA_VERSIONS = ['1.0', '1.1', '1.2', '1.3'];
   var IMG_EXT = /\.(png|jpe?g|webp|gif|svg)$/i;
 
   function isObj(v) { return v !== null && typeof v === 'object' && !Array.isArray(v); }
@@ -376,6 +377,59 @@
         checkProv('contents', function (key) {
           return isObj(pack.contents) && Object.prototype.hasOwnProperty.call(pack.contents, key);
         }, 'points to a non-existent contents entry');
+
+      }
+    }
+
+    /* E16: derivations declaration consistency (v1.3) */
+    if (pack.derivations !== undefined) {
+      var DERIV_KINDS = ['repeat', 'insertion-order', 'lookup-rebuild', 'scope-resolution', 'projection', 'reference-only'];
+      var resolvePath = function (expr) {
+        // dotted path with optional '*' wildcard: walk pack sections
+        var segs = String(expr).split('.');
+        var roots = { entities: 1, relations: 1, stages: 1, contents: 1, domain: 1, aliases: 1, attributeTypes: 1, meta: 1, sameAs: 1, provenance: 1 };
+        if (!roots[segs[0]]) return { rootOk: false, resolved: false };
+        var nodes = [pack];
+        for (var i = 0; i < segs.length; i++) {
+          var next = [];
+          for (var j = 0; j < nodes.length; j++) {
+            var node = nodes[j];
+            if (!isObj(node) && !Array.isArray(node)) continue;
+            if (segs[i] === '*') {
+              Object.keys(node).forEach(function (k) { next.push(node[k]); });
+            } else if (Object.prototype.hasOwnProperty.call(node, segs[i])) {
+              next.push(node[segs[i]]);
+            }
+          }
+          nodes = next;
+          if (!nodes.length) return { rootOk: true, resolved: false };
+        }
+        return { rootOk: true, resolved: nodes.length > 0 };
+      };
+      if (!isObj(pack.derivations)) {
+        errors.push('E16: derivations must be an object');
+      } else {
+        Object.keys(pack.derivations).forEach(function (dk) {
+          var d = pack.derivations[dk];
+          var at = 'derivations.' + dk;
+          if (!isObj(d)) { errors.push('E16: ' + at + ' must be an object'); return; }
+          if (DERIV_KINDS.indexOf(d.kind) === -1) {
+            errors.push('E16: ' + at + '.kind ' + JSON.stringify(d.kind) + ' is not a valid derivation kind (' + DERIV_KINDS.join('/') + ')');
+          }
+          if (typeof d.source !== 'string' || !d.source) {
+            errors.push('E16: ' + at + '.source must be a non-empty pack path string');
+          } else {
+            var r = resolvePath(d.source);
+            if (!r.rootOk) errors.push('E16: ' + at + '.source "' + d.source + '" has an invalid root section');
+            else if (!r.resolved) warnings.push('E16: ' + at + '.source "' + d.source + '" resolves to nothing in this pack');
+          }
+          if (!Array.isArray(d.consumers) || !d.consumers.length || d.consumers.some(function (c) { return typeof c !== 'string' || !c; })) {
+            errors.push('E16: ' + at + '.consumers must be a non-empty array of strings');
+          }
+          if (typeof d.note !== 'string' || !d.note) {
+            errors.push('E16: ' + at + '.note must be a non-empty string');
+          }
+        });
       }
     }
 

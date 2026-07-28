@@ -79,6 +79,7 @@ const scope = {
   meta: pack.meta || {},
   sameAs: pack.sameAs || [],
   provenance: pack.provenance || {},
+  derivations: pack.derivations || {},
   pack
 };
 const scopeKeys = Object.keys(scope);

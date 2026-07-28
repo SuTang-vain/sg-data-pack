@@ -121,3 +121,33 @@ Origin conventions: `engine-embedded-defaults` / `example-json-contract` / `temp
   E13 content refs / E14 sameAs / E15 provenance keys
 - **Warnings** (recorded, non-blocking): W1 unreferenced entity / W2 missing asset / W3 edge
   missing label / W4 asset missing hash / W5 low confidence / W6 suspected duplicate entity
+
+## derivations (v1.3, optional)
+
+Declarative contract for **non-trivial derivations** between pack data and rendering.
+Not executable code — it answers three questions for every derived presentation:
+WHAT kind of derivation, from WHICH source, consumed by WHOM. Motivation: without it,
+the mapping only exists in engine source (insertion-order timelines, repeated tracks,
+lookup-rebuilt events), so data producers cannot know the blast radius of a change.
+
+```jsonc
+"derivations": {
+  "carouselTrack": {
+    "kind": "repeat",                          // repeat | insertion-order | lookup-rebuild | scope-resolution | projection | reference-only
+    "source": "domain.carouselTrack.entityIds", // pack path, '*' wildcard allowed (E16-checked)
+    "consumers": ["components/carousel-3d-item.js"], // engine function or component file
+    "affects": ["div.slot1-carousel-track"],    // optional: affected selectors/regions
+    "note": "6 milestones rendered as 12 track items for the infinite loop; editing one milestone changes both copies"
+  }
+}
+```
+
+Rules:
+- Only model **non-trivial** derivations (repeat / ordering / rebuild / resolution / projection);
+  plain field interpolation does not belong here.
+- E16: valid kind enum, source path must resolve within the pack (invalid root = error,
+  unresolvable = warning), consumers non-empty, note non-empty.
+- `consumers`/`affects` existence on disk is NOT checked by the universal validator
+  (loader is path-agnostic) — assert those in library-level rules instead.
+- When a derivation's source changes, `sg-data-pack diff` output should be read together
+  with the derivation's note (impact surface).
