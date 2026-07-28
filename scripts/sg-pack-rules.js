@@ -98,8 +98,11 @@ for (const r of rulesDoc.rules) {
     if (r.level === 'hard') hardFail++;
     continue;
   }
-  if (r.level === 'hard') { hardFail++; console.error('[FAIL]  ' + r.id + ' (hard): ' + r.rule); }
-  else { softFail++; console.warn('[softfail] ' + r.id + ' (soft): ' + r.rule); }
+  // DesignRepair-style repair hint: point at the actionable subject and,
+  // when the rule author provided one, the concrete repair instruction.
+  const hint = (r.subject ? '\n         → subject: ' + r.subject : '') + (r.repairHint ? '\n         → repair: ' + r.repairHint : '');
+  if (r.level === 'hard') { hardFail++; console.error('[FAIL]  ' + r.id + ' (hard): ' + r.rule + hint); }
+  else { softFail++; console.warn('[softfail] ' + r.id + ' (soft): ' + r.rule + hint); }
 }
 
 const total = rulesDoc.rules.length;

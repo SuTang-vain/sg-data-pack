@@ -35,6 +35,7 @@ Validate any rules file with: `node scripts/sg-data-pack rules <libDir> [--stric
       "evidence": "measured evidence, e.g. '15/15 avatars are .png; 5 sampled at 160px width'",
       "source": "observed | extracted | human",   // induced from data / extracted from page or engine / human-specified
       "check": "JS expression string or null — see below",
+      "repairHint": "optional but recommended for hard rules: one-line actionable fix instruction, printed on failure (DesignRepair-style detect→repair). Anchor it to the subject: WHAT to change, WHERE, and HOW (incl. copy-pastable commands when useful).",
       "coveredBy": "E-rule number if already covered by the universal contract (e.g. 'E3/E6'), else null"
     }
   ]
