@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "1.3",
+  "meta": {
+    "id": "pilot-chinese-name",
+    "title": "Chinese-name normalization pilot",
+    "recrawlFieldMap": { "birthDate": "birth" }
+  },
+  "entities": {
+    "chengbing": { "kind": "person", "name": "程兵", "actor": "秦昊", "birth": "1975-05-19" },
+    "wangdayong": { "kind": "person", "name": "王大勇", "actor": "陈明昊" }
+  },
+  "aliases": {
+    "程兵": "chengbing",
+    "程 兵": { "id": "chengbing", "context": "crawler-spacing" },
+    "王大勇": "wangdayong"
+  },
+  "relationTypes": {
+    "pursuit": { "label": "追捕" }
+  },
+  "relations": [
+    { "id": "chengbing-pursues-wangdayong", "a": "程兵", "b": "王大勇", "type": "pursuit", "label": "持续追捕", "scope": ["case"] }
+  ],
+  "stages": [
+    {
+      "key": "case",
+      "name": "案件阶段",
+      "entities": ["程 兵", "王大勇"],
+      "relations": [{ "id": "chengbing-pursues-wangdayong", "a": "chengbing", "b": "王大勇" }],
+      "overlay": {
+        "chengbing": { "role": "刑警" },
+        "wangdayong": { "role": "嫌疑人" }
+      }
+    }
+  ],
+  "contents": {},
+  "domain": {},
+  "assets": {},
+  "provenance": {
+    "entities": {
+      "chengbing": { "origin": "crawl:pilot", "sourceUrl": "https://example.test/cast", "fetchedAt": "2026-07-29", "confidence": 0.95 },
+      "wangdayong": { "origin": "crawl:pilot", "sourceUrl": "https://example.test/cast", "fetchedAt": "2026-07-29", "confidence": 0.95 }
+    },
+    "relations": {
+      "chengbing-pursues-wangdayong": { "origin": "crawl:pilot", "sourceUrl": "https://example.test/plot", "fetchedAt": "2026-07-29", "confidence": 0.9 }
+    }
+  },
+  "derivations": {
+    "legacyNameGraph": {
+      "kind": "lookup-rebuild",
+      "source": "entities.*.name",
+      "consumers": ["engine.__fromPack"],
+      "affects": [".relationship-graph"],
+      "alsoTouches": ["aliases", "relations"],
+      "note": "Canonical ids are restored to Chinese display names for the legacy engine."
+    }
+  }
+}

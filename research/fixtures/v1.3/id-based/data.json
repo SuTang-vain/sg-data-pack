@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "1.3",
+  "meta": {
+    "id": "pilot-id-based",
+    "title": "ID-based relationship graph pilot",
+    "hero": "hero",
+    "fetchedAt": "2026-07-29"
+  },
+  "entities": {
+    "hero": { "kind": "person", "name": "Hero" },
+    "ally": { "kind": "person", "name": "Ally" },
+    "rival": { "kind": "person", "name": "Rival" }
+  },
+  "aliases": {
+    "The Hero": "hero",
+    "Best Ally": "ally"
+  },
+  "relationTypes": {
+    "ally": { "label": "Ally" },
+    "rival": { "label": "Rival" }
+  },
+  "relations": [
+    { "id": "hero-ally-origin", "a": "hero", "b": "ally", "type": "ally", "label": "forms alliance", "scope": ["origin"] },
+    { "id": "hero-rival-climax", "a": "hero", "b": "rival", "type": "rival", "label": "final conflict", "scope": ["climax"] }
+  ],
+  "stages": [
+    {
+      "key": "origin",
+      "name": "Origin",
+      "entities": ["hero", "ally"],
+      "relations": [{ "id": "hero-ally-origin", "a": "hero", "b": "ally" }]
+    },
+    {
+      "key": "climax",
+      "name": "Climax",
+      "entities": ["hero", "rival"],
+      "relations": [{ "id": "hero-rival-climax", "a": "hero", "b": "rival" }]
+    }
+  ],
+  "contents": {},
+  "domain": {},
+  "assets": {},
+  "provenance": {
+    "entities": {
+      "hero": { "origin": "engine-embedded-defaults", "sourceUrl": null, "fetchedAt": "2026-07-29", "confidence": 1 },
+      "ally": { "origin": "engine-embedded-defaults", "sourceUrl": null, "fetchedAt": "2026-07-29", "confidence": 1 },
+      "rival": { "origin": "engine-embedded-defaults", "sourceUrl": null, "fetchedAt": "2026-07-29", "confidence": 1 }
+    },
+    "relations": {
+      "hero-ally-origin": { "origin": "engine-embedded-defaults", "sourceUrl": null, "fetchedAt": "2026-07-29", "confidence": 1 },
+      "hero-rival-climax": { "origin": "engine-embedded-defaults", "sourceUrl": null, "fetchedAt": "2026-07-29", "confidence": 1 }
+    }
+  },
+  "derivations": {
+    "stageGraph": {
+      "kind": "scope-resolution",
+      "source": "stages",
+      "consumers": ["engine.renderStageGraph"],
+      "affects": [".stage-graph"],
+      "alsoTouches": ["relations"],
+      "note": "The active graph is rebuilt from stage relation references and master relation scope."
+    }
+  }
+}

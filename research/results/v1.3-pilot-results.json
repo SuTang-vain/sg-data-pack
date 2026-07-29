@@ -1,0 +1,106 @@
+{
+  "experiment": "Data Pack v1.3 three-pilot reproducibility experiment",
+  "executedAt": "2026-07-29",
+  "node": "v22.23.0",
+  "pilots": [
+    {
+      "name": "id-based",
+      "packId": "pilot-id-based",
+      "entities": 3,
+      "relations": 2,
+      "stages": 2,
+      "derivations": 1,
+      "validation": {
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "name": "chinese-name",
+      "packId": "pilot-chinese-name",
+      "entities": 2,
+      "relations": 1,
+      "stages": 1,
+      "derivations": 1,
+      "validation": {
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "name": "collection",
+      "packId": "pilot-collection",
+      "entities": 3,
+      "relations": 0,
+      "stages": 1,
+      "derivations": 1,
+      "validation": {
+        "errors": [],
+        "warnings": []
+      }
+    }
+  ],
+  "collectionEvolution": {
+    "diffExitCode": 1,
+    "changedEntities": [
+      {
+        "id": "work-beta",
+        "fields": [
+          "cover"
+        ]
+      }
+    ],
+    "assetAdds": [
+      "../assets/beta-v2.png"
+    ],
+    "assetRemovals": [
+      "../assets/beta.png"
+    ],
+    "derivationsImpacted": [
+      {
+        "name": "carouselItems",
+        "triggers": [
+          "~entity work-beta.cover"
+        ],
+        "consumers": [
+          "components.carouselItem"
+        ]
+      }
+    ]
+  },
+  "chineseRecrawl": {
+    "exitCode": 0,
+    "summary": {
+      "total": 2,
+      "hits": 2,
+      "misses": 0
+    },
+    "autoMergeable": 0,
+    "needsHumanReview": 0,
+    "agrees": [
+      {
+        "id": "chengbing",
+        "fields": [
+          "actor",
+          "birthDate"
+        ]
+      },
+      {
+        "id": "wangdayong",
+        "fields": [
+          "actor"
+        ]
+      }
+    ]
+  },
+  "collectionTemplatize": {
+    "exitCode": 0,
+    "slots": 3,
+    "byteExact": true
+  },
+  "typeGeneration": {
+    "exitCode": 0,
+    "bytes": 2179,
+    "containsWorkEntity": true
+  }
+}

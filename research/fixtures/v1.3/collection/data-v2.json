@@ -1,0 +1,126 @@
+{
+  "schemaVersion": "1.3",
+  "meta": {
+    "id": "pilot-collection",
+    "title": "Collection and template pilot",
+    "assetBase": "../assets/"
+  },
+  "kindNameFields": {
+    "work": "title"
+  },
+  "entities": {
+    "work-alpha": {
+      "kind": "work",
+      "title": "Alpha",
+      "summary": "First work",
+      "cover": "alpha.png"
+    },
+    "work-beta": {
+      "kind": "work",
+      "title": "Beta",
+      "summary": "Second work",
+      "cover": "beta-v2.png"
+    },
+    "work-gamma": {
+      "kind": "work",
+      "title": "Gamma",
+      "summary": "Third work",
+      "cover": "gamma.png"
+    }
+  },
+  "aliases": {},
+  "relationTypes": {},
+  "relations": [],
+  "stages": [
+    {
+      "key": "catalog",
+      "name": "Catalog",
+      "entities": [
+        "work-alpha",
+        "work-beta",
+        "work-gamma"
+      ]
+    }
+  ],
+  "contents": {
+    "intro": {
+      "kind": "article-section",
+      "title": "Collection",
+      "body": "Three repeated cards are projected from entity data."
+    }
+  },
+  "domain": {
+    "carouselTrack": {
+      "entityIds": [
+        "work-alpha",
+        "work-beta",
+        "work-gamma"
+      ]
+    }
+  },
+  "assets": {
+    "../assets/alpha.png": {
+      "exists": true,
+      "bytes": 101,
+      "hash": "sha1:alpha"
+    },
+    "../assets/gamma.png": {
+      "exists": true,
+      "bytes": 103,
+      "hash": "sha1:gamma"
+    },
+    "../assets/beta-v2.png": {
+      "exists": true,
+      "bytes": 120,
+      "hash": "sha1:beta-v2"
+    }
+  },
+  "provenance": {
+    "entities": {
+      "work-alpha": {
+        "origin": "template-html-contents",
+        "sourceUrl": null,
+        "fetchedAt": "2026-07-29",
+        "confidence": 1
+      },
+      "work-beta": {
+        "origin": "template-html-contents",
+        "sourceUrl": null,
+        "fetchedAt": "2026-07-29",
+        "confidence": 1
+      },
+      "work-gamma": {
+        "origin": "template-html-contents",
+        "sourceUrl": null,
+        "fetchedAt": "2026-07-29",
+        "confidence": 1
+      }
+    },
+    "contents": {
+      "intro": {
+        "origin": "template-html-contents",
+        "sourceUrl": null,
+        "fetchedAt": "2026-07-29",
+        "confidence": 1
+      }
+    }
+  },
+  "derivations": {
+    "carouselItems": {
+      "kind": "repeat",
+      "source": "domain.carouselTrack.entityIds",
+      "consumers": [
+        "components.carouselItem"
+      ],
+      "affects": [
+        ".carousel-track"
+      ],
+      "alsoTouches": [
+        "entities.*.title",
+        "entities.*.summary",
+        "entities.*.cover"
+      ],
+      "note": "Each entity id is projected into one collection card; cover or copy edits affect the repeated card output."
+    }
+  }
+}

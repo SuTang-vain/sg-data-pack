@@ -60,6 +60,14 @@
           "minimum": 0,
           "maximum": 1,
           "description": "(v1.2) Low-confidence warning threshold; default 0.7"
+        },
+        "recrawlFieldMap": {
+          "type": "object",
+          "description": "(v1.3) Optional crawled-field -> entity-field mapping used by recrawl-skeleton for like-for-like cross-checks (e.g. {\"birthDate\":\"birth\"}). Without it, recrawl does not guess field correspondences.",
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       },
       "additionalProperties": true
@@ -144,10 +152,20 @@
     },
     "aliases": {
       "type": "object",
-      "description": "Crawled name / variant spelling -> canonical id. The normalization entry point on the data-production side; resolvable at runtime via SGDataLoader.resolveId.",
+      "description": "Crawled name / variant spelling -> canonical id. The normalization entry point on the data-production side; resolvable at runtime via SGDataLoader.resolveId. Values may be a plain id string or a {id, context} object for same-name disambiguation (E9 reserved context).",
       "additionalProperties": {
-        "type": "string",
-        "description": "Must be an id present in entities"
+        "oneOf": [
+          { "type": "string", "minLength": 1, "description": "Canonical entity id" },
+          {
+            "type": "object",
+            "required": ["id"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1, "description": "Canonical entity id" },
+              "context": { "type": "string", "description": "Disambiguation context (e.g. 'cast', 'crew')" }
+            },
+            "additionalProperties": true
+          }
+        ]
       }
     },
     "relationTypes": {
@@ -199,7 +217,7 @@
     },
     "relations": {
       "type": "array",
-      "description": "Master edge list; each edge is stored exactly once. Stages reference edges via {a,b}; duplication is forbidden. When multiple edges share the same (a,b) pair (relationship evolves across stages), scope or type must make references resolvable.",
+      "description": "Master edge list; each edge is stored exactly once. Stages reference edges via {a,b} optionally disambiguated by id/type; duplication is forbidden. When multiple edges share the same (a,b) pair (relationship evolves across stages), scope, type, or a stable relation.id must make references resolvable.",
       "items": {
         "type": "object",
         "required": [
@@ -208,6 +226,11 @@
           "type"
         ],
         "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "(v1.3) Optional stable id for this master edge. When present, it is the preferred key for provenance and stage relation refs; duplicates are rejected (E12)."
+          },
           "a": {
             "type": "string",
             "description": "Entity id (or a crawled name from aliases, normalized during validation)"
@@ -301,6 +324,15 @@
                 },
                 "b": {
                   "type": "string"
+                },
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "(v1.3) Optional: resolve this ref to the master edge whose relation.id matches."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "(v1.3) Optional: disambiguate by edge type when multiple edges share (a,b)."
                 }
               },
               "additionalProperties": false
