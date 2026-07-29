@@ -118,7 +118,7 @@ const out = `/* Auto-generated from data.json by sg-data-pack types (${libName})
  * Do not edit — regenerate: sg-data-pack types lib/data/data.json --name ${libName} */
 
 /* ---------- contract layer (universal Data Pack sections) ---------- */
-export interface SgRelation { a: string; b: string; type: string; label?: string; scope?: string[]; }
+export interface SgRelation { id?: string; a: string; b: string; type: string; label?: string; scope?: string[]; }
 export interface SgProvenanceEntry { origin: string; sourceUrl: string | null; fetchedAt: string; confidence: number; note?: string; }
 export interface SgAssetEntry { exists: boolean; bytes?: number; hash?: string; }
 export interface SgDerivation {
@@ -126,6 +126,7 @@ export interface SgDerivation {
   source: string;
   consumers: string[];
   affects?: string[];
+  alsoTouches?: string[];
   note: string;
 }
 
@@ -139,7 +140,7 @@ export interface ${libName}Pack {
   schemaVersion: '1.0' | '1.1' | '1.2' | '1.3';
   meta: { id: string; title: string; [k: string]: unknown };
   entities: Record<string, ${libName}Entity>;
-  aliases: Record<string, string>;
+  aliases: Record<string, string | { id: string; context?: string; [k: string]: unknown }>;
   relationTypes: Record<string, { label?: string; dimension?: string }>;
   relations: SgRelation[];
   stages: Array<Record<string, unknown>>;

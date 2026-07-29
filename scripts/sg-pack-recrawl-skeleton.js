@@ -35,25 +35,51 @@ const outDir = flag('--out') || '.';
 const source = flag('--source') || '(unspecified)';
 const fetchedAt = flag('--fetchedAt') || new Date().toISOString().slice(0, 10);
 
-const pack = JSON.parse(fs.readFileSync(packPath, 'utf8'));
-const rawRecords = JSON.parse(fs.readFileSync(recordsPath, 'utf8'));
+function loadJson(file, label) {
+  try { return JSON.parse(fs.readFileSync(file, 'utf8')); }
+  catch (e) { console.error(label + ': ' + e.message); process.exit(2); }
+}
+const pack = loadJson(packPath, 'Invalid data.json');
+const rawRecords = loadJson(recordsPath, 'Invalid records.json');
+if (!Array.isArray(rawRecords)) {
+  console.error('records.json must contain an array of names or record objects');
+  process.exit(2);
+}
 
-// normalize records to {crawledName, fields}
-const records = rawRecords.map((r) => {
-  if (typeof r === 'string') return { crawledName: r, fields: {} };
-  const { crawledName, name, ...fields } = r;
-  return { crawledName: crawledName || name, fields };
-});
+// normalize records to {crawledName, fields}; reject malformed rows early so
+// a bad crawl payload cannot silently become an unresolved empty-name miss.
+let records;
+try {
+  records = rawRecords.map((r, i) => {
+    if (typeof r === 'string') {
+      if (!r.trim()) throw new Error(`records[${i}] must contain a non-empty name`);
+      return { crawledName: r.trim(), fields: {} };
+    }
+    if (!r || typeof r !== 'object' || Array.isArray(r)) {
+      throw new Error(`records[${i}] must be a string or object`);
+    }
+    const { crawledName, name, ...fields } = r;
+    const resolvedName = crawledName || name;
+    if (typeof resolvedName !== 'string' || !resolvedName.trim()) {
+      throw new Error(`records[${i}] must contain crawledName or name`);
+    }
+    return { crawledName: resolvedName.trim(), fields };
+  });
+} catch (e) {
+  console.error('Invalid records.json: ' + e.message);
+  process.exit(2);
+}
 
 /* ---------- alias resolution (inline, from sg-data-loader) ---------- */
 function resolveAlias(p, n) {
-  if ((p.aliases || {})[n]) return p.aliases[n];
-  return null;
+  if (!Object.prototype.hasOwnProperty.call(p.aliases || {}, n)) return null;
+  return p.aliases[n];
 }
 function resolveId(p, n) {
-  if ((p.entities || {})[n]) return n;
-  const via = resolveAlias(p, n);
-  return via && (p.entities || {})[via] ? via : null;
+  if (Object.prototype.hasOwnProperty.call(p.entities || {}, n)) return n;
+  let via = resolveAlias(p, n);
+  if (via && typeof via === 'object') via = via.id;
+  return via && Object.prototype.hasOwnProperty.call(p.entities || {}, via) ? via : null;
 }
 
 /* ---------- similarity (from alias-candidates) ---------- */
@@ -97,7 +123,10 @@ for (const [id, e] of Object.entries(pack.entities || {})) {
   const dn = nameField(id, e);
   if (dn && dn !== id) surface.push({ id, text: dn, via: 'name' });
 }
-for (const [alias, id] of Object.entries(pack.aliases || {})) surface.push({ id, text: alias, via: 'alias' });
+for (const [alias, target] of Object.entries(pack.aliases || {})) {
+  const id = target && typeof target === 'object' ? target.id : target;
+  if (id && (pack.entities || {})[id]) surface.push({ id, text: alias, via: 'alias' });
+}
 
 function candidatesFor(name, topN) {
   topN = topN || 3;
@@ -119,18 +148,23 @@ function crossCheck(id, fields) {
   const e = pack.entities[id];
   if (!e) return { status: 'no-baseline' };
   const result = { agree: [], conflict: [], gap: [] };
-  // common cross-check: actor/role fields if present in both
+  const fieldMap = (pack.meta && pack.meta.recrawlFieldMap) || {};
   for (const [fk, fv] of Object.entries(fields)) {
-    if (fk === 'crawledName' || fk === 'name') continue;
-    // try to find a matching baseline field by suffix match (actor/role/etc)
-    const bv = e[fk] || e.actor || e.role;
-    if (bv === undefined || bv === '待定') {
-      if (fv != null) result.gap.push({ field: fk, baseline: bv, crawled: fv });
+    if (fk === 'crawledName' || fk === 'name' || fv === undefined || fv === null || fv === '') continue;
+    // Only compare a like-for-like baseline field. Domain-specific aliases such
+    // as birthDate -> birth can be declared explicitly in meta.recrawlFieldMap;
+    // never fall back to actor/role for an unrelated field, which turns gaps
+    // into false conflicts.
+    const baselineField = fieldMap[fk] || fk;
+    const hasBaseline = Object.prototype.hasOwnProperty.call(e, baselineField);
+    const bv = hasBaseline ? e[baselineField] : undefined;
+    if (!hasBaseline || bv === undefined || bv === null || bv === '' || bv === '待定') {
+      if (fv != null) result.gap.push({ field: fk, baselineField, baseline: bv, crawled: fv });
     } else {
       const bvNorm = String(bv).replace(/ 饰$/, '').trim();
       const fvNorm = String(fv).replace(/ 饰$/, '').trim();
       if (bvNorm === fvNorm) result.agree.push(fk);
-      else result.conflict.push({ field: fk, baseline: bv, crawled: fv });
+      else result.conflict.push({ field: fk, baselineField, baseline: bv, crawled: fv });
     }
   }
   return result;

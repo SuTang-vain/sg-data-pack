@@ -87,13 +87,15 @@ for (const [id, e] of Object.entries(pack.entities || {})) {
   const dn = nameField(id, e);
   if (dn && dn !== id) surface.push({ id, text: dn, via: 'name' });
 }
-for (const [alias, id] of Object.entries(pack.aliases || {})) {
-  surface.push({ id, text: alias, via: 'alias' });
+for (const [alias, target] of Object.entries(pack.aliases || {})) {
+  const id = target && typeof target === 'object' ? target.id : target;
+  if (id && (pack.entities || {})[id]) surface.push({ id, text: alias, via: 'alias' });
 }
 
 const resolve = (name) => {
   if ((pack.entities || {})[name]) return name;
-  const via = (pack.aliases || {})[name];
+  let via = (pack.aliases || {})[name];
+  if (via && typeof via === 'object') via = via.id;
   return via && (pack.entities || {})[via] ? via : null;
 };
 

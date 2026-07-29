@@ -69,7 +69,7 @@ Validate any rules file with: `node scripts/sg-data-pack rules <libDir> [--stric
    before ruling on it. Pilot discoveries that changed rules: a `layout` field that is NOT used
    at runtime (engine recomputes), a `color` token with no CSS definition (ghost enum),
    a `desc` truncation that does not exist. Write such findings into `profile.dataShapeNotes`.
-4. **Don't re-legislate the universal contract.** If E1-E15 already covers it, set `coveredBy`
+4. **Don't re-legislate the universal contract.** If E1-E16 already covers it, set `coveredBy`
    and only write the library-specific delta (e.g. "rel must be one of THESE 4 values because
    the engine's legend is hardcoded").
 5. **Statistics must be real.** Length/count rules: compute min/max/median over the actual pack

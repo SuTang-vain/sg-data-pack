@@ -1,7 +1,7 @@
 ---
 name: sg-data-pack
 description: >-
-  Component-library data-layer normalization pipeline — extracts embedded/scattered business data from component libraries (especially sg-* libraries decomposed from HTML case pages) into a unified Data Pack (entities/aliases/relations/stages/contents/provenance), and patches engines to prefer injected data. MUST USE when the user mentions: component library data normalization, fixing data-crawl errors or broken data relationships, extracting embedded data into data.json, entity-relationship modeling (character graphs / event stages), Data Pack validation (E1-E15), data provenance/confidence, mount-options data injection, or applying this pipeline to a new component library.
+  Component-library data-layer normalization pipeline — extracts embedded/scattered business data from component libraries (especially sg-* libraries decomposed from HTML case pages) into a unified Data Pack (entities/aliases/relations/stages/contents/provenance/derivations), and patches engines to prefer injected data. MUST USE when the user mentions: component library data normalization, fixing data-crawl errors or broken data relationships, extracting embedded data into data.json, entity-relationship modeling (character graphs / event stages), Data Pack validation (E1-E16), data provenance/confidence, mount-options data injection, or applying this pipeline to a new component library.
 ---
 
 # SG Data Pack — Component Library Data-Layer Normalization
@@ -13,7 +13,7 @@ A Data Pack is the **single entry point** for a component library's business dat
 1. **Single source of truth**: embedded defaults in the engine JS are fallback only; production data lives in data.json
 2. **ID-only references**: entities live in `entities` (stable slug ids); `aliases` maps crawled names → ids; never reference by name or array index
 3. **Reference, never duplicate**: `relations` holds each edge exactly once; `stages` carry id references and overlays only
-4. **Fail loudly**: `SGDataLoader.assertValid` validates on mount (E1-E15/W1-W6) — errors are thrown, never silently swallowed
+4. **Fail loudly**: `SGDataLoader.assertValid` validates on mount (E1-E16/W1-W8) — errors are thrown, never silently swallowed; warnings are reported honestly
 
 ## CLI (scripts/sg-data-pack, zero-dependency, Node ≥ 18)
 
@@ -26,6 +26,9 @@ node $SK validate <data.json> [--strict] [--verify-hash]  # standalone validatio
 node $SK rules <libDir> [--strict]                      # execute library-level data rules (data-rules.json)
 node $SK diff <old.json> <new.json> [--json]            # structural diff between two packs (evolution / recrawl review)
 node $SK templatize <instances.json> [--out dir]        # derive item template from repeated HTML instances (collection pages)
+node $SK alias-candidates <data.json> <names.json|txt>     # rank unresolved crawled names
+node $SK recrawl-skeleton <data.json> <records.json> [--out dir]  # generate cross-check/review report
+node $SK types <data.json> [--out file.d.ts] [--name N]   # generate TypeScript declarations
 node $SK loader    # print runtime-validator path (copy into the library's lib/src/)
 node $SK schema    # print contract schema path
 ```
@@ -102,11 +105,13 @@ convention, evidence discipline). Verify with `node $SK rules <libDir>`.
 |---|---|
 | E5/E7 | references in relations/stages (after alias resolution) must exist in entities — **crawled-name mismatches explode here** |
 | E6/E10 | relation.type must be registered in relationTypes; attribute-pair labels must be registered in attributeTypes |
-| E11 | local assets referenced by entities/contents must be listed in assets (bare filenames resolve via meta.assetBase) |
-| E12 | multiple edges on the same (a,b) pair (relationship evolves across stages) must be disambiguated by scope |
+| E11 | local assets referenced by entities/contents/**domain** must be listed in assets (bare filenames resolve via meta.assetBase) |
+| E12 | multiple edges on the same (a,b) pair (relationship evolves across stages) must be disambiguated by scope; stage refs canonicalize via resolveId |
 | E13 | contents highlights[].ref must resolve to an entity/alias/annotation key — **wrong entity names in prose are caught** |
 | E14/E15 | both sides of sameAs must exist; provenance keys must point at real records |
+| E16 | derivations: valid kind enum + source path resolvable within the pack + alsoTouches/affects paths validated |
 | W5/W6 | below-threshold confidence goes to a review list; same-named entities without sameAs get flagged |
+| W7/W8 | provenance missing origin warns; crawl-origin provenance missing sourceUrl warns |
 
 ## Crawl-Pipeline Contract (for data producers)
 
@@ -118,7 +123,7 @@ Crawl output may only consist of: `data.json` + `assets/` + the alias table. Req
 
 ## Deep References
 
-- `references/data-pack-contract.md` — full Data Pack v1.2 contract (field level)
+- `references/data-pack-contract.md` — full Data Pack v1.3 contract (field level)
 - `references/extraction-config.md` — extraction-config guide with three typical patterns
 - `references/engine-integration.md` — engine-patch standard template (copy-paste grade)
 - `references/data-rules-guide.md` — library-level feature rules: format, check convention, evidence discipline

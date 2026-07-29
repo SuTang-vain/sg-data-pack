@@ -1,20 +1,21 @@
-# Data Pack v1.2 Contract (Field Level)
+# Data Pack v1.3 Contract (Field Level)
 
 > Formal schema: `scripts/lib/data-pack.schema.json`; runtime validator: `scripts/lib/sg-data-loader.js`.
 > Top-level fields: schemaVersion / meta / entities / aliases / relationTypes / relations / stages /
-> attributeTypes / attributeSources / contents / domain / assets / sameAs / provenance / kindNameFields.
+> attributeTypes / attributeSources / contents / domain / assets / sameAs / provenance / kindNameFields / derivations.
 
 ## Top-Level Structure
 
 ```jsonc
 {
-  "schemaVersion": "1.2",
+  "schemaVersion": "1.3",
   "meta": {
     "id": "library-id", "title": "Title",
     "hero": "core entity id (optional)",
     "source": "data source", "fetchedAt": "YYYY-MM-DD",
     "assetBase": "../assets/",          // resolution prefix for bare-filename assets (optional)
     "confidenceThreshold": 0.7,          // W5 threshold (optional, default 0.7)
+    "recrawlFieldMap": { "birthDate": "birth" }, // optional crawl-field mapping
     "generatedBy": "@generated marker"
   },
   "entities": { /* required, see below */ },
@@ -29,7 +30,8 @@
   "assets": { /* asset manifest */ },
   "sameAs": [["idA", "idB"]],
   "provenance": { /* record-level provenance */ },
-  "kindNameFields": { "work": "title" }
+  "kindNameFields": { "work": "title" },
+  "derivations": { /* non-trivial data -> presentation mappings */ }
 }
 ```
 
@@ -42,21 +44,23 @@ crawled names are normalized through aliases.
 
 ## aliases
 
-`{"嬴政": "yingzheng"}`. Targets must exist (E4); values may use the `{id, context}` form
-for disambiguation (same name, different people).
+`{"嬴政": "yingzheng", "程 兵": {"id":"chengbing","context":"crawler-spacing"}}`.
+Targets must exist (E4). The object form preserves review context while `resolveId` still returns the canonical id.
 
 ## relationTypes / relations
 
 ```jsonc
 "relationTypes": { "enemy": { "label": "对立", "color": "#d94b4b" } },
 "relations": [
-  { "a": "rulaifo", "b": "wukong", "type": "enemy", "label": "五行山压", "scope": ["tianting"] }
+  { "id": "rulaifo-wukong-tianting", "a": "rulaifo", "b": "wukong",
+    "type": "enemy", "label": "五行山压", "scope": ["tianting"] }
 ]
 ```
+- `id` is optional but strongly recommended for scoped multi-edges, stage references, diff and provenance
 - `type` must be registered in relationTypes (E6)
 - `scope` (v1.1+): this edge is only active in the listed stages. When multiple edges share the
-  same (a,b) pair, a stage's `{a,b}` reference must resolve to exactly one edge via scope
-  (or type) (E12)
+  same (a,b) pair, a stage reference must resolve to exactly one edge via stable `id`, `type`,
+  or the current stage's scope (E12)
 
 ## stages
 
@@ -64,7 +68,8 @@ for disambiguation (same name, different people).
 { "key": "tianting", "name": "大闹天宫", "desc": "…",
   "entities": ["wukong"],              // id subset (preserve order when it drives rendering)
   "layout": { "wukong": [0.5, 0.4] },  // normalized coordinates in [0,1] (E8)
-  "relations": [{ "a": "rulaifo", "b": "wukong" }],  // references into master edges; never duplicate
+  "relations": [{ "id": "rulaifo-wukong-tianting", "a": "rulaifo", "b": "wukong" }],
+  // references into master edges; optional id/type disambiguates, never duplicate
   "overlay": { "wukong": { "rel": ["主角"], "desc": "…" } } }  // stage-specific persona/description
 ```
 Event-level metadata (year/summary/image, etc.) is preserved as extra stage fields.
@@ -95,7 +100,7 @@ resolved via `meta.assetBase` before registration):
 ```jsonc
 "../assets/x.webp": { "exists": true, "bytes": 12345, "hash": "sha1:…", "sourceUrl": "…" }
 ```
-E11: every local asset referenced by entities/contents must be registered (http(s)/data: URIs
+E11: every local asset referenced by entities/contents/domain must be registered (http(s)/data: URIs
 are exempt). W2 missing file, W4 missing hash.
 
 ## sameAs / provenance (v1.2)
@@ -105,22 +110,25 @@ are exempt). W2 missing file, W4 missing hash.
 "provenance": {
   "entities":  { "yingzheng": { "origin": "example-json-contract", "sourceUrl": null,
                                 "fetchedAt": "2026-07-27", "confidence": 1.0, "note": "…" } },
-  "relations": { "yingzheng::lisi": { /* key format: a::b */ } },
+  "relations": { "yingzheng-lisi-advisor": { /* preferred key: relation.id */ } },
   "contents":  { "timeline-2016": { "origin": "template-html-contents" } }
 }
 ```
 Parallel-section design: never embedded into the entities themselves, so engines need no changes.
-confidence below threshold → W5 review list.
+For new packs, relation provenance should use `relation.id`; the full fallback identity is
+`a::b::type::scope=<sorted scopes>`. Legacy `a::b` is accepted only for an unambiguous pair.
+Confidence below threshold → W5 review list. Missing origin → W7; crawl origin without sourceUrl → W8.
 Origin conventions: `engine-embedded-defaults` / `example-json-contract` / `template-html-contents` / `crawl:<source>`.
 
 ## Full Rule Set
 
 - **Errors** (thrown on mount): E1 version / E2 meta / E3 required entity fields / E4 aliases /
   E5 dangling edge refs / E6 unregistered relationship enum / E7 stage refs / E8 coordinate out of
-  range / E10 unregistered attribute / E11 unregistered asset / E12 scope not resolvable /
-  E13 content refs / E14 sameAs / E15 provenance keys
+  range / E10 unregistered attribute / E11 unregistered asset (incl. domain refs) / E12 scope not resolvable /
+  E13 content refs / E14 sameAs / E15 provenance keys / E16 derivations (kind + source/alsoTouches pack paths + affects string list)
 - **Warnings** (recorded, non-blocking): W1 unreferenced entity / W2 missing asset / W3 edge
-  missing label / W4 asset missing hash / W5 low confidence / W6 suspected duplicate entity
+  missing label / W4 asset missing hash / W5 low confidence / W6 suspected duplicate entity /
+  W7 provenance missing origin / W8 crawl provenance missing sourceUrl
 
 ## derivations (v1.3, optional)
 
@@ -146,8 +154,9 @@ lookup-rebuilt events), so data producers cannot know the blast radius of a chan
 Rules:
 - Only model **non-trivial** derivations (repeat / ordering / rebuild / resolution / projection);
   plain field interpolation does not belong here.
-- E16: valid kind enum, source path must resolve within the pack (invalid root = error,
-  unresolvable = warning), consumers non-empty, note non-empty.
+- E16: valid kind enum; `source` and `alsoTouches` paths must resolve within the pack
+  (invalid root = error, unresolvable = warning); `affects` contains selector/region strings;
+  consumers and note must be non-empty.
 - `consumers`/`affects` existence on disk is NOT checked by the universal validator
   (loader is path-agnostic) — assert those in library-level rules instead.
 - When a derivation's source changes, `sg-data-pack diff` output should be read together

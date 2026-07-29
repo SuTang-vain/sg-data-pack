@@ -12,7 +12,7 @@ module.exports = {
   libDir: '/abs/path/to/my-lib-ts',      // library root (absolute path)
   engineFile: 'lib/src/my-lib.js',       // engine file (relative to libDir)
   globalName: 'MyLibrary',               // engine global name (read after requiring the engine)
-  schemaVersion: '1.2',                  // optional, default 1.2
+  schemaVersion: '1.3',                  // optional, default 1.3
 
   literals: [                            // default-data literal slicing (losslessness baseline)
     // JS literal: pattern matches up to and including `||` or `=`; acorn parses the expression from there
@@ -75,7 +75,7 @@ Source data where "every node implicitly connects to the center" (no explicit ed
 generate relations as `{a: centerId, b: nodeId, type: node.rel, label: node.rel}` and set
 meta.hero = centerId.
 
-## Provenance Stamping (mandatory in v1.2)
+## Provenance Stamping (mandatory since v1.2)
 
 At the end of buildPack, generate with a generic stamp function (never hand-write entries):
 

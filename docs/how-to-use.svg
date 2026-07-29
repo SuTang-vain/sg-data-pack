@@ -21,7 +21,7 @@
   <g class="mono" font-size="13">
     <text x="32" y="74"><tspan class="prompt">$</tspan><tspan class="cmd" dx="8">node $SK extract ./sandadui.config.js</tspan></text>
     <text x="48" y="100" class="out">entities: 12 · relations: 14 · stages: 4 · assets: 12</text>
-    <text x="48" y="124" class="ok">✔ validation passed — E1–E15, 0 errors</text>
+    <text x="48" y="124" class="ok">✔ validation passed — E1–E16, 0 errors</text>
     <text x="48" y="148" class="ok">✔ equivalence: 5 deep comparisons, lossless</text>
 
     <text x="32" y="184"><tspan class="prompt">$</tspan><tspan class="cmd" dx="8">node $SK validate lib/data/data.json --strict --verify-hash</tspan></text>

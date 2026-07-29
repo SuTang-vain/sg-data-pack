@@ -21,21 +21,33 @@ function __fromPack(pack) {
     Object.keys(e).forEach(function (k) { if (k !== 'kind') c[k] = e[k]; });
     chars[id] = c;
   });
-  var allEdges = (pack.relations || []).map(function (r) {
-    return { a: r.a, b: r.b, type: r.type, label: r.label };
-  });
-  var byPair = {};
-  allEdges.forEach(function (e) { byPair[e.a + '::' + e.b] = e; });
+  var masterEdges = pack.relations || [];
+  function canonical(x) {
+    return typeof SGDataLoader !== 'undefined' ? (SGDataLoader.resolveId(pack, x) || x) : x;
+  }
+  function legacyEdge(r) {
+    return { a: canonical(r.a), b: canonical(r.b), type: r.type, label: r.label };
+  }
+  var allEdges = masterEdges.map(legacyEdge);
+  function matchEdge(ref, stageKey) {
+    var cands = masterEdges.filter(function (r) {
+      return canonical(r.a) === canonical(ref.a) && canonical(r.b) === canonical(ref.b);
+    });
+    if (ref.id) cands = cands.filter(function (r) { return r.id === ref.id; });
+    if (cands.length > 1 && ref.type) cands = cands.filter(function (r) { return r.type === ref.type; });
+    if (cands.length > 1) {
+      var scoped = cands.filter(function (r) { return Array.isArray(r.scope) && r.scope.indexOf(stageKey) !== -1; });
+      if (scoped.length === 1) cands = scoped;
+    }
+    if (cands.length !== 1) throw new Error('stage relation cannot resolve uniquely: ' + ref.a + '::' + ref.b);
+    return legacyEdge(cands[0]);
+  }
   var storyModules = (pack.stages || []).map(function (s) {
     return {
       key: s.key, name: s.name, desc: s.desc,
-      chars: (s.entities || []).slice(),
+      chars: (s.entities || []).map(canonical),
       layout: s.layout,
-      edges: (s.relations || []).map(function (ref) {
-        // when multiple edges share (a,b), resolve via scope (isomorphic to loader E12)
-        var hit = byPair[ref.a + '::' + ref.b];
-        return hit;
-      }),
+      edges: (s.relations || []).map(function (ref) { return matchEdge(ref, s.key); }),
       roles: s.overlay
     };
   });
@@ -45,7 +57,13 @@ function __fromPack(pack) {
 function __resolveDataOptions(options) {
   if (!options || !options.data) return options;
   if (typeof SGDataLoader !== 'undefined') {
-    SGDataLoader.assertValid(options.data);        // fail loudly, never silently
+    var __r = SGDataLoader.assertValid(options.data);        // fail loudly, never silently
+    // Warnings are reported honestly: the validator may surface W1/W2/W4/W5/W6/W7/W8
+    // (unreferenced entities, missing asset hashes, low confidence, missing origin, etc.).
+    // These are non-blocking but must not be swallowed on mount.
+    if (typeof console !== 'undefined' && console.warn && __r && __r.warnings && __r.warnings.length) {
+      __r.warnings.forEach(function (w) { console.warn('[SGDataLoader] ' + w); });
+    }
   } else if (typeof console !== 'undefined' && console.error) {
     console.error('[engine] options.data not validated: include lib/src/sg-data-loader.js first');
   }

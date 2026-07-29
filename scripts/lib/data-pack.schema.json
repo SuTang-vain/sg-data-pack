@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://sg.local/data-pack.schema.json",
-  "title": "SG Data Pack v1.2 — Unified Data Contract for Component Libraries",
-  "description": "The single entry point for business data of all sg-* component libraries. Globally unique entities, id references, stages that reference rather than duplicate. Runtime validation is performed by sg-data-loader.js (rules E1-E15/W1-W6 correspond one-to-one with the rules below); this file is the formal contract. v1.1 added: relations.scope, attributeTypes/attributeSources, contents, assets hash, meta.assetBase, kindNameFields. v1.2 added: sameAs (entity identity), provenance (record-level provenance as a parallel section that never invades entity bodies — zero engine changes), meta.confidenceThreshold, W6 fuzzy duplicate detection.",
+  "title": "SG Data Pack v1.3 — Unified Data Contract for Component Libraries",
+  "description": "The single entry point for business data of all sg-* component libraries. Globally unique entities, id references, stages that reference rather than duplicate. Runtime validation is performed by sg-data-loader.js (rules E1-E16/W1-W8 correspond one-to-one with the rules below); this file is the formal contract. v1.1 added: relations.scope, attributeTypes/attributeSources, contents, assets hash, meta.assetBase, kindNameFields. v1.2 added: sameAs (entity identity), provenance (record-level provenance as a parallel section that never invades entity bodies — zero engine changes), meta.confidenceThreshold, W6 fuzzy duplicate detection. v1.3 added: derivations contract (kind/source/consumers/note/alsoTouches/affects, E16-validated), E11 domain asset coverage, contextual alias {id,context} runtime resolution, E12 scope canonicalization, provenance W7/W8 warnings.",
   "type": "object",
   "required": [
     "schemaVersion",

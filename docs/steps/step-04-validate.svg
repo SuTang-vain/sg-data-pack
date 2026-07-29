@@ -12,8 +12,8 @@
     <path d="M17 0 L34 6 V18 C34 30 26 37 17 40 C8 37 0 30 0 18 V6 Z" fill="#6FA586" fill-opacity="0.15" stroke="#6FA586" stroke-width="1.6"/>
     <path d="M9 19 l6 6 11 -12" stroke="#5B8F72" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <text x="24" y="104" class="sans" font-size="12" fill="#83868F">E1–E15 errors, fail loud</text>
-  <text x="24" y="126" class="sans" font-size="12" fill="#83868F">W1–W6 honest warnings</text>
+  <text x="24" y="104" class="sans" font-size="12" fill="#83868F">E1–E16 errors, fail loud</text>
+  <text x="24" y="126" class="sans" font-size="12" fill="#83868F">W1–W8 honest warnings</text>
   <text x="24" y="148" class="sans" font-size="12" fill="#83868F">equivalence + sha1 hash</text>
   <rect x="24" y="160" width="152" height="20" rx="10" fill="#EFF6F1" stroke="#CBE2D4"/>
   <text x="36" y="174" class="mono" font-size="10" font-weight="600" fill="#4E7D63">no silent swallowing</text>

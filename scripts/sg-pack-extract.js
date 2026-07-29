@@ -170,7 +170,7 @@ function main() {
 
   console.log('== 2/4 Building spec-compliant Data Pack');
   const pack = config.buildPack(defaults);
-  pack.schemaVersion = config.schemaVersion || '1.2';
+  pack.schemaVersion = config.schemaVersion || '1.3';
   pack.meta = Object.assign({ id: config.libId, generatedBy: 'sg-data-pack: ' + path.basename(configPath) }, config.meta || {}, pack.meta || {});
   pack.assets = Object.assign(collectAssets(pack, config.libDir), pack.assets || {});
   const missing = Object.entries(pack.assets).filter(([, a]) => !a.exists);
@@ -213,7 +213,7 @@ function main() {
     // library-level schema: canonical core + domain extension
     const core = JSON.parse(fs.readFileSync(path.join(__dirname, 'lib', 'data-pack.schema.json'), 'utf8'));
     core.$id = 'https://sg.local/' + config.libId + '/data.schema.json';
-    core.title = 'SG Data Pack v1.2 — ' + config.libId + ' data contract';
+    core.title = 'SG Data Pack v1.3 — ' + config.libId + ' data contract';
     if (config.domainSchema) core.properties.domain = config.domainSchema;
     fs.writeFileSync(path.join(dataDir, 'data.schema.json'), JSON.stringify(core, null, 2) + '\n');
 

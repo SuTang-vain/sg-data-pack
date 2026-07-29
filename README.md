@@ -8,7 +8,7 @@
   <a href="https://github.com/SuTang-vain/sg-data-pack/blob/main/SKILL.md"><img src="https://img.shields.io/badge/agent%20skill-codex%20%C2%B7%20claude%20code%20%C2%B7%20zcode-31406B" alt="agent skill"/></a>
   <img src="https://img.shields.io/badge/node-%E2%89%A518-4A5B8C" alt="node ≥ 18"/>
   <img src="https://img.shields.io/badge/dependencies-0-4A5B8C" alt="zero dependencies"/>
-  <img src="https://img.shields.io/badge/rules-E1--E15%20%2B%20W1--W6-C99F57" alt="validation rules"/>
+  <img src="https://img.shields.io/badge/rules-E1--E16%20%2B%20W1--W8-C99F57" alt="validation rules"/>
   <a href="https://github.com/SuTang-vain/sg-data-pack/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-8A6A2C" alt="license MIT"/></a>
 </p>
 
@@ -47,7 +47,7 @@ Entities are keyed by stable slug IDs; crawled names normalize through `aliases`
 <td width="33%" valign="top">
 
 ### 🚨 Fail loudly, never silently
-`SGDataLoader` validates on mount — **E1–E15** errors throw, **W1–W6** warnings are reported honestly. Dangling refs and illegal enums explode at load time.
+`SGDataLoader` validates on mount — **E1–E16** errors throw, **W1–W8** warnings are reported honestly. Dangling refs, illegal enums, and invalid derivation source paths explode at load time.
 
 </td>
 </tr>
@@ -106,7 +106,7 @@ crawled names become `aliases`, per-stage duplicated copies collapse into
 Everything lands in `lib/data/data.json`: entities, aliases, relation registry,
 master edges, stage views, long-form contents, library-specific domain data,
 an asset manifest with sha1, entity-identity `sameAs`, and record-level
-`provenance`. Formal contract: JSON Schema v1.2.
+`provenance` and declarative `derivations`. Formal contract: JSON Schema v1.3.
 
 <br clear="all"/>
 
@@ -114,9 +114,9 @@ an asset manifest with sha1, entity-identity `sameAs`, and record-level
 
 ### 04 · Validate — fail loud, never silently
 
-`SGDataLoader` checks **E1–E15** on mount (dangling refs, illegal enums,
-coordinate range, asset registration, scope disambiguation…) and reports
-**W1–W6** honestly. The equivalence test proves `__fromPack(pack)` deep-equals
+`SGDataLoader` checks **E1–E16** on mount (dangling refs, illegal enums,
+coordinate range, asset registration, scope disambiguation, derivation paths…) and reports
+**W1–W8** honestly. The equivalence test proves `__fromPack(pack)` deep-equals
 the engine defaults; `--verify-hash` catches replaced assets.
 
 <br clear="all"/>
@@ -155,6 +155,12 @@ SKILL=~/.zcode/skills/sg-data-pack/scripts/sg-data-pack
 node $SK extract <path/to/config.js>          # extract + validate + equivalence test
 node $SK extract <path/to/config.js> --check  # validate only (regression)
 node $SK validate <data.json> --strict --verify-hash
+node $SK rules <libDir> [--strict]
+node $SK diff <old.json> <new.json> [--json]
+node $SK templatize <instances.json> [--out dir]
+node $SK alias-candidates <data.json> <names.json|txt>
+node $SK recrawl-skeleton <data.json> <records.json> [--out dir]
+node $SK types <data.json> [--out data-types.d.ts] [--name PackName]
 node $SK loader    # print runtime-validator path (copy into a library's lib/src/)
 node $SK schema    # print contract-schema path
 ```
@@ -163,7 +169,7 @@ node $SK schema    # print contract-schema path
 
 ---
 
-## The Data Pack (v1.2)
+## The Data Pack (v1.3)
 
 <table>
 <tr>
@@ -171,7 +177,7 @@ node $SK schema    # print contract-schema path
 
 ```jsonc
 {
-  "schemaVersion": "1.2",
+  "schemaVersion": "1.3",
   "meta":      { "id": "…", "title": "…",
                  "hero": "…" },
   "entities":  { "wukong": {
@@ -222,10 +228,21 @@ Full contract: [`references/data-pack-contract.md`](references/data-pack-contrac
 | File | Contents |
 |---|---|
 | [`SKILL.md`](SKILL.md) | Agent workflow + rules (loaded by Codex / Claude Code / ZCode) |
-| [`references/data-pack-contract.md`](references/data-pack-contract.md) | Data Pack v1.2 field-level contract |
+| [`references/data-pack-contract.md`](references/data-pack-contract.md) | Data Pack v1.3 field-level contract |
 | [`references/extraction-config.md`](references/extraction-config.md) | Config guide + three real-world patterns |
 | [`references/engine-integration.md`](references/engine-integration.md) | Engine-patch standard template |
 | [`assets/extract.config.template.js`](assets/extract.config.template.js) | Annotated config template for a new library |
+
+## Tests
+
+Zero-dependency contract tests cover the loader rules (E1–E16 / W1–W8), the diff impact tracker,
+the TypeScript generator, and cross-artifact version consistency:
+
+```bash
+node --test "tests/*.test.js"
+```
+
+The same suite runs in CI via `.github/workflows/smoke.yml`. Three reproducible v1.3 pilots and their machine-readable result live under `research/`; rerun them with `node research/run-v1.3-pilots.js`.
 
 ## License
 

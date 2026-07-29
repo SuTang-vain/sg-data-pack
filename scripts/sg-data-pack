@@ -61,10 +61,15 @@ switch (cmd) {
     console.log(`sg-data-pack — component-library data-layer normalization CLI
 
 Usage:
-  sg-data-pack extract <path/to/config.js> [--check]        Extract embedded data into a Data Pack (validate + equivalence test)
-  sg-data-pack validate <data.json> [--strict] [--verify-hash]  Standalone Data Pack validation
-  sg-data-pack rules <libDir | data-rules.json> [--strict]      Execute library-level data rules
-  sg-data-pack schema                                       Print the contract-schema path
-  sg-data-pack loader                                       Print the runtime-validator path (copy into lib/src/)`);
+  sg-data-pack extract <config.js> [--check]                 Extract + validate + equivalence-test
+  sg-data-pack validate <data.json> [--strict] [--verify-hash]  Validate a Data Pack
+  sg-data-pack rules <libDir | data-rules.json> [--strict]   Execute library-level rules
+  sg-data-pack diff <old.json> <new.json> [--json]            Structural diff + derivation impact
+  sg-data-pack templatize <instances.json> [--out dir]       Derive a byte-exact repeated-item template
+  sg-data-pack alias-candidates <pack.json> <names> [--json] Rank crawl-name alias candidates
+  sg-data-pack types <data.json> [--out file] [--name N]     Generate TypeScript declarations
+  sg-data-pack recrawl-skeleton <pack.json> <records.json>   Build a crawl review report
+  sg-data-pack schema                                        Print the contract-schema path
+  sg-data-pack loader                                        Print the runtime-validator path`);
     process.exit(cmd ? 2 : 0);
 }

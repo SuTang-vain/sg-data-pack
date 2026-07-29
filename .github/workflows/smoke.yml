@@ -48,3 +48,7 @@ jobs:
       - name: SKILL.md frontmatter parses
         run: |
           node -e "const s=require('fs').readFileSync('SKILL.md','utf8');const m=s.match(/^---\n([\s\S]*?)\n---/);if(!m||!/name: sg-data-pack/.test(m[1]))process.exit(1);console.log('frontmatter ok')"
+
+      - name: Contract + pilot test suite (loader / diff / recrawl / types / consistency)
+        run: |
+          node --test "tests/*.test.js"

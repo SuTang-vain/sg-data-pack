@@ -1,5 +1,5 @@
 /*
- * sg-data-loader.js — SG Data Pack runtime validator (zero-dependency UMD) v1.2
+ * sg-data-loader.js — SG Data Pack runtime validator (zero-dependency UMD) v1.3
  *
  * Responsibilities:
  *   1. validate(pack)  -> { errors: [], warnings: [] }  structural Data Pack validation
@@ -17,8 +17,8 @@
  *   E8  layout coordinates must be within [0,1]
  *   E9  (reserved: alias disambiguation context)
  *   E10 attribute-pair labels in attributeSources collections must be registered in attributeTypes (v1.1)
- *   E11 local assets referenced by entities/contents must be registered in the assets manifest (v1.1)
- *   E12 relations[].scope stage keys must exist; ambiguous stage edge refs must be resolvable via scope/type (v1.1)
+ *   E11 local assets referenced by entities/contents/domain must be registered in the assets manifest (v1.1)
+ *   E12 relation ids/scopes must be valid; ambiguous stage edge refs must resolve via id/type/scope (v1.1)
  *   E13 contents[].highlights[].ref must resolve to an entity/alias or domain.notes key (v1.1)
  *   E14 both sides of a sameAs pair must exist (v1.2)
  *   E15 provenance keys must point at existing entities/relations/contents (v1.2)
@@ -29,6 +29,8 @@
  *   W4  local asset exists but lacks a hash (incomplete provenance)
  *   W5  provenance confidence below threshold (default 0.7, tunable via meta.confidenceThreshold) (v1.2)
  *   W6  entity names collide after normalization without a sameAs declaration (suspected duplicate, v1.2)
+ *   W7  provenance entry missing origin (v1.3)
+ *   W8  crawl provenance entry missing sourceUrl (v1.3)
  */
 (function (global) {
   'use strict';
@@ -45,13 +47,24 @@
     return null;
   }
 
-  /* crawled name / alias / canonical id -> canonical id; null when unresolvable */
+  /* crawled name / alias / canonical id -> canonical id; null when unresolvable.
+   * Handles the {id, context} disambiguation form: resolveAlias may return an
+   * object (E4 validates it), so we unpack .id here before the entity lookup. */
   function resolveId(pack, idOrName) {
     if (!pack || !isObj(pack.entities)) return null;
     if (Object.prototype.hasOwnProperty.call(pack.entities, idOrName)) return idOrName;
     var via = resolveAlias(pack, idOrName);
+    if (isObj(via)) via = via.id;
     if (via && Object.prototype.hasOwnProperty.call(pack.entities, via)) return via;
     return null;
+  }
+
+  function relationIdentity(pack, relation) {
+    if (relation && typeof relation.id === 'string' && relation.id) return relation.id;
+    var a = resolveId(pack, relation && relation.a) || (relation && relation.a);
+    var b = resolveId(pack, relation && relation.b) || (relation && relation.b);
+    var scope = Array.isArray(relation && relation.scope) ? relation.scope.slice().sort().join('|') : '*';
+    return a + '::' + b + '::' + (relation && relation.type) + '::scope=' + scope;
   }
 
   /* contents highlight ref: entity/alias, or a domain.notes annotation key */
@@ -84,7 +97,9 @@
     return out;
   }
 
-  /* Collect all local asset references in entities/contents (value-shape heuristic) */
+  /* Collect all local asset references in entities/contents/domain (value-shape heuristic).
+   * domain is free-form but commonly carries asset paths (e.g. domain.works[*].img),
+   * so it must be covered by E11 just like entities and contents. */
   function collectAssetRefs(pack) {
     var refs = [];
     function walk(v) {
@@ -95,6 +110,7 @@
     }
     walk(pack.entities || {});
     walk(pack.contents || {});
+    walk(pack.domain || {});
     return refs;
   }
 
@@ -171,8 +187,14 @@
       errors.push('E5: relations must be an array');
     }
     var referenced = {};
+    var relationIds = Object.create(null);
     relations.forEach(function (r, i) {
       if (!isObj(r)) { errors.push('E5: relations[' + i + '] must be an object'); return; }
+      if (r.id !== undefined) {
+        if (typeof r.id !== 'string' || !r.id) errors.push('E12: relations[' + i + '].id must be a non-empty string when present');
+        else if (relationIds[r.id]) errors.push('E12: relations[' + i + '].id "' + r.id + '" is duplicated');
+        else relationIds[r.id] = true;
+      }
       ['a', 'b'].forEach(function (end) {
         var id = resolveId(pack, r[end]);
         if (!id) errors.push('E5: relations[' + i + '].' + end + ' dangling reference "' + r[end] + '"');
@@ -235,8 +257,17 @@
           if (!okA) errors.push('E7: ' + at + '.a dangling reference "' + ref.a + '"');
           if (!okB) errors.push('E7: ' + at + '.b dangling reference "' + ref.b + '"');
           if (!okA || !okB) return;
-          /* E12: when (a,b) matches multiple master edges, it must resolve to one via type or scope */
-          var cands = relations.filter(function (r) { return r.a === ref.a && r.b === ref.b; });
+          /* E12: when (a,b) matches multiple master edges, it must resolve to one via type or scope.
+           * Endpoints are canonicalized via resolveId so that a stage ref using an alias
+           * name still matches a master edge declared with the canonical id. */
+          var ra = okA, rb = okB;
+          var cands = relations.filter(function (r) {
+            return resolveId(pack, r.a) === ra && resolveId(pack, r.b) === rb;
+          });
+          if (ref.id !== undefined) {
+            if (typeof ref.id !== 'string' || !ref.id) errors.push('E12: ' + at + '.id must be a non-empty string when present');
+            else cands = cands.filter(function (r) { return r.id === ref.id; });
+          }
           if (cands.length > 1 && ref.type) {
             cands = cands.filter(function (r) { return r.type === ref.type; });
           }
@@ -365,15 +396,31 @@
           Object.keys(g).forEach(function (key) {
             if (!exists(key)) { errors.push('E15: provenance.' + group + '."' + key + '" ' + describe); return; }
             var p = g[key];
+            if (!isObj(p) || typeof p.origin !== 'string' || !p.origin) {
+              warnings.push('W7: ' + group + '."' + key + '" missing origin (provenance should record where the data came from)');
+            }
             if (isObj(p) && typeof p.confidence === 'number' && p.confidence < threshold) {
               warnings.push('W5: ' + group + '."' + key + '" confidence=' + p.confidence + ' is below threshold ' + threshold + ' (low-confidence data; manual review advised)');
+            }
+            if (isObj(p) && typeof p.origin === 'string' && p.origin.indexOf('crawl:') === 0 &&
+                (p.sourceUrl === undefined || p.sourceUrl === null || p.sourceUrl === '')) {
+              warnings.push('W8: ' + group + '."' + key + '" origin is crawl:* but sourceUrl is missing');
             }
           });
         };
         checkProv('entities', function (id) { return Object.prototype.hasOwnProperty.call(entities, id); }, 'points to a non-existent entity');
         checkProv('relations', function (key) {
-          return relations.some(function (r) { return (r.a + '::' + r.b) === key; });
-        }, 'points to a non-existent relation (key format "a::b")');
+          if (relations.some(function (r) { return relationIdentity(pack, r) === key || r.id === key; })) return true;
+          // v1.2 compatibility: a::b is accepted only when it identifies one
+          // canonical pair unambiguously. New packs should use relation.id or
+          // the full a::b::type::scope=<...> identity.
+          var pairMatches = relations.filter(function (r) {
+            var a = resolveId(pack, r.a) || r.a;
+            var b = resolveId(pack, r.b) || r.b;
+            return (a + '::' + b) === key || (r.a + '::' + r.b) === key;
+          });
+          return pairMatches.length === 1;
+        }, 'points to a non-existent or ambiguous relation (use relation.id or a::b::type::scope=<...>)');
         checkProv('contents', function (key) {
           return isObj(pack.contents) && Object.prototype.hasOwnProperty.call(pack.contents, key);
         }, 'points to a non-existent contents entry');
@@ -387,7 +434,7 @@
       var resolvePath = function (expr) {
         // dotted path with optional '*' wildcard: walk pack sections
         var segs = String(expr).split('.');
-        var roots = { entities: 1, relations: 1, stages: 1, contents: 1, domain: 1, aliases: 1, attributeTypes: 1, meta: 1, sameAs: 1, provenance: 1 };
+        var roots = { entities: 1, aliases: 1, relationTypes: 1, heroRelTypes: 1, relations: 1, stages: 1, attributeTypes: 1, attributeSources: 1, contents: 1, domain: 1, assets: 1, kindNameFields: 1, sameAs: 1, provenance: 1, derivations: 1, meta: 1 };
         if (!roots[segs[0]]) return { rootOk: false, resolved: false };
         var nodes = [pack];
         for (var i = 0; i < segs.length; i++) {
@@ -428,6 +475,21 @@
           }
           if (typeof d.note !== 'string' || !d.note) {
             errors.push('E16: ' + at + '.note must be a non-empty string');
+          }
+          /* alsoTouches is a secondary pack-source path and is resolved like
+           * source. affects, by contrast, names selectors/regions and is only
+           * required to be an array of non-empty strings. */
+          if (d.alsoTouches !== undefined) {
+            if (!Array.isArray(d.alsoTouches) || d.alsoTouches.some(function (x) { return typeof x !== 'string' || !x; })) {
+              errors.push('E16: ' + at + '.alsoTouches must be an array of non-empty pack path strings');
+            } else d.alsoTouches.forEach(function (expr) {
+              var rr = resolvePath(expr);
+              if (!rr.rootOk) errors.push('E16: ' + at + '.alsoTouches "' + expr + '" has an invalid root section');
+              else if (!rr.resolved) warnings.push('E16: ' + at + '.alsoTouches "' + expr + '" resolves to nothing in this pack');
+            });
+          }
+          if (d.affects !== undefined && (!Array.isArray(d.affects) || d.affects.some(function (x) { return typeof x !== 'string' || !x; }))) {
+            errors.push('E16: ' + at + '.affects must be an array of non-empty selector/region strings');
           }
         });
       }
@@ -490,6 +552,7 @@
     assertValid: assertValid,
     resolveAlias: resolveAlias,
     resolveId: resolveId,
-    resolveContentRef: resolveContentRef
+    resolveContentRef: resolveContentRef,
+    relationIdentity: relationIdentity
   };
 })(typeof window !== 'undefined' ? window : globalThis);
