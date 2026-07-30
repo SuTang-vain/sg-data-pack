@@ -246,7 +246,7 @@ the TypeScript generator, and cross-artifact version consistency:
 node --test tests/*.test.js
 ```
 
-The same suite runs in CI via `.github/workflows/smoke.yml`. Three reproducible v1.3 pilots and their machine-readable result live under `research/`; rerun them with `node research/run-v1.3-pilots.js`.
+The same suite runs in CI via `.github/workflows/smoke.yml`. Three reproducible v1.3 synthetic pilots and their machine-readable result live under `research/`; rerun them with `node research/run-v1.3-pilots.js`. The suite also contains a hermetic real-engine integration fixture for the Qinshihuang event graph at `tests/fixtures/integration/qinshihuang-0716-ts/`, covering external HTML JSON extraction, deep equivalence, committed asset baselines plus tamper detection, library rules, generated types, and real derivation impact.
 
 ## License
 

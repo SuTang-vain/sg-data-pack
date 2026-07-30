@@ -1,0 +1,214 @@
+{
+  "rulesVersion": "1.0",
+  "libId": "qinshihuang-0716-ts",
+  "generatedAt": "2026-07-27",
+  "profile": {
+    "archetype": "event-driven character-graph（事件切换 + 核心人物放射关系图谱）",
+    "summary": "单一核心人物（嬴政/秦始皇）贯穿 7 个历史事件阶段，每阶段以其为圆心放射出 3-5 个人物节点与少量人物间关系边，人物跨阶段共享实体、阶段差异全部挂在 overlay 上。",
+    "entityKinds": [
+      "person"
+    ],
+    "stageModel": "event-driven",
+    "heroCentric": true,
+    "growthAxes": [
+      "entities",
+      "stages",
+      "relations"
+    ],
+    "dataShapeNotes": [
+      "核心人物放射边不在数据中显式存储：引擎取 stages[].entities[0] 为核心，运行时由 overlay.big + overlay.rel 合成核心↔他人连线（qinshihuang.js currentEdges），数据中只存人物↔人物的 links",
+      "同一人物跨阶段是共享实体 + 阶段 overlay（role/deed/impact/rel 逐阶段不同），stages 只引用 id 不复制实体字段",
+      "主角是双 id 同一实体：第 1 阶段用 yingzheng、第 2-7 阶段用 qinshihuang，靠 sameAs 声明同一性，两者共用同一头像文件",
+      "stages[].relations 只存 {a,b} 键引用全集 relations，type/label 以全集为准；全集 11 条边被 7 个阶段复用",
+      "每阶段携带双长度文案 summary（桌面）/summaryShort（移动端）与一张事件配图 image；引擎在移动端整段切换而非截断",
+      "overlay.rel 取值是面向核心的关系（ruler/enemy/family），由 heroRelTypes 注册；全集 relations[].type 是人物间关系（ally/enemy），由 relationTypes 注册，两套枚举语义隔离"
+    ]
+  },
+  "rules": [
+    {
+      "id": "qsh-entity-avatar-required",
+      "level": "hard",
+      "subject": "entities.*.avatar",
+      "rule": "每个人物实体必须含 name（2-3 字中文展示名）、kind=\"person\"、avatar（裸文件名 PNG，不带目录前缀）；avatar 文件必须放入 lib/assets/ 并在 assets 清单中登记 exists=true；同时在 aliases 中补一条「中文名 -> id」映射。",
+      "rationale": "引擎把 avatar 直接拼成 IMG+p.avatar 作为节点背景图与弹窗头像（qinshihuang.js buildGraph/showPerson），无兜底下发即破图；aliases 是数据生产侧的归一化入口（schema aliases 段）。",
+      "evidence": "15/15 实体均含 name/kind=person/avatar 且均为 .png；15/15 中文名均在 aliases 登记；assets 清单 14 个头像文件 exists 全为 true（秦始皇.png 被 yingzheng/qinshihuang 共用）。",
+      "source": "observed",
+      "check": "Object.entries(entities).every(([id,e]) => e.kind==='person' && /\\.png$/.test(e.avatar) && assets[meta.assetBase+e.avatar] && assets[meta.assetBase+e.avatar].exists===true && aliases[e.name]===id)",
+      "coveredBy": "E3（仅覆盖 name/kind，avatar 与 alias 登记为本库补充）",
+      "repairHint": "补齐 entities.<id>：name（2-3 字中文名）、kind:\"person\"、avatar（裸文件名 PNG 如 \"王离.png\"，不带目录）；把头像放进 lib/assets/，在 assets 段登记 \"../assets/<文件名>\": {\"exists\":true,\"bytes\":<stat -f%z>,\"hash\":\"sha1:<shasum 结果>\"}，并在 aliases 加 \"<中文名>\": \"<id>\"。"
+    },
+    {
+      "id": "qsh-avatar-image-spec",
+      "level": "soft",
+      "subject": "assets（人物头像 PNG）",
+      "rule": "新头像用 PNG，宽度 160px、横版构图（宽/高 1.0-1.3，人物胸像居中），文件控制在 50KB 以内；不得以竖版或超过 600px 的大图代替（现有 3 个例外文件为历史遗留，不作范本）。",
+      "rationale": "节点头像渲染尺寸仅 42-84px CSS 像素（avatarSizes 三档），以 background-image cover 裁成圆形；横版胸像裁切后人物居中效果最好，过大文件只会拖慢预热加载（init 中全量 Image 预加载）。",
+      "evidence": "sips 实测 14 个头像：11 个为 160px 宽、高 127-154（宽/高 1.04-1.26）；例外为程邈 127x160（竖版）、王绾 348x324、淳于越 554x418；体积 16-164KB，中位约 36KB。",
+      "source": "observed",
+      "check": null,
+      "coveredBy": null,
+      "repairHint": "用 sips 重制头像为 160px 宽横版：`sips -z <高> 160 lib/assets/<名>.png`（宽/高 1.0-1.3、胸像居中、≤50KB）；完成后用 `shasum` 与 `stat -f%z` 更新 assets 清单的 hash/bytes。"
+    },
+    {
+      "id": "qsh-stage-image-required",
+      "level": "hard",
+      "subject": "stages.*.image",
+      "rule": "每个阶段必须提供 image（裸文件名 PNG），文件放入 lib/assets/ 并在 assets 清单登记 exists=true。",
+      "rationale": "renderIntro 无条件输出 <img src=IMG+e.image> 作为事件简介图标，缺失即破图；init 预热也依赖该字段。",
+      "evidence": "7/7 阶段均有 image；assets 清单 7 个事件图文件 exists 全为 true。",
+      "source": "extracted",
+      "check": "stages.every(s => /\\.png$/.test(s.image) && assets[meta.assetBase+s.image] && assets[meta.assetBase+s.image].exists===true)",
+      "coveredBy": null,
+      "repairHint": "给该阶段补 image 字段（裸文件名 PNG 如 \"东巡刻石.png\"，不带目录）；把事件配图放进 lib/assets/ 并在 assets 段登记 \"../assets/<文件名>\": {\"exists\":true,\"bytes\":<stat -f%z>,\"hash\":\"sha1:<shasum 结果>\"}。"
+    },
+    {
+      "id": "qsh-stage-image-spec",
+      "level": "soft",
+      "subject": "assets（事件配图 PNG）",
+      "rule": "新事件配图用 PNG，宽度 480px、横版（宽/高 1.2-1.6，高度 300-400px），体积控制在 130KB 以内。",
+      "rationale": "sg-intro-icon 在事件简介区以小图标等比展示，480px 宽在桌面/移动双基准（380/788 宽画布）下均清晰；保持横版可与现有 7 张图视觉统一。",
+      "evidence": "sips 实测 7 张事件图：6 张 480px 宽（高 309-404，宽/高 1.19-1.55），1 张 398x292；体积 26-130KB。",
+      "source": "observed",
+      "check": null,
+      "coveredBy": null,
+      "repairHint": "用 sips 重制事件图为 480px 宽横版：`sips -z <高> 480 lib/assets/<事件图>.png`（高 300-400px、宽/高 1.2-1.6、≤130KB）；完成后用 `shasum` 与 `stat -f%z` 更新 assets 清单的 hash/bytes。"
+    },
+    {
+      "id": "qsh-hero-core-node",
+      "level": "hard",
+      "subject": "stages.*.entities[0] / stages.*.overlay",
+      "rule": "每个阶段 entities[0] 必须是核心人物（meta.hero 或其 sameAs 对侧，即 yingzheng/qinshihuang），且 overlay[entities[0]].big=true；每阶段恰好 1 个 big=true；big 节点不得带 rel 字段。",
+      "rationale": "引擎 currentEdges 以 people[0] 为圆心，把 big 节点布局在画布中心（computeLayout layout[people[0]]=[cx,cy]），核心↔他人的放射边类型取自他人 overlay.rel；showPerson 对无 rel 的节点显示『核心人物 · 本人』。big 数量 ≠1 或核心不在首位会直接导致图谱错位与文案错误。",
+      "evidence": "7/7 阶段 entities[0] 为 yingzheng（阶段1）或 qinshihuang（阶段2-7）；每阶段 big=true 恰 1 个且均无 rel；7/7 阶段含核心人物。",
+      "source": "extracted",
+      "check": "stages.every(s => { const heroIds = sameAs.flat().concat([meta.hero]); return heroIds.includes(s.entities[0]) && s.overlay[s.entities[0]].big===true && Object.values(s.overlay).filter(o=>o.big===true).length===1 && s.overlay[s.entities[0]].rel===undefined; })",
+      "coveredBy": null,
+      "repairHint": "把该阶段 entities[0] 换成核心人物（事件在亲政前用 yingzheng、称帝后用 qinshihuang），在 overlay[entities[0]] 设 \"big\":true 并删掉它的 rel 字段；同时移除本阶段其他 overlay 条目上的 big，保证每阶段恰好 1 个 big=true。"
+    },
+    {
+      "id": "qsh-hero-rel-dimension",
+      "level": "hard",
+      "subject": "stages.*.overlay.*.rel",
+      "rule": "overlay.rel（人物→核心关系）只能使用 heroRelTypes 注册表（ruler/family/enemy，hero-radial 维度）；relations[].type（人物↔人物）只能使用 relationTypes 注册表（pairwise 维度）。两个维度禁止混用：ally 不可作 overlay.rel，heroRelTypes 未注册的类型不可作边 type。",
+      "rationale": "本库关系数据有两个维度（人物→核心的放射关系 vs 人物↔人物的直接边），共用注册表会导致爬取混用（如把 ally 填进 overlay.rel）。v1.3 方案 B 拆分双注册表后由此规则强制。",
+      "evidence": "overlay.rel 实际分布 ruler 20/family 4/enemy 1（+7 个 big 核心无 rel）；relations[].type 实际分布 ally 6/enemy 5。",
+      "source": "human",
+      "check": "stages.every(s => Object.values(s.overlay).every(o => o.big === true || Object.keys(pack.heroRelTypes || {}).includes(o.rel))) && relations.every(r => Object.keys(relationTypes).includes(r.type))",
+      "coveredBy": null,
+      "repairHint": "overlay.rel 只能取 heroRelTypes 注册的 ruler/family/enemy：若是 ally（同僚）语义，删掉该 overlay.rel，改在全集 relations 建一条 {a,b,type:\"ally\",label} 人物间边并在对应阶段用 {a,b} 引用；relations[].type 越界的，改成 relationTypes 已注册的 family/ruler/ally/enemy 之一。"
+    },
+    {
+      "id": "qsh-noncore-rel-enum",
+      "level": "hard",
+      "subject": "stages.*.overlay.*.rel",
+      "rule": "每个非 big 的 overlay 条目必须带 rel，取值只能是 heroRelTypes 已注册的 3 类之一：ruler（君臣/臣属将领）、family（宗亲/子嗣）、enemy（对立/叛乱者）；人物间关系类型另由 relationTypes 注册。",
+      "rationale": "引擎用 REL[p.rel].name/color 渲染弹窗关系标签、用 p.rel||'ally' 决定放射边配色（currentEdges）；rel 缺失会把普通人物误标为『核心人物 · 本人』，未注册取值会直接抛 undefined 错误。语义约定见引擎注释：臣属/将领=ruler、子嗣=family、举兵反叛者=enemy。",
+      "evidence": "25/25 非 big overlay 条目均带 rel：ruler 20 次、family 4 次、enemy 1 次，全部在 heroRelTypes 注册表内。",
+      "source": "extracted",
+      "check": "stages.every(s => Object.values(s.overlay).every(o => o.big===true || Object.keys(pack.heroRelTypes || {}).includes(o.rel)))",
+      "coveredBy": "E6（仅约束 relations[].type；overlay.rel 为本库补充）",
+      "repairHint": "给该非 big overlay 条目补 rel 字段，三选一：ruler（臣属/将领）、family（子嗣宗亲）、enemy（反叛对立）；big 核心节点例外（不得带 rel）。确需人物间新类型时，在 relationTypes 注册 label+color 并写入 relations。"
+    },
+    {
+      "id": "qsh-overlay-complete",
+      "level": "hard",
+      "subject": "stages.*.overlay",
+      "rule": "overlay 的键集合必须与该阶段 entities 完全一致（不多不少），且每个条目含 role、deed、impact 三个非空字段（big 节点可省 rel，其余字段同）。",
+      "rationale": "__fromPack 逐人读 ov.role/deed/impact 填入弹窗与节点职务标签，缺条目时弹窗出现 undefined；多出不在 entities 的键则永不渲染，属脏数据。",
+      "evidence": "7/7 阶段 overlay 键集与 entities 精确相等（extra=0、missing=0）；32/32 条目 role/deed/impact 非空。",
+      "source": "observed",
+      "check": "stages.every(s => { const a=Object.keys(s.overlay).slice().sort().join(), b=s.entities.slice().sort().join(); return a===b && Object.values(s.overlay).every(o => o.role && o.deed && o.impact); })",
+      "coveredBy": "E7（仅校验引用存在，完整性与字段非空为本库补充）",
+      "repairHint": "把该阶段 overlay 键集合对齐 entities：缺的 id 补条目 {role（2-9 字职务）, deed（21-42 字作为）, impact（20-29 字影响），非核心另加 rel}，多出来的、不在 entities 里的键直接删除。"
+    },
+    {
+      "id": "qsh-stage-relations-valid",
+      "level": "hard",
+      "subject": "stages.*.relations",
+      "rule": "阶段 relations 只写 {a,b} 引用（禁带 type/label），该 {a,b} 必须在全集 relations 中存在，且 a、b 都在本阶段 entities 内；新增人物间关系须先写入全集 relations（含 type/label），再在阶段引用。",
+      "rationale": "__fromPack 用 byPair[a+'::'+b] 反查全集边取 type/label，查不到即抛错；引擎按名字连线，端点不在本阶段节点中则该边悬空不渲染。",
+      "evidence": "7 阶段共 13 条阶段边引用，全部命中全集 11 条边（badRef=0），且端点均在本阶段 entities 内（relOutOfStage=0）；全集 11 条边均有 type+label。",
+      "source": "observed",
+      "check": "stages.every(s => s.relations.every(r => relations.some(g => g.a===r.a && g.b===r.b) && s.entities.includes(r.a) && s.entities.includes(r.b)))",
+      "coveredBy": "E7/E5（端点须在阶段内为本库补充）",
+      "repairHint": "若全集 relations 没有这条边，先在 relations 追加 {a,b,type,label}（type 用已注册的 ally/enemy）；再把阶段 relations 的 {a,b} 按全集同方向照抄、删掉多写的 type/label；若 a 或 b 不在本阶段 entities，把该人物加入 entities 并补 overlay，或删除这条阶段引用。"
+    },
+    {
+      "id": "qsh-stage-size-range",
+      "level": "soft",
+      "subject": "stages.*.entities / stages.*.relations",
+      "rule": "每阶段人物 4-6 人（含核心），人物间关系边 1-4 条；超过 6 人须先评估：环形排序为 (n-1)! 全排列暴力枚举，且画布防碰撞空间随人数迅速收紧。",
+      "rationale": "orderRing 注释明示『人数≤6，开销极小』；computeLayout 在 788x492/380x456 双基准画布上做 120 轮分离迭代，连线标签在无间隙落点时会被整体隐藏（updateEdgesFromDOM 的 sg-lbl-hide 分支），人越多标签越容易消失。",
+      "evidence": "7 阶段 entities 数 [5,5,4,4,4,4,6]（min4/max6/med4）；阶段边数 [2,2,1,1,1,1,4]（min1/max4/med1）。",
+      "source": "extracted",
+      "check": "stages.every(s => s.entities.length>=4 && s.entities.length<=6 && s.relations.length>=1 && s.relations.length<=4)",
+      "coveredBy": null
+    },
+    {
+      "id": "qsh-summary-length",
+      "level": "soft",
+      "subject": "stages.*.summary / stages.*.summaryShort",
+      "rule": "每阶段同时撰写两版摘要：summary 42-47 字（桌面端），summaryShort 24-29 字（移动端）；summaryShort 不是截断而是重写，须独立成句、保留主干信息。",
+      "rationale": "renderIntro 在移动端整段切换为 summaryShort（isMobile() && e.summaryShort ? short : summary），无逐字截断逻辑；长度对齐现有分布可保证双端简介区不溢出、不换行错乱。",
+      "evidence": "实测 7 阶段：summary 42-47 字（中位 45），summaryShort 24-29 字（中位 26），7/7 双字段齐全。",
+      "source": "observed",
+      "check": "stages.every(s => s.summary.length>=42 && s.summary.length<=47 && s.summaryShort.length>=24 && s.summaryShort.length<=29)",
+      "coveredBy": null
+    },
+    {
+      "id": "qsh-deed-impact-length",
+      "level": "soft",
+      "subject": "stages.*.overlay.*.deed / impact",
+      "rule": "deed（在本事件中的作为）21-42 字、impact（影响）20-29 字；deed 写具体事迹（含年份/事件名），impact 写一句后果评价，均单句或两句，不列表、不分段。",
+      "rationale": "弹窗 modal-body 以纯文本整段展示（showPerson textContent），无折叠无截断；对齐现有长度分布可保证弹窗在双基准画布内不超出可视区。",
+      "evidence": "实测 32 条 overlay：deed 21-42 字（中位 28），impact 20-29 字（中位 26）。",
+      "source": "observed",
+      "check": "stages.every(s => Object.values(s.overlay).every(o => o.deed.length>=21 && o.deed.length<=42 && o.impact.length>=20 && o.impact.length<=29))",
+      "coveredBy": null
+    },
+    {
+      "id": "qsh-short-text-length",
+      "level": "soft",
+      "subject": "stages.*.overlay.*.role / entities.*.name / relations.*.label",
+      "rule": "role（职务标签）不超过 9 字，建议 2-5 字；人物 name 保持 2-3 字中文名；关系 label 2-3 字（如『举荐』『矫诏』），不超过 4 字。",
+      "rationale": "name 宽度进入防碰撞包围盒（nameW=k.length*nf*0.95+14），role-chip 与 name 都是连线标签的避让障碍；label 按实测文本宽度占位，找不到无重叠落点即整条隐藏（sg-lbl-hide），短标签显著降低被隐藏概率。",
+      "evidence": "实测：role 2-9 字（中位 3）；15 个实体 name 全为 2-3 字；11 条关系 label 全为 2-3 字。",
+      "source": "observed",
+      "check": "stages.every(s => Object.values(s.overlay).every(o => o.role.length<=9)) && Object.values(entities).every(e => e.name.length>=2 && e.name.length<=3) && relations.every(r => r.label.length<=4)",
+      "coveredBy": null
+    },
+    {
+      "id": "qsh-add-person-checklist",
+      "level": "soft",
+      "subject": "entities（新增人物）",
+      "rule": "新增一个人物按序完成 6 步：① 起语义化小写 id（拼音 slug，如 wangli），勿与现有 id/aliases 冲突；② entities 增 {name, kind:'person', avatar}；③ 头像 PNG（160px 宽横版）放入 lib/assets/ 并在 assets 清单登记 hash/bytes/exists；④ aliases 增中文名映射；⑤ 在每个出场阶段的 entities 数组追加 id 并补 overlay（role/rel/deed/impact，字数见 qsh-deed-impact-length）；⑥ provenance.entities 增溯源记录。若该人物与现有实体是同一现实对象（如别称），不要新建实体，改在 sameAs 加对、aliases 加名（参照 yingzheng/qinshihuang 特例）。",
+      "rationale": "综合 qsh-entity-avatar-required / qsh-avatar-image-spec / qsh-overlay-complete / qsh-noncore-rel-enum；sameAs 为 v1.2 实体同一性机制（E14/W6），重复建实体触发 W6 撞名警告。",
+      "evidence": "15 实体全部具备上述 6 要素；sameAs 现有 1 对（yingzheng↔qinshihuang）为同一人物双 id 的既有范例。",
+      "source": "observed",
+      "check": null,
+      "coveredBy": null
+    },
+    {
+      "id": "qsh-add-stage-checklist",
+      "level": "soft",
+      "subject": "stages（新增事件）",
+      "rule": "新增一个事件按序完成 7 步：① 起语义化 key（拼音 slug）并插入 stages 的正确时间序位置（底部按钮与左右方向键按数组顺序切换）；② name 取 3-4 字事件名；③ year 用『前NNN-前NNN』或『前NNN起』格式，period 填朝代阶段（现有取值：战国末期/秦始皇帝时期/秦始皇帝中后期/秦始皇帝晚年/秦末）；④ 写 summary+summaryShort 双版摘要（长度见 qsh-summary-length）；⑤ 备 480px 宽横版 PNG 事件图并登记 assets；⑥ entities 首位放核心人物（yingzheng 或 qinshihuang，按该事件时点的称谓选择），总人数 4-6；⑦ overlay 全员补齐（核心 big=true 无 rel，其余带 rel），涉及的人物间新关系先录入全集 relations 再用 {a,b} 引用。",
+      "rationale": "综合 qsh-hero-core-node / qsh-stage-image-required / qsh-stage-size-range / qsh-stage-relations-valid；goTo 与 renderEventBtns 均按数组顺序渲染，时间序即数组序。",
+      "evidence": "7 阶段 key 全为拼音 slug；name 3-4 字；year 全部匹配『前NNN(-前NNN|起)』；stages 按前247→前207 时间升序排列。",
+      "source": "observed",
+      "check": null,
+      "coveredBy": null
+    },
+    {
+      "id": "qsh-add-relation-checklist",
+      "level": "soft",
+      "subject": "relations（新增关系）",
+      "rule": "新增一条人物间关系按序完成 4 步：① 确认两端实体存在（没有则先按 qsh-add-person-checklist 补人）；② 全集 relations 追加 {a, b, type, label}，type 用已注册的 ally/enemy（人物间边现有只用这两类），label 2-3 字动词短语；③ 在对应阶段 relations 里加 {a,b} 引用，并确认两端都在该阶段 entities 内、阶段总边数不超 4；④ provenance.relations 增 'a::b' 键溯源记录。核心人物与他人的关系不走此流程——改写在对应阶段 overlay 的 rel 字段（见 qsh-noncore-rel-enum）。",
+      "rationale": "综合 qsh-stage-relations-valid / qsh-short-text-length / qsh-stage-size-range；放射边由引擎运行时合成（currentEdges），全集 relations 只承载人物↔人物边。",
+      "evidence": "全集 11 条边 type 分布 ally 6 / enemy 5（family/ruler 未用于人物间边）；11 条均有 2-3 字 label；provenance.relations 11 个 'a::b' 键齐全。",
+      "source": "observed",
+      "check": null,
+      "coveredBy": null
+    }
+  ]
+}

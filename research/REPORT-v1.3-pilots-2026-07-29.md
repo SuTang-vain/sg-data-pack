@@ -104,11 +104,11 @@ Collection pilot 成功生成 2179 bytes 的 `.d.ts`，并包含 `CollectionPilo
 - JSON Schema 仍主要是契约产物，CLI 的权威执行层仍是 `SGDataLoader`；
 - templatize 只验证 byte-exact，没有自动判断 slot 的业务语义；
 - alias 候选尚无 precision/recall 标注集；
-- extract equivalence 仍需接入至少三个真实组件库引擎。
+- extract equivalence 目前已接入一个真实组件库引擎（秦始皇事件图谱 fixture），仍需至少两个不同形态的真实组件库引擎。
 
 ## 7. 下一实验
 
-1. 将三类 synthetic pilot 替换或补充为真实组件库匿名 fixture；
+1. 将第二、第三类真实组件库匿名 fixture 接入 extraction/equivalence（首个真实 Qinshihuang fixture 已纳入 `tests/extract-integration.test.js`）；
 2. 为 alias-candidates 建立人工标注名称集并计算 Top-1/Top-3 命中率；
 3. 为 templatize 增加可选节点、嵌套标签和异质项拒绝实验；
 4. 增加 JSON Schema/runtime parity 自动检查；
