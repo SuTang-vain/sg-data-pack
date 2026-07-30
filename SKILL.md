@@ -18,19 +18,19 @@ A Data Pack is the **single entry point** for a component library's business dat
 ## CLI (scripts/sg-data-pack, zero-dependency, Node ≥ 18)
 
 ```bash
-SKILL=~/.zcode/skills/sg-data-pack/scripts/sg-data-pack   # or the codex/claude install path
+SK=~/.zcode/skills/sg-data-pack/scripts/sg-data-pack   # or the codex/claude install path
 
-node $SK extract <path/to/xxx.config.js>          # extract + validate + equivalence test; writes lib/data/{data.json,data.js,data.schema.json}
-node $SK extract <path/to/xxx.config.js> --check  # validate + equivalence only (no writes)
-node $SK validate <data.json> [--strict] [--verify-hash]  # standalone validation (--verify-hash detects replaced assets)
-node $SK rules <libDir> [--strict]                      # execute library-level data rules (data-rules.json)
-node $SK diff <old.json> <new.json> [--json]            # structural diff between two packs (evolution / recrawl review)
-node $SK templatize <instances.json> [--out dir]        # derive item template from repeated HTML instances (collection pages)
-node $SK alias-candidates <data.json> <names.json|txt>     # rank unresolved crawled names
-node $SK recrawl-skeleton <data.json> <records.json> [--out dir]  # generate cross-check/review report
-node $SK types <data.json> [--out file.d.ts] [--name N]   # generate TypeScript declarations
-node $SK loader    # print runtime-validator path (copy into the library's lib/src/)
-node $SK schema    # print contract schema path
+node "$SK" extract <path/to/xxx.config.js>          # extract + validate + equivalence test; writes lib/data/{data.json,data.js,data.schema.json}
+node "$SK" extract <path/to/xxx.config.js> --check  # validate + equivalence only (no writes)
+node "$SK" validate <data.json> [--strict] [--verify-hash]  # standalone validation (--verify-hash detects replaced assets)
+node "$SK" rules <libDir> [--strict]                      # execute library-level data rules (data-rules.json)
+node "$SK" diff <old.json> <new.json> [--json]            # structural diff between two packs (evolution / recrawl review)
+node "$SK" templatize <instances.json> [--out dir]        # derive item template from repeated HTML instances (collection pages)
+node "$SK" alias-candidates <data.json> <names.json|txt>     # rank unresolved crawled names
+node "$SK" recrawl-skeleton <data.json> <records.json> [--out dir]  # generate cross-check/review report
+node "$SK" types <data.json> [--out file.d.ts] [--name N]   # generate TypeScript declarations
+node "$SK" loader    # print runtime-validator path (copy into the library's lib/src/)
+node "$SK" schema    # print contract schema path
 ```
 
 ## Workflow (for a new component library)
@@ -65,7 +65,7 @@ timelines, leaderboards), first split it into component fragments with **offset-
 pitfalls), then auto-derive item templates:
 
 ```bash
-node $SK templatize items.json --out build/   # items.json = array of per-instance HTML strings
+node "$SK" templatize items.json --out build/   # items.json = array of per-instance HTML strings
 ```
 
 Verify group homogeneity *before* parameterizing — a "repeated item" group that templatize
@@ -77,8 +77,8 @@ stay static — declare the boundary in DATA-GUIDE.
 ### 4. Extract + validate
 
 ```bash
-cp "$(node $SK loader)" <lib>/lib/src/sg-data-loader.js
-node $SK extract <config>          # must be fully green: 0 validation errors, equivalence passed
+cp "$(node "$SK" loader)" <lib>/lib/src/sg-data-loader.js
+node "$SK" extract <config>          # must be fully green: 0 validation errors, equivalence passed
 ```
 
 The equivalence test is the **losslessness guarantee**: `__fromPack(pack)` must deep-equal the
@@ -88,7 +88,7 @@ undeduplicated duplicates — fix item by item using the reported diff paths.
 ### 5. Integrate + regress
 
 Example page: `sg-data-loader.js` → engine → `../data/data.js` → `mount(root, { data: SG_DATA_PACK })`.
-Re-run `node $SK extract <config> --check` to confirm stability.
+Re-run `node "$SK" extract <config> --check` to confirm stability.
 
 ### 6. Analyze: derive library-level feature rules
 
@@ -97,7 +97,7 @@ assets) and produce `lib/data/data-rules.json` (hard/soft rules with evidence, m
 `check` expressions) + `lib/data/DATA-GUIDE.md` (human contributor guide). This serves two goals:
 (a) a contract for future page-extension development, (b) guidance for humans supplementing
 content and assets. **Follow `references/data-rules-guide.md`** (format, check-expression
-convention, evidence discipline). Verify with `node $SK rules <libDir>`.
+convention, evidence discipline). Verify with `node "$SK" rules <libDir>`.
 
 ## Rule Cheat Sheet (enforced by the validator)
 
@@ -119,7 +119,7 @@ Crawl output may only consist of: `data.json` + `assets/` + the alias table. Req
 
 - Normalize entity names to canonical ids via `aliases` before writing any reference
 - Fill provenance with real `origin`/`sourceUrl`/`fetchedAt`/`confidence` (baseline data is 1.0; crawled data uses actual values)
-- Before committing, must pass: `node $SK validate data.json --strict --verify-hash`
+- Before committing, must pass: `node "$SK" validate data.json --strict --verify-hash`
 
 ## Deep References
 

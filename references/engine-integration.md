@@ -33,10 +33,13 @@ function __fromPack(pack) {
     var cands = masterEdges.filter(function (r) {
       return canonical(r.a) === canonical(ref.a) && canonical(r.b) === canonical(ref.b);
     });
-    if (ref.id) cands = cands.filter(function (r) { return r.id === ref.id; });
-    if (cands.length > 1 && ref.type) cands = cands.filter(function (r) { return r.type === ref.type; });
+    if (ref.id !== undefined) cands = cands.filter(function (r) { return r.id === ref.id; });
+    if (ref.type !== undefined) cands = cands.filter(function (r) { return r.type === ref.type; });
+    cands = cands.filter(function (r) {
+      return !Array.isArray(r.scope) || r.scope.indexOf(stageKey) !== -1;
+    });
     if (cands.length > 1) {
-      var scoped = cands.filter(function (r) { return Array.isArray(r.scope) && r.scope.indexOf(stageKey) !== -1; });
+      var scoped = cands.filter(function (r) { return Array.isArray(r.scope); });
       if (scoped.length === 1) cands = scoped;
     }
     if (cands.length !== 1) throw new Error('stage relation cannot resolve uniquely: ' + ref.a + '::' + ref.b);

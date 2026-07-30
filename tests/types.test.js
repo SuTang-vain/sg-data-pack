@@ -2,78 +2,108 @@
 /*
  * types.test.js — sg-pack-types generation tests
  *
- * Covers P0-8: the generated SgDerivation interface must include
- * `alsoTouches?: string[]` (schema declares it, loader E16 checks it,
- * but the TS generator omits it).
- *
- * Run: node --test tests/
+ * Run: node --test tests/*.test.js
  */
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { execFileSync } = require('node:child_process');
+const { execFileSync, spawnSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
 
 const TYPES = path.join(__dirname, '..', 'scripts', 'sg-pack-types.js');
 
-function generateTypes(pack) {
+function withPack(pack, run) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sg-types-'));
   const packPath = path.join(dir, 'pack.json');
-  const outPath = path.join(dir, 'types.d.ts');
   fs.writeFileSync(packPath, JSON.stringify(pack));
   try {
-    execFileSync(process.execPath, [TYPES, packPath, '--name', 'Demo', '--out', outPath], { encoding: 'utf8' });
-    return fs.readFileSync(outPath, 'utf8');
+    return run({ dir, packPath });
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
 }
 
-test('SgDerivation includes alsoTouches', () => {
-  const pack = {
-    schemaVersion: '1.3',
-    meta: { id: 'demo', title: 'Demo' },
-    entities: { a: { kind: 'person', name: 'A' } },
-    aliases: {}, relationTypes: {}, relations: [], stages: [],
-    contents: {}, domain: {}, assets: {},
-    derivations: {
-      d1: {
-        kind: 'repeat', source: 'entities', consumers: ['e'],
-        alsoTouches: ['entities.*.name'], note: 'n',
-      },
-    },
-  };
-  const dts = generateTypes(pack);
-  assert.match(dts, /alsoTouches\?:\s*string\[\]/, 'SgDerivation must declare alsoTouches?: string[]');
-});
+function generateTypes(pack) {
+  return withPack(pack, ({ dir, packPath }) => {
+    const outPath = path.join(dir, 'types.d.ts');
+    execFileSync(process.execPath, [TYPES, packPath, '--name', 'Demo', '--out', outPath], { encoding: 'utf8' });
+    return fs.readFileSync(outPath, 'utf8');
+  });
+}
 
-test('SgDerivation includes affects', () => {
-  const pack = {
+function minimalPack(overrides) {
+  return Object.assign({
     schemaVersion: '1.3',
     meta: { id: 'demo', title: 'Demo' },
     entities: { a: { kind: 'person', name: 'A' } },
-    aliases: {}, relationTypes: {}, relations: [], stages: [],
-    contents: {}, domain: {}, assets: {},
+  }, overrides || {});
+}
+
+test('SgDerivation includes alsoTouches and affects', () => {
+  const dts = generateTypes(minimalPack({
     derivations: {
       d1: {
-        kind: 'projection', source: 'domain.works', consumers: ['e'],
-        affects: ['div.x'], alsoTouches: ['entities.*'], note: 'n',
+        kind: 'projection', source: 'entities', consumers: ['e'],
+        affects: ['div.x'], alsoTouches: ['entities.*.name'], note: 'n',
       },
     },
-  };
-  const dts = generateTypes(pack);
-  assert.match(dts, /affects\?:\s*string\[\]/, 'SgDerivation must declare affects?: string[]');
+  }));
+  assert.match(dts, /alsoTouches\?:\s*string\[\]/);
+  assert.match(dts, /affects\?:\s*string\[\]/);
 });
 
 test('contract types include stable relation ids and contextual aliases', () => {
-  const pack = {
-    schemaVersion: '1.3', meta: { id: 'demo', title: 'Demo' },
-    entities: { a: { kind: 'person', name: 'A' } },
-    aliases: { Alias: { id: 'a', context: 'pilot' } },
-    relationTypes: {}, relations: [], stages: [], contents: {}, domain: {}, assets: {},
-  };
-  const dts = generateTypes(pack);
+  const dts = generateTypes(minimalPack({ aliases: { Alias: { id: 'a', context: 'pilot' } } }));
   assert.match(dts, /interface SgRelation \{ id\?: string;/);
-  assert.match(dts, /aliases: Record<string, string \| \{ id: string; context\?: string;/);
+  assert.match(dts, /aliases\?: Record<string, string \| \{ id: string; context\?: string;/);
+});
+
+test('generated schemaVersion union matches all supported contract versions', () => {
+  const dts = generateTypes(minimalPack());
+  const declared = /schemaVersion: ([^;]+);/.exec(dts)[1].match(/'[^']+'/g).map((value) => value.slice(1, -1));
+  assert.deepEqual(declared, ['1.0', '1.1', '1.2', '1.3']);
+});
+
+test('generated top-level sections follow the schema optionality policy', () => {
+  const dts = generateTypes(minimalPack());
+  for (const field of ['aliases', 'relationTypes', 'heroRelTypes', 'relations', 'stages', 'attributeTypes', 'attributeSources', 'contents', 'domain', 'assets']) {
+    assert.match(dts, new RegExp(`\\n  ${field}\\?:`), `${field} must be optional`);
+  }
+  assert.match(dts, /\n  schemaVersion:/);
+  assert.match(dts, /\n  meta:/);
+  assert.match(dts, /\n  entities:/);
+});
+
+test('generated relation registry, provenance, and asset fields match the formal contract', () => {
+  const dts = generateTypes(minimalPack());
+  assert.match(dts, /relationTypes\?: Record<string, \{ label: string;/);
+  assert.match(dts, /interface SgProvenanceEntry \{ origin\?: string; sourceUrl\?: string \| null; fetchedAt\?: string; confidence\?: number;/);
+  assert.match(dts, /interface SgAssetEntry \{ exists\?: boolean; bytes\?: number; hash\?: string; sourceUrl\?: string;/);
+});
+
+test('types without --out prints the declaration to stdout', () => {
+  const stdout = withPack(minimalPack(), ({ packPath }) => (
+    execFileSync(process.execPath, [TYPES, packPath, '--name', 'Demo'], { encoding: 'utf8' })
+  ));
+  assert.match(stdout, /export interface DemoPack/);
+  assert.match(stdout, /export interface SgRelation/);
+});
+
+test('types rejects an invalid explicit TypeScript interface name', () => {
+  const result = withPack(minimalPack(), ({ packPath }) => (
+    spawnSync(process.execPath, [TYPES, packPath, '--name', 'Demo-Pack'], { encoding: 'utf8' })
+  ));
+  assert.equal(result.status, 2);
+  assert.match(result.stderr, /valid TypeScript identifier/);
+});
+
+test('types rejects flags that are missing their values', () => {
+  for (const flag of ['--name', '--out']) {
+    const result = withPack(minimalPack(), ({ packPath }) => (
+      spawnSync(process.execPath, [TYPES, packPath, flag], { encoding: 'utf8' })
+    ));
+    assert.equal(result.status, 2);
+    assert.match(result.stderr, new RegExp(`${flag} requires a value`));
+  }
 });

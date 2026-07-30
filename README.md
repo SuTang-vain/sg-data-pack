@@ -55,7 +55,7 @@ Entities are keyed by stable slug IDs; crawled names normalize through `aliases`
 <td width="33%" valign="top">
 
 ### 🧬 Record-level provenance
-Every entity / relation / content block carries `origin`, `sourceUrl`, `fetchedAt`, `confidence`. Below-threshold records go to a review list (W5).
+Entity / relation / content records can be traced in the parallel `provenance` section. Missing origin/source metadata is surfaced by W7/W8; below-threshold confidence goes to a review list (W5).
 
 </td>
 <td width="33%" valign="top">
@@ -150,19 +150,19 @@ ln -s "$PWD/sg-data-pack" ~/.claude/skills/sg-data-pack   # Claude Code
 <img src="docs/how-to-use.svg" alt="CLI session: extract, validate, loader" width="760"/>
 
 ```bash
-SKILL=~/.zcode/skills/sg-data-pack/scripts/sg-data-pack
+SK=~/.zcode/skills/sg-data-pack/scripts/sg-data-pack
 
-node $SK extract <path/to/config.js>          # extract + validate + equivalence test
-node $SK extract <path/to/config.js> --check  # validate only (regression)
-node $SK validate <data.json> --strict --verify-hash
-node $SK rules <libDir> [--strict]
-node $SK diff <old.json> <new.json> [--json]
-node $SK templatize <instances.json> [--out dir]
-node $SK alias-candidates <data.json> <names.json|txt>
-node $SK recrawl-skeleton <data.json> <records.json> [--out dir]
-node $SK types <data.json> [--out data-types.d.ts] [--name PackName]
-node $SK loader    # print runtime-validator path (copy into a library's lib/src/)
-node $SK schema    # print contract-schema path
+node "$SK" extract <path/to/config.js>          # extract + validate + equivalence test
+node "$SK" extract <path/to/config.js> --check  # validate only (regression)
+node "$SK" validate <data.json> --strict --verify-hash
+node "$SK" rules <libDir> [--strict]
+node "$SK" diff <old.json> <new.json> [--json]
+node "$SK" templatize <instances.json> [--out dir]
+node "$SK" alias-candidates <data.json> <names.json|txt>
+node "$SK" recrawl-skeleton <data.json> <records.json> [--out dir]
+node "$SK" types <data.json> [--out data-types.d.ts] [--name PackName]
+node "$SK" loader    # print runtime-validator path (copy into a library's lib/src/)
+node "$SK" schema    # print contract-schema path
 ```
 
 > Zero dependencies (acorn is vendored). Requires **Node ≥ 18**.
@@ -178,24 +178,28 @@ node $SK schema    # print contract-schema path
 ```jsonc
 {
   "schemaVersion": "1.3",
-  "meta":      { "id": "…", "title": "…",
-                 "hero": "…" },
-  "entities":  { "wukong": {
-    "name": "孙悟空", "kind": "person" } },
-  "aliases":   { "孙悟空": "wukong" },
-  "relations": [{ "a": "rulaifo",
-    "b": "wukong", "type": "enemy",
-    "label": "五行山压",
-    "scope": ["tianting"] }],
-  "stages":    [{ "key": "tianting",
-    "entities": ["wukong"],
+  "meta": { "id": "journey", "title": "Journey",
+            "hero": "wukong" },
+  "entities": {
+    "wukong": { "name": "孙悟空", "kind": "person" },
+    "rulaifo": { "name": "如来佛祖", "kind": "person" }
+  },
+  "aliases": { "孙悟空": "wukong" },
+  "relationTypes": {
+    "enemy": { "label": "敌对" }
+  },
+  "relations": [{ "id": "wuxingshan",
+    "a": "rulaifo", "b": "wukong", "type": "enemy",
+    "label": "五行山压", "scope": ["tianting"] }],
+  "stages": [{ "key": "tianting", "name": "大闹天宫",
+    "entities": ["wukong", "rulaifo"],
     "relations": [
-      { "a": "rulaifo", "b": "wukong" }
+      { "id": "wuxingshan", "a": "rulaifo", "b": "wukong" }
     ] }],
-  "sameAs":    [["yingzheng",
-                 "qinshihuang"]],
   "provenance": { "entities": {
-    "wukong": { "confidence": 1.0 } } }
+    "wukong": { "origin": "engine-embedded-defaults",
+                 "fetchedAt": "2026-07-30", "confidence": 1.0 }
+  } }
 }
 ```
 
@@ -239,7 +243,7 @@ Zero-dependency contract tests cover the loader rules (E1–E16 / W1–W8), the 
 the TypeScript generator, and cross-artifact version consistency:
 
 ```bash
-node --test "tests/*.test.js"
+node --test tests/*.test.js
 ```
 
 The same suite runs in CI via `.github/workflows/smoke.yml`. Three reproducible v1.3 pilots and their machine-readable result live under `research/`; rerun them with `node research/run-v1.3-pilots.js`.

@@ -1,8 +1,9 @@
 # Data Pack v1.3 Contract (Field Level)
 
 > Formal schema: `scripts/lib/data-pack.schema.json`; runtime validator: `scripts/lib/sg-data-loader.js`.
-> Top-level fields: schemaVersion / meta / entities / aliases / relationTypes / relations / stages /
-> attributeTypes / attributeSources / contents / domain / assets / sameAs / provenance / kindNameFields / derivations.
+> Required top-level fields: schemaVersion / meta / entities. Optional sections: aliases / relationTypes /
+> heroRelTypes / relations / stages / attributeTypes / attributeSources / contents / domain / assets /
+> sameAs / provenance / kindNameFields / derivations.
 
 ## Top-Level Structure
 
@@ -58,9 +59,9 @@ Targets must exist (E4). The object form preserves review context while `resolve
 ```
 - `id` is optional but strongly recommended for scoped multi-edges, stage references, diff and provenance
 - `type` must be registered in relationTypes (E6)
-- `scope` (v1.1+): this edge is only active in the listed stages. When multiple edges share the
-  same (a,b) pair, a stage reference must resolve to exactly one edge via stable `id`, `type`,
-  or the current stage's scope (E12)
+- `scope` (v1.1+): this edge is only active in the listed stages. Every stage reference must
+  resolve to exactly one active edge; explicit `id` and `type` constraints always match, and
+  the current stage must be included by a scoped edge (E12)
 
 ## stages
 

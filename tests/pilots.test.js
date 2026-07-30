@@ -15,10 +15,11 @@ function read(...parts) { return JSON.parse(fs.readFileSync(path.join(...parts),
 function run(args) { return spawnSync(process.execPath, [CLI, ...args], { encoding: 'utf8', maxBuffer: 1 << 24 }); }
 
 for (const pilot of ['id-based', 'chinese-name', 'collection']) {
-  test(`v1.3 ${pilot} pilot validates with zero errors`, () => {
+  test(`v1.3 ${pilot} pilot validates with zero errors and warnings`, () => {
     const pack = read(FIXTURES, pilot, 'data.json');
     const result = globalThis.SGDataLoader.validate(pack);
     assert.deepEqual(result.errors, []);
+    assert.deepEqual(result.warnings, []);
   });
 }
 

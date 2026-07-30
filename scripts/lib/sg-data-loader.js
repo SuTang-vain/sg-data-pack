@@ -171,7 +171,20 @@
     });
 
     /* relationTypes registry */
-    var relationTypes = isObj(pack.relationTypes) ? pack.relationTypes : {};
+    var relationTypes = {};
+    if (pack.relationTypes !== undefined && !isObj(pack.relationTypes)) {
+      errors.push('E6: relationTypes must be an object');
+    } else if (isObj(pack.relationTypes)) {
+      relationTypes = pack.relationTypes;
+      Object.keys(relationTypes).forEach(function (type) {
+        var entry = relationTypes[type];
+        if (!isObj(entry)) {
+          errors.push('E6: relationTypes.' + type + ' must be an object');
+        } else if (typeof entry.label !== 'string' || !entry.label) {
+          errors.push('E6: relationTypes.' + type + '.label must be a non-empty string');
+        }
+      });
+    }
 
     /* stages pre-scan (E12 needs the stage-key set) */
     var stages = Array.isArray(pack.stages) ? pack.stages : [];
@@ -188,12 +201,20 @@
     }
     var referenced = {};
     var relationIds = Object.create(null);
+    var anonymousRelationIds = Object.create(null);
     relations.forEach(function (r, i) {
       if (!isObj(r)) { errors.push('E5: relations[' + i + '] must be an object'); return; }
       if (r.id !== undefined) {
         if (typeof r.id !== 'string' || !r.id) errors.push('E12: relations[' + i + '].id must be a non-empty string when present');
         else if (relationIds[r.id]) errors.push('E12: relations[' + i + '].id "' + r.id + '" is duplicated');
         else relationIds[r.id] = true;
+      } else {
+        var anonymousIdentity = relationIdentity(pack, r);
+        if (anonymousRelationIds[anonymousIdentity] !== undefined) {
+          errors.push('E12: relations[' + i + '] duplicated master relation identity "' + anonymousIdentity + '" (first declared at relations[' + anonymousRelationIds[anonymousIdentity] + '])');
+        } else {
+          anonymousRelationIds[anonymousIdentity] = i;
+        }
       }
       ['a', 'b'].forEach(function (end) {
         var id = resolveId(pack, r[end]);
@@ -257,31 +278,46 @@
           if (!okA) errors.push('E7: ' + at + '.a dangling reference "' + ref.a + '"');
           if (!okB) errors.push('E7: ' + at + '.b dangling reference "' + ref.b + '"');
           if (!okA || !okB) return;
-          /* E12: when (a,b) matches multiple master edges, it must resolve to one via type or scope.
-           * Endpoints are canonicalized via resolveId so that a stage ref using an alias
-           * name still matches a master edge declared with the canonical id. */
+          /* E12: a stage ref must resolve to exactly one active master edge.
+           * Endpoints are canonicalized via resolveId; explicit id/type constraints always
+           * match, and scoped edges are active only in their declared stages. */
           var ra = okA, rb = okB;
-          var cands = relations.filter(function (r) {
-            return resolveId(pack, r.a) === ra && resolveId(pack, r.b) === rb;
+          var endpointCands = relations.filter(function (r) {
+            return isObj(r) && resolveId(pack, r.a) === ra && resolveId(pack, r.b) === rb;
           });
+          var cands = endpointCands;
+          var validRefId = true;
           if (ref.id !== undefined) {
-            if (typeof ref.id !== 'string' || !ref.id) errors.push('E12: ' + at + '.id must be a non-empty string when present');
-            else cands = cands.filter(function (r) { return r.id === ref.id; });
+            if (typeof ref.id !== 'string' || !ref.id) {
+              errors.push('E12: ' + at + '.id must be a non-empty string when present');
+              validRefId = false;
+              cands = [];
+            } else {
+              cands = cands.filter(function (r) { return r.id === ref.id; });
+            }
           }
-          if (cands.length > 1 && ref.type) {
-            cands = cands.filter(function (r) { return r.type === ref.type; });
+          if (ref.type !== undefined) {
+            if (typeof ref.type !== 'string' || !ref.type) {
+              errors.push('E12: ' + at + '.type must be a non-empty string when present');
+              cands = [];
+            } else {
+              cands = cands.filter(function (r) { return r.type === ref.type; });
+            }
           }
+          cands = cands.filter(function (r) {
+            return !Array.isArray(r.scope) || r.scope.indexOf(s.key) !== -1;
+          });
           if (cands.length > 1) {
-            var scoped = cands.filter(function (r) {
-              return Array.isArray(r.scope) && r.scope.indexOf(s.key) !== -1;
-            });
+            var scoped = cands.filter(function (r) { return Array.isArray(r.scope); });
             if (scoped.length === 1) cands = scoped;
           }
-          if (cands.length === 0) {
+          if (endpointCands.length === 0) {
             errors.push('E7: ' + at + ' {' + ref.a + ',' + ref.b + '} does not exist in master relations');
+          } else if (cands.length === 0 && validRefId) {
+            errors.push('E12: ' + at + ' {' + ref.a + ',' + ref.b + '} matches no active master edge for the declared id/type/scope (stage "' + s.key + '")');
           } else if (cands.length > 1) {
             errors.push('E12: ' + at + ' {' + ref.a + ',' + ref.b + '} matches ' + cands.length +
-              ' master edges and cannot be resolved via type/scope (stage "' + s.key + '")');
+              ' active master edges and cannot be resolved via id/type/scope (stage "' + s.key + '")');
           }
         });
       }
@@ -361,7 +397,9 @@
 
     /* W1 */
     Object.keys(entities).forEach(function (id) {
-      if (!referenced[id]) warnings.push('W1: entity "' + id + '" (' + (entities[id].name || entities[id].title || id) + ') is not referenced by any relation/stage');
+      var entity = entities[id];
+      var display = isObj(entity) ? (entity.name || entity.title || id) : id;
+      if (!referenced[id]) warnings.push('W1: entity "' + id + '" (' + display + ') is not referenced by any relation/stage');
     });
 
     /* E14: sameAs entity-identity pairs (v1.2) */
@@ -410,11 +448,12 @@
         };
         checkProv('entities', function (id) { return Object.prototype.hasOwnProperty.call(entities, id); }, 'points to a non-existent entity');
         checkProv('relations', function (key) {
-          if (relations.some(function (r) { return relationIdentity(pack, r) === key || r.id === key; })) return true;
+          if (relations.some(function (r) { return isObj(r) && (relationIdentity(pack, r) === key || r.id === key); })) return true;
           // v1.2 compatibility: a::b is accepted only when it identifies one
           // canonical pair unambiguously. New packs should use relation.id or
           // the full a::b::type::scope=<...> identity.
           var pairMatches = relations.filter(function (r) {
+            if (!isObj(r)) return false;
             var a = resolveId(pack, r.a) || r.a;
             var b = resolveId(pack, r.b) || r.b;
             return (a + '::' + b) === key || (r.a + '::' + r.b) === key;
@@ -502,6 +541,7 @@
     var byNorm = {};
     Object.keys(entities).forEach(function (id) {
       var e = entities[id];
+      if (!isObj(e)) return;
       var n = normName(e.name || e.title || '');
       if (!n) return;
       if (!byNorm[n]) byNorm[n] = [];

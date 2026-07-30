@@ -33,11 +33,27 @@ if (!packPath) {
   console.error('Usage: sg-data-pack types <data.json> [--out <file.d.ts>] [--name <PackName>]');
   process.exit(2);
 }
-const flag = (n) => { const i = rest.indexOf(n); return i >= 0 ? rest[i + 1] : null; };
+const flag = (n) => {
+  const i = rest.indexOf(n);
+  if (i < 0) return null;
+  const value = rest[i + 1];
+  if (!value || value.startsWith('--')) {
+    console.error(`${n} requires a value`);
+    process.exit(2);
+  }
+  return value;
+};
 const pack = JSON.parse(fs.readFileSync(packPath, 'utf8'));
-const libName = flag('--name') || (() => {
+const explicitName = flag('--name');
+if (explicitName && !/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(explicitName)) {
+  console.error(`--name must be a valid TypeScript identifier, got ${JSON.stringify(explicitName)}`);
+  process.exit(2);
+}
+const libName = explicitName || (() => {
   const id = (pack.meta && pack.meta.id) || 'Library';
-  return id.replace(/(^|[-_])(\w)/g, (m, p, c) => c.toUpperCase()).replace(/[^A-Za-z0-9]/g, '');
+  const derived = id.replace(/(^|[-_])(\w)/g, (m, p, c) => c.toUpperCase()).replace(/[^A-Za-z0-9_$]/g, '');
+  if (!derived) return 'Library';
+  return /^[A-Za-z_$]/.test(derived) ? derived : `Pack${derived}`;
 })();
 const outPath = flag('--out');
 
@@ -119,8 +135,8 @@ const out = `/* Auto-generated from data.json by sg-data-pack types (${libName})
 
 /* ---------- contract layer (universal Data Pack sections) ---------- */
 export interface SgRelation { id?: string; a: string; b: string; type: string; label?: string; scope?: string[]; }
-export interface SgProvenanceEntry { origin: string; sourceUrl: string | null; fetchedAt: string; confidence: number; note?: string; }
-export interface SgAssetEntry { exists: boolean; bytes?: number; hash?: string; }
+export interface SgProvenanceEntry { origin?: string; sourceUrl?: string | null; fetchedAt?: string; confidence?: number; note?: string; }
+export interface SgAssetEntry { exists?: boolean; bytes?: number; hash?: string; sourceUrl?: string; }
 export interface SgDerivation {
   kind: 'repeat' | 'insertion-order' | 'lookup-rebuild' | 'scope-resolution' | 'projection' | 'reference-only';
   source: string;
@@ -140,14 +156,16 @@ export interface ${libName}Pack {
   schemaVersion: '1.0' | '1.1' | '1.2' | '1.3';
   meta: { id: string; title: string; [k: string]: unknown };
   entities: Record<string, ${libName}Entity>;
-  aliases: Record<string, string | { id: string; context?: string; [k: string]: unknown }>;
-  relationTypes: Record<string, { label?: string; dimension?: string }>;
-  relations: SgRelation[];
-  stages: Array<Record<string, unknown>>;
-  contents: Record<string, Record<string, unknown>>;
-  domain: Record<string, unknown>;
-  assets: Record<string, SgAssetEntry>;
-  attributeTypes?: Record<string, { label?: string; note?: string }>;
+  aliases?: Record<string, string | { id: string; context?: string; [k: string]: unknown }>;
+  relationTypes?: Record<string, { label: string; color?: string; [k: string]: unknown }>;
+  heroRelTypes?: Record<string, { label: string; color?: string; dimension?: 'hero-radial' | 'pairwise' | 'both'; [k: string]: unknown }>;
+  relations?: SgRelation[];
+  stages?: Array<Record<string, unknown>>;
+  contents?: Record<string, Record<string, unknown>>;
+  domain?: Record<string, unknown>;
+  assets?: Record<string, SgAssetEntry>;
+  attributeTypes?: Record<string, { label?: string; description?: string; [k: string]: unknown }>;
+  attributeSources?: string[];
   kindNameFields?: Record<string, string>;
   sameAs?: Array<[string, string]>;
   derivations?: Record<string, SgDerivation>;
@@ -163,6 +181,8 @@ if (outPath) {
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   fs.writeFileSync(outPath, out);
   console.log(`wrote ${outPath}`);
+  console.log(`kinds: ${kindInterfaces.length} (${kindInterfaces.map((k) => k.kind).join(', ')})`);
+  console.log(`entities: ${Object.keys(pack.entities || {}).length}, ids as literal union: ${idUnion === 'never' ? 'no' : 'yes'}`);
+} else {
+  process.stdout.write(out);
 }
-console.log(`kinds: ${kindInterfaces.length} (${kindInterfaces.map((k) => k.kind).join(', ')})`);
-console.log(`entities: ${Object.keys(pack.entities || {}).length}, ids as literal union: ${idUnion === 'never' ? 'no' : 'yes'}`);

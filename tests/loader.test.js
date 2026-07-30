@@ -67,6 +67,12 @@ test('E3 rejects an entity missing its name field', () => {
   assert.ok(hasError(errorsOf(basePack({ entities: { a: { kind: 'person' } } })), 'E3'));
 });
 
+test('E3 reports a malformed entity without crashing warning checks', () => {
+  const pack = basePack({ entities: { a: null } });
+  assert.doesNotThrow(() => validate(pack));
+  assert.ok(hasError(errorsOf(pack), 'entities.a must be an object'));
+});
+
 test('E4 rejects an alias pointing to a non-existent entity', () => {
   assert.ok(hasError(errorsOf(basePack({ aliases: { ghost: 'nope' } })), 'E4'));
 });
@@ -75,8 +81,22 @@ test('E5 flags a dangling relation endpoint', () => {
   assert.ok(hasError(errorsOf(basePack({ relations: [{ a: 'a', b: 'ghost', type: 'friend' }] })), 'E5'));
 });
 
+test('E5 reports a malformed master relation without crashing stage resolution', () => {
+  const pack = basePack({
+    relations: [null],
+    stages: [{ key: 's1', name: 'S1', entities: ['a', 'b'], relations: [{ a: 'a', b: 'b' }] }],
+  });
+  assert.doesNotThrow(() => validate(pack));
+  assert.ok(hasError(errorsOf(pack), 'relations[0] must be an object'));
+});
+
 test('E6 rejects an unregistered relation type', () => {
   assert.ok(hasError(errorsOf(basePack({ relations: [{ a: 'a', b: 'b', type: 'unknown' }] })), 'E6'));
+});
+
+test('E6 rejects a relation type registry entry without a label', () => {
+  const pack = basePack({ relationTypes: { friend: {} } });
+  assert.ok(hasError(errorsOf(pack), 'relationTypes.friend.label'));
 });
 
 test('E7 flags a dangling stage entity reference', () => {
@@ -95,6 +115,15 @@ test('E14 rejects a sameAs pair referencing a missing entity', () => {
 
 test('E15 rejects a provenance key pointing at a missing record', () => {
   assert.ok(hasError(errorsOf(basePack({ provenance: { entities: { ghost: {} } } })), 'E15'));
+});
+
+test('E15 handles malformed master relations without crashing provenance checks', () => {
+  const pack = basePack({
+    relations: [null],
+    provenance: { relations: { 'a::b': { origin: 'test' } } },
+  });
+  assert.doesNotThrow(() => validate(pack));
+  assert.ok(hasError(errorsOf(pack), 'E15'));
 });
 
 test('W1 warns about an unreferenced entity', () => {
@@ -162,6 +191,51 @@ test('E12 resolves a stage relation ref whose endpoint is an alias', () => {
     }],
   });
   assert.ok(!hasError(errorsOf(pack), 'E12'), 'alias endpoints must be canonicalized before candidate matching');
+});
+
+test('E12 rejects a wrong type even when the endpoint pair has one master edge', () => {
+  const pack = basePack({
+    relationTypes: { friend: { label: 'Friend' }, rival: { label: 'Rival' } },
+    relations: [{ a: 'a', b: 'b', type: 'friend', label: 'A-B' }],
+    stages: [{
+      key: 's1', name: 'S1', entities: ['a', 'b'],
+      relations: [{ a: 'a', b: 'b', type: 'rival' }],
+    }],
+  });
+  assert.ok(hasError(errorsOf(pack), 'E12'), 'an explicit stage-ref type must always match');
+});
+
+test('E12 rejects a scoped edge outside its active stage even when it is the only candidate', () => {
+  const pack = basePack({
+    relations: [{ a: 'a', b: 'b', type: 'friend', label: 'A-B', scope: ['s2'] }],
+    stages: [
+      { key: 's1', name: 'S1', entities: ['a', 'b'], relations: [{ a: 'a', b: 'b' }] },
+      { key: 's2', name: 'S2', entities: ['a', 'b'] },
+    ],
+  });
+  assert.ok(hasError(errorsOf(pack), 'E12'), 'a scoped edge must not resolve in another stage');
+});
+
+test('E12 rejects duplicate anonymous master relation identities', () => {
+  const pack = basePack({
+    relations: [
+      { a: 'a', b: 'b', type: 'friend', label: 'First' },
+      { a: 'a', b: 'b', type: 'friend', label: 'Duplicate' },
+    ],
+  });
+  assert.ok(hasError(errorsOf(pack), 'duplicated master relation'));
+});
+
+test('E12 resolves an alias ref with matching id, type, and scope', () => {
+  const pack = basePack({
+    aliases: { '甲': 'a' },
+    relations: [{ id: 'friend-s1', a: 'a', b: 'b', type: 'friend', label: 'A-B', scope: ['s1'] }],
+    stages: [{
+      key: 's1', name: 'S1', entities: ['a', 'b'],
+      relations: [{ id: 'friend-s1', a: '甲', b: 'b', type: 'friend' }],
+    }],
+  });
+  assert.ok(!hasError(errorsOf(pack), 'E12'));
 });
 
 /* ============================================================ */

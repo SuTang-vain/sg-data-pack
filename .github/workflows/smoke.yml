@@ -9,12 +9,15 @@ on:
 jobs:
   smoke:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 22]
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: ${{ matrix.node-version }}
 
       - name: Zero-dependency check (no node_modules required)
         run: |
@@ -51,4 +54,4 @@ jobs:
 
       - name: Contract + pilot test suite (loader / diff / recrawl / types / consistency)
         run: |
-          node --test "tests/*.test.js"
+          node --test tests/*.test.js

@@ -3,7 +3,7 @@
 - 实验日期：2026-07-29
 - 实验入口：`node research/run-v1.3-pilots.js`
 - 机器结果：`research/results/v1.3-pilot-results.json`
-- 自动回归：`node --test "tests/*.test.js"`
+- 自动回归：`node --test tests/*.test.js`
 
 ## 1. 研究问题
 
@@ -31,7 +31,7 @@
 node research/run-v1.3-pilots.js
 
 # 完整回归
-node --test "tests/*.test.js"
+node --test tests/*.test.js
 
 # 可单独复核
 node scripts/sg-data-pack validate research/fixtures/v1.3/id-based/data.json

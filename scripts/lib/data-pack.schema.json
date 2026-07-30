@@ -125,19 +125,18 @@
     "entities": {
       "type": "object",
       "minProperties": 1,
-      "description": "Global entity table. Keys are stable ids (semantic slugs); values preserve all business fields of the entity. Referencing by name or array index is forbidden.",
+      "description": "Global entity table. Keys are stable ids (semantic slugs); values preserve all business fields of the entity. Referencing by name or array index is forbidden. The formal schema requires kind; runtime E3 additionally requires the display field selected by kindNameFields[kind], defaulting to name, because that cross-field lookup is not expressed by this generic schema.",
       "patternProperties": {
         "^[a-z][a-z0-9_-]*$": {
           "type": "object",
           "required": [
-            "name",
             "kind"
           ],
           "properties": {
             "name": {
               "type": "string",
               "minLength": 1,
-              "description": "Display name (may be Chinese; for display only, never a reference key)"
+              "description": "Default display field (may be Chinese; for display only, never a reference key). Runtime E3 requires this unless kindNameFields maps the entity kind to another non-empty string field."
             },
             "kind": {
               "type": "string",
@@ -178,7 +177,8 @@
         ],
         "properties": {
           "label": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "color": {
             "type": "string",
@@ -198,7 +198,8 @@
         ],
         "properties": {
           "label": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1
           },
           "color": {
             "type": "string"
