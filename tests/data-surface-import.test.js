@@ -54,6 +54,7 @@ test('Data Surface importer accepts a ready interface manifest without generatin
   assert.equal(report.status, 'ready');
   assert.equal(report.dataPackGenerationAllowed, true);
   assert.equal(report.surfaces.length, 1);
+  assert.equal(report.review.policyNotices.length, 0);
   for (const key of ['entities', 'aliases', 'relations', 'stages', 'contents', 'adapters']) {
     assert.equal(Object.prototype.hasOwnProperty.call(report, key), false);
   }
@@ -69,6 +70,7 @@ test('Data Surface importer keeps review-required manifests auditable but blocks
   assert.equal(report.status, 'review-required');
   assert.equal(report.dataPackGenerationAllowed, false);
   assert.equal(report.blockers.length > 0, true);
+  assert.equal(Array.isArray(report.review.policyNotices), true);
   assert.throws(() => importDataSurfaceManifest(input, { requireReady: true }), /requires review/);
 });
 

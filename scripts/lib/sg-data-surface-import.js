@@ -109,6 +109,7 @@ function importDataSurfaceManifest(manifest, options = {}) {
       unresolved: surface.unresolved,
     })),
     unresolved: manifest.unresolved,
+    review: manifest.review || { blockers: manifest.unresolved, policyNotices: [] },
     metrics: manifest.metrics,
     blockers,
     reviewRequired,
