@@ -27,7 +27,8 @@ node "$SK" rules <libDir> [--strict]                      # execute library-leve
 node "$SK" diff <old.json> <new.json> [--json]            # structural diff between two packs (evolution / recrawl review)
 node "$SK" templatize <instances.json> [--out dir]        # derive item template from repeated HTML instances (collection pages)
 node "$SK" alias-candidates <data.json> <names.json|txt>     # rank unresolved crawled names
-node "$SK" recrawl-skeleton <data.json> <records.json> [--out dir]  # generate cross-check/review report
+node "$SK" recrawl-skeleton <data.json> <records.json> [--out dir]
+node "$SK" data-surface-import <ui-dismantler-manifest.json> [--out report.json] [--allow-review-required]  # read component data-surface handoff; never generate a Data Pack  # generate cross-check/review report
 node "$SK" types <data.json> [--out file.d.ts] [--name N]   # generate TypeScript declarations
 node "$SK" loader    # print runtime-validator path (copy into the library's lib/src/)
 node "$SK" schema    # print contract schema path
