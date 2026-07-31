@@ -28,6 +28,7 @@ node "$SK" diff <old.json> <new.json> [--json]            # structural diff betw
 node "$SK" templatize <instances.json> [--out dir]        # derive item template from repeated HTML instances (collection pages)
 node "$SK" alias-candidates <data.json> <names.json|txt>     # rank unresolved crawled names
 node "$SK" recrawl-skeleton <data.json> <records.json> [--out dir]  # generate cross-check/review report
+node "$SK" data-surface-import <ui-dismantler-manifest.json> [--out report.json] [--allow-review-required]  # read-only interface handoff; never generate a Data Pack
 node "$SK" candidate <data.json> <review-report.json> <decisions.json> --records <records.json> --out <candidate.json>  # apply explicit Review Decisions
 node "$SK" report <libDir> [--config config.js] [--baseline old.json] [--review review-report.json] [--audit candidate-audit.json] [--strict] [--verify-hash] [--out report/] [--json]  # unified user-facing report
 node "$SK" types <data.json> [--out file.d.ts] [--name N]   # generate TypeScript declarations
@@ -101,6 +102,19 @@ assets) and produce `lib/data/data-rules.json` (hard/soft rules with evidence, m
 content and assets. **Follow `references/data-rules-guide.md`** (format, check-expression
 convention, evidence discipline). Verify with `node "$SK" rules <libDir>`.
 
+### 6b. Import: consume a reviewed Data Surface handoff
+
+When a `ui-dismantler` Data Surface Manifest is available, consume it before business-entity modeling:
+
+```bash
+node "$SK" data-surface-import <ui-dismantler-manifest.json> --out data-surface-report.json
+```
+
+This is read-only interface evidence. It rejects raw static values and Data Pack fields, preserves
+unresolved/review notices, and never generates `data.json`. A review-required report remains blocked
+unless `--allow-review-required` is explicitly used for audit-only output. See
+`references/data-surface-manifest-import.md`.
+
 ### 7. Report: hand the result to humans and CI
 
 Run the unified product-facing report after extraction, validation, rules, diff, review, or Candidate work:
@@ -141,6 +155,7 @@ Crawl output may only consist of: `data.json` + `assets/` + the alias table. Req
 ## Deep References
 
 - `references/data-pack-contract.md` — full Data Pack v1.3 contract (field level)
+- `references/data-surface-manifest-import.md` — read-only Data Surface Manifest handoff and review gate
 - `references/review-candidate-contract.md` — candidate-ready reports, explicit decisions, and audit sidecars
 - `references/run-report-contract.md` — unified Library Evolution Report, coverage, risks, and exit codes
 - `references/extraction-config.md` — extraction-config guide with three typical patterns

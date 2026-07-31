@@ -186,6 +186,7 @@ node "$SK" templatize <instances.json> [--out dir]
 node "$SK" alias-candidates <data.json> <names.json|txt>
 node "$SK" recrawl-skeleton <data.json> <records.json> [--out dir]
 node "$SK" recrawl-skeleton <data.json> <records.json> --candidate-ready --origin crawl:site --source https://example.test/source --fetchedAt 2026-07-31 --out review/
+node "$SK" data-surface-import <ui-dismantler-manifest.json> [--out report.json] [--allow-review-required]
 node "$SK" candidate <data.json> review/review-report.json review/decisions.json --records records.json --out candidate.json --audit candidate-audit.json
 node "$SK" report <libDir> [--config extract.config.js] [--baseline old-data.json] \
   [--review review-report.json] [--audit candidate-audit.json] [--strict] \
@@ -194,6 +195,8 @@ node "$SK" types <data.json> [--out data-types.d.ts] [--name PackName]
 node "$SK" loader    # print runtime-validator path (copy into a library's lib/src/)
 node "$SK" schema    # print contract-schema path
 ```
+
+> `data-surface-import` is a read-only handoff from `ui-dismantler`. It accepts component data interfaces and review evidence; it does not normalize business entities or create `data.json`. A review-required report exits non-zero unless `--allow-review-required` is supplied for audit-only output.
 
 > Zero dependencies (acorn is vendored). Requires **Node ≥ 18**.
 
@@ -216,6 +219,10 @@ node "$SK" report path/to/library \
   --audit candidate-audit.json \
   --strict --json > report.json
 ```
+
+`data-surface-import` is the read-only handoff from `ui-dismantler`: it consumes a Data Surface Manifest,
+keeps unresolved/review evidence auditable, and never creates `data.json`. Review-required manifests
+remain blocked unless `--allow-review-required` is explicitly used for audit-only output.
 
 `--out report/` writes `report.json` and `REPORT.md` without modifying the library source.
 `--json` writes exactly one RunReport JSON object to stdout; collector progress is kept on stderr.

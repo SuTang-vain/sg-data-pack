@@ -11,6 +11,7 @@
  *   sg-data-pack alias-candidates <data.json> <names.json|txt> [--json] [--top n]  Rank alias candidates for crawled names
  *   sg-data-pack types <data.json> [--out file.d.ts] [--name N]   Generate TypeScript declarations from a pack
  *   sg-data-pack recrawl-skeleton <data.json> <records.json> [--out dir]  Recrawl normalization pipeline (alias hits/misses + cross-check + review report)
+ *   sg-data-pack data-surface-import <manifest.json> [--out report.json] [--allow-review-required]  Read a ui-dismantler Data Surface Manifest without generating a Data Pack
  *   sg-data-pack candidate <baseline.json> <review-report.json> <decisions.json> --records records.json --out candidate.json  Apply explicit Review Decisions
  *   sg-data-pack report <libDir> [options]                 Generate a unified Library Evolution Report
  *   sg-data-pack schema                                  Print the contract-schema path
@@ -40,6 +41,7 @@ Usage:
   sg-data-pack alias-candidates <pack.json> <names> [--json] Rank crawl-name alias candidates
   sg-data-pack types <data.json> [--out file] [--name N]     Generate TypeScript declarations
   sg-data-pack recrawl-skeleton <pack.json> <records.json>   Build a crawl review report
+  sg-data-pack data-surface-import <manifest.json> [--out report.json] [--allow-review-required]  Read a ui-dismantler Data Surface Manifest
   sg-data-pack candidate <baseline.json> <report.json> <decisions.json> --records <records.json> --out <candidate.json>  Apply explicit Review Decisions
   sg-data-pack report <libDir> [--config config.js] [--baseline old.json] [--review review-report.json] [--audit candidate-audit.json] [--strict] [--verify-hash] [--out dir] [--json]
   sg-data-pack schema                                        Print the contract-schema path
@@ -70,6 +72,9 @@ switch (cmd) {
     break;
   case 'recrawl-skeleton':
     run('sg-pack-recrawl-skeleton.js', rest);
+    break;
+  case 'data-surface-import':
+    run('sg-pack-data-surface.js', rest);
     break;
   case 'candidate':
     run('sg-pack-candidate.js', rest);
