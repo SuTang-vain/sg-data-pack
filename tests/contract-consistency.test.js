@@ -38,7 +38,7 @@ test('extract defaults generated packs to v1.3', () => {
 });
 
 test('entity display fields are enforced by runtime kindNameFields, not a hard-coded schema name', () => {
-  const entitySchema = schema.properties.entities.patternProperties['^[a-z][a-z0-9_-]*$'];
+  const entitySchema = Object.values(schema.properties.entities.patternProperties)[0];
   assert.deepEqual(entitySchema.required, ['kind']);
 
   const collection = readJson('research/fixtures/v1.3/collection/data.json');
@@ -98,11 +98,36 @@ test('CI covers the documented Node 18 baseline and Node 22', () => {
   assert.match(workflow, /node --test tests\/\*\.test\.js/);
 });
 
+test('candidate review contract and CLI are documented consistently', () => {
+  const cli = read('scripts/sg-data-pack');
+  assert.match(cli, /candidate <baseline\.json>/);
+  assert.match(read('README.md'), /candidate .*review-report/);
+  assert.match(read('SKILL.md'), /candidate .*review-report/);
+  assert.match(read('references/review-candidate-contract.md'), /decisionsVersion/);
+  const provEntry = definition(schema.properties.provenance.properties.entities.additionalProperties.$ref);
+  assert.ok(provEntry.properties.fieldOrigins, 'schema must expose fieldOrigins');
+  const types = read('scripts/sg-pack-types.js');
+  assert.match(types, /fieldOrigins\?: Record<string, SgProvenanceEntry>/);
+});
+
+test('RunReport contract and public CLI expose the unified report command', () => {
+  const reportSchema = readJson('scripts/lib/run-report.schema.json');
+  assert.equal(reportSchema.properties.reportVersion.const, '1.0');
+  assert.deepEqual(reportSchema.properties.run.required, ['id', 'command', 'exitCode', 'libId', 'mode', 'outcome', 'maturity']);
+  const cli = read('scripts/sg-data-pack');
+  assert.match(cli, /case 'report'/);
+  assert.match(cli, /report <libDir>/);
+  assert.match(read('README.md'), /node "\$SK" report/);
+  assert.match(read('SKILL.md'), /node "\$SK" report/);
+  assert.match(read('references/run-report-contract.md'), /NOT_ASSESSED/);
+});
+
 test('CLI help aliases print usage and exit successfully', () => {
   const cli = path.join(ROOT, 'scripts', 'sg-data-pack');
   for (const flag of ['--help', '-h', 'help']) {
     const result = spawnSync(process.execPath, [cli, flag], { encoding: 'utf8' });
     assert.equal(result.status, 0, `${flag} must exit successfully`);
     assert.match(result.stdout, /Usage:/);
+    assert.match(result.stdout, /candidate/);
   }
 });

@@ -63,3 +63,58 @@ test('recrawl rejects malformed records with exit 2', () => {
   assert.equal(report, null);
   assert.match(result.stderr, /must contain crawledName or name/);
 });
+
+test('candidate-ready report preserves observations and binds fixed crawl provenance', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sg-recrawl-ready-'));
+  try {
+    const packPath = path.join(dir, 'pack.json');
+    const recordsPath = path.join(dir, 'records.json');
+    const outDir = path.join(dir, 'out');
+    const pack = basePack({
+      meta: { id: 'demo', title: 'Demo', recrawlFieldMap: { birthDate: 'birth' } },
+      entities: { p1: { kind: 'person', name: 'Alice', actor: 'Alice Actor', birth: '1990-01-01' } },
+    });
+    const records = [
+      { crawledName: 'Alice', birthDate: '1990-01-01', sourceUrl: 'https://crawl.example/alice', confidence: 0.92 },
+      { crawledName: 'Alicia', occupation: '演员' },
+    ];
+    fs.writeFileSync(packPath, JSON.stringify(pack));
+    fs.writeFileSync(recordsPath, JSON.stringify(records));
+    const result = spawnSync(process.execPath, [
+      RECRAWL, packPath, recordsPath, '--out', outDir, '--candidate-ready',
+      '--origin', 'crawl:example.test', '--source', 'https://example.test/cast', '--fetchedAt', '2026-07-31',
+    ], { encoding: 'utf8' });
+    assert.equal(result.status, 1, 'misses retain the legacy review exit code');
+    const report = JSON.parse(fs.readFileSync(path.join(outDir, 'review-report.json'), 'utf8'));
+    const review = report.candidateReview;
+    assert.match(review.reportId, /^sha256:/);
+    assert.equal(review.origin, 'crawl:example.test');
+    assert.equal(review.sourceUrl, 'https://example.test/cast');
+    assert.equal(review.observations[0].rawFields.sourceUrl, 'https://crawl.example/alice');
+    assert.equal(review.observations[0].checks.find((check) => check.crawledField === 'sourceUrl'), undefined);
+    assert.equal(review.observations[1].resolution.status, 'miss');
+    assert.ok(review.reviewItems.some((item) => item.kind === 'identity'));
+    assert.equal(review.observations[0].checks.find((check) => check.crawledField === 'birthDate').classification, 'agree');
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('candidate-ready requires explicit stable provenance arguments', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sg-recrawl-ready-invalid-'));
+  try {
+    const packPath = path.join(dir, 'pack.json');
+    const recordsPath = path.join(dir, 'records.json');
+    fs.writeFileSync(packPath, JSON.stringify(basePack()));
+    fs.writeFileSync(recordsPath, JSON.stringify(['Alice']));
+    const result = spawnSync(process.execPath, [
+      RECRAWL, packPath, recordsPath, '--out', path.join(dir, 'out'), '--candidate-ready',
+      '--origin', 'crawl:example.test', '--source', 'https://', '--fetchedAt', '2026-07-31',
+    ], { encoding: 'utf8' });
+    assert.equal(result.status, 2);
+    assert.match(result.stderr, /HTTP\(S\)/);
+    assert.equal(fs.existsSync(path.join(dir, 'out', 'review-report.json')), false);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});

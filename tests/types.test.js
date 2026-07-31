@@ -78,7 +78,10 @@ test('generated top-level sections follow the schema optionality policy', () => 
 test('generated relation registry, provenance, and asset fields match the formal contract', () => {
   const dts = generateTypes(minimalPack());
   assert.match(dts, /relationTypes\?: Record<string, \{ label: string;/);
-  assert.match(dts, /interface SgProvenanceEntry \{ origin\?: string; sourceUrl\?: string \| null; fetchedAt\?: string; confidence\?: number;/);
+  assert.match(dts, /interface SgProvenanceEntry \{/);
+  for (const field of ['origin?: string', 'sourceUrl?: string | null', 'fetchedAt?: string', 'confidence?: number', 'fieldOrigins?: Record<string, SgProvenanceEntry>']) {
+    assert.ok(dts.includes(field), `provenance declarations must include ${field}`);
+  }
   assert.match(dts, /interface SgAssetEntry \{ exists\?: boolean; bytes\?: number; hash\?: string; sourceUrl\?: string;/);
 });
 

@@ -125,9 +125,12 @@
     "entities": {
       "type": "object",
       "minProperties": 1,
-      "description": "Global entity table. Keys are stable ids (semantic slugs); values preserve all business fields of the entity. Referencing by name or array index is forbidden. The formal schema requires kind; runtime E3 additionally requires the display field selected by kindNameFields[kind], defaulting to name, because that cross-field lookup is not expressed by this generic schema.",
+      "description": "Global entity table. Keys are safe stable ids (semantic slugs); values preserve all business fields of the entity. Referencing by name or array index is forbidden. The formal schema requires kind; runtime E3 additionally requires the display field selected by kindNameFields[kind], defaulting to name, because that cross-field lookup is not expressed by this generic schema.",
+      "propertyNames": {
+        "pattern": "^(?!__proto__$|prototype$|constructor$)[a-z][a-z0-9_-]*$"
+      },
       "patternProperties": {
-        "^[a-z][a-z0-9_-]*$": {
+        "^(?!__proto__$|prototype$|constructor$)[a-z][a-z0-9_-]*$": {
           "type": "object",
           "required": [
             "kind"
@@ -152,6 +155,9 @@
     "aliases": {
       "type": "object",
       "description": "Crawled name / variant spelling -> canonical id. The normalization entry point on the data-production side; resolvable at runtime via SGDataLoader.resolveId. Values may be a plain id string or a {id, context} object for same-name disambiguation (E9 reserved context).",
+      "propertyNames": {
+        "not": { "enum": ["__proto__", "prototype", "constructor"] }
+      },
       "additionalProperties": {
         "oneOf": [
           { "type": "string", "minLength": 1, "description": "Canonical entity id" },
@@ -519,7 +525,7 @@
             "string",
             "null"
           ],
-          "description": "Original source URL (mandatory for crawl pipelines)"
+          "description": "Original HTTP(S) source URL (mandatory for crawl pipelines); runtime E15 validates protocol and hostname"
         },
         "fetchedAt": {
           "type": "string",
@@ -533,6 +539,13 @@
         },
         "note": {
           "type": "string"
+        },
+        "fieldOrigins": {
+          "type": "object",
+          "description": "Optional field-level provenance for direct entity fields; keys are entity field names and values use the same provenance entry contract.",
+          "additionalProperties": {
+            "$ref": "#/$defs/provEntry"
+          }
         }
       },
       "additionalProperties": true

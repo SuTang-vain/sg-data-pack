@@ -38,7 +38,7 @@
 
 ## entities (required, non-empty)
 
-Global entity table; keys are stable slug ids (`^[a-z][a-z0-9_-]*$`). Each entity requires `kind`
+Global entity table; keys are stable slug ids (`^[a-z][a-z0-9_-]*$`) and must not be the reserved object keys `__proto__`, `prototype`, or `constructor`. Each entity requires `kind`
 and a name field (`name` by default; overridable per kind via `kindNameFields`, e.g. work→title).
 All other business fields are preserved as-is. **Never** reference by name or array index;
 crawled names are normalized through aliases.
@@ -110,15 +110,18 @@ are exempt). W2 missing file, W4 missing hash.
 "sameAs": [["yingzheng", "qinshihuang"]],   // two entities referring to the same real-world subject (E14)
 "provenance": {
   "entities":  { "yingzheng": { "origin": "example-json-contract", "sourceUrl": null,
-                                "fetchedAt": "2026-07-27", "confidence": 1.0, "note": "…" } },
+                                "fetchedAt": "2026-07-27", "confidence": 1.0, "note": "…",
+                                "fieldOrigins": {
+                                  "title": { "origin": "crawl:reviewed", "sourceUrl": "https://example.test", "fetchedAt": "2026-07-31", "confidence": 0.95 }
+                                } } },
   "relations": { "yingzheng-lisi-advisor": { /* preferred key: relation.id */ } },
   "contents":  { "timeline-2016": { "origin": "template-html-contents" } }
 }
 ```
-Parallel-section design: never embedded into the entities themselves, so engines need no changes.
+Parallel-section design: never embedded into the entities themselves, so engines need no changes. `provenance.entities.<id>.fieldOrigins` is an optional parallel map for direct entity fields updated by a reviewed crawl; every key must exist on that entity and each value follows the same provenance-entry shape. Review identifiers may be carried as additional audit properties.
 For new packs, relation provenance should use `relation.id`; the full fallback identity is
 `a::b::type::scope=<sorted scopes>`. Legacy `a::b` is accepted only for an unambiguous pair.
-Confidence below threshold → W5 review list. Missing origin → W7; crawl origin without sourceUrl → W8.
+Confidence must be a finite number in `[0,1]`; below threshold → W5 review list. Missing origin → W7; crawl origin without sourceUrl → W8. Non-empty source URLs must be valid HTTP(S) URLs.
 Origin conventions: `engine-embedded-defaults` / `example-json-contract` / `template-html-contents` / `crawl:<source>`.
 
 ## Full Rule Set

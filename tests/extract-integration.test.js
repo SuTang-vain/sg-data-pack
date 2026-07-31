@@ -109,6 +109,86 @@ test('real Qinshihuang engine passes extract, strict validation, rules, types, a
     const tamperedValidation = run(['validate', dataPath, '--strict', '--verify-hash']);
     assert.equal(tamperedValidation.status, 1, 'asset replacement must fail hash verification');
     assert.match(tamperedValidation.stderr, /hash mismatch/);
+
+    // Review Decisions -> Candidate Pack against the real extracted fixture.
+    // Use a fresh copy because the preceding asset tamper is intentionally destructive.
+    const candidateFixture = copyFixture();
+    try {
+      const candidateExtract = run(['extract', candidateFixture.config]);
+      assertSuccessful(candidateExtract, 'candidate fixture extract');
+      const candidateDataPath = path.join(candidateFixture.libDir, 'lib', 'data', 'data.json');
+      const candidateRecordsPath = path.join(candidateFixture.dir, 'records.json');
+      fs.writeFileSync(candidateRecordsPath, JSON.stringify([
+        { crawledName: '李斯', occupation: '丞相', avatar: '李斯-更新.png' },
+        { crawledName: '李 斯' },
+      ], null, 2) + '\n');
+      const candidateReviewDir = path.join(candidateFixture.dir, 'review');
+      const candidateRecrawl = run([
+        'recrawl-skeleton', candidateDataPath, candidateRecordsPath,
+        '--out', candidateReviewDir, '--candidate-ready',
+        '--origin', 'crawl:qinshihuang.test', '--source', 'https://example.test/qinshihuang/cast', '--fetchedAt', '2026-07-31',
+      ]);
+      assert.equal(candidateRecrawl.status, 1, candidateRecrawl.stderr);
+      const reviewPath = path.join(candidateReviewDir, 'review-report.json');
+      const review = JSON.parse(fs.readFileSync(reviewPath, 'utf8'));
+      const decisionsPath = path.join(candidateFixture.dir, 'review-decisions.json');
+      const decisions = {
+        decisionsVersion: '1.0',
+        reportId: review.candidateReview.reportId,
+        reviewedBy: 'integration-reviewer',
+        reviewedAt: '2026-07-31T12:00:00Z',
+        decisions: review.candidateReview.reviewItems.map((item) => item.kind === 'identity'
+          ? { itemId: item.itemId, action: 'map-alias', entityId: 'lisi', context: 'reviewed-spacing' }
+          : { itemId: item.itemId, action: item.classification === 'gap' ? 'apply' : 'keep', confidence: item.classification === 'gap' ? 0.95 : undefined, note: 'reviewed integration fixture' }),
+      };
+      fs.writeFileSync(decisionsPath, JSON.stringify(decisions, null, 2) + '\n');
+      const candidatePath = path.join(candidateFixture.libDir, 'lib', 'data', 'candidate.json');
+      const auditPath = path.join(candidateFixture.dir, 'candidate-audit.json');
+      const candidateRun = run([
+        'candidate', candidateDataPath, reviewPath, decisionsPath,
+        '--records', candidateRecordsPath, '--out', candidatePath, '--audit', auditPath,
+      ]);
+      assertSuccessful(candidateRun, 'candidate pack');
+      const candidatePack = JSON.parse(fs.readFileSync(candidatePath, 'utf8'));
+      const candidateAudit = JSON.parse(fs.readFileSync(auditPath, 'utf8'));
+      assert.equal(candidatePack.entities.lisi.occupation, '丞相');
+      assert.deepEqual(candidatePack.aliases['李 斯'], { id: 'lisi', context: 'reviewed-spacing' });
+      assert.equal(candidatePack.provenance.entities.lisi.fieldOrigins.occupation.confidence, 0.95);
+      assert.equal(candidateAudit.status, 'valid');
+      assert.equal(candidateAudit.diff.total, 3);
+
+      const candidateValidation = run(['validate', candidatePath, '--strict', '--verify-hash']);
+      assertSuccessful(candidateValidation, 'candidate strict validation');
+
+      // Rules consume <lib>/lib/data/data.json, so validate an isolated library copy.
+      const candidateRulesFixture = copyFixture();
+      try {
+        fs.mkdirSync(path.join(candidateRulesFixture.libDir, 'lib', 'data'), { recursive: true });
+        fs.copyFileSync(candidatePath, path.join(candidateRulesFixture.libDir, 'lib', 'data', 'data.json'));
+        const candidateRules = run(['rules', candidateRulesFixture.libDir, '--strict']);
+        assertSuccessful(candidateRules, 'candidate rules');
+
+        const evolutionReport = run([
+          'report', candidateRulesFixture.libDir,
+          '--baseline', candidateDataPath,
+          '--review', reviewPath,
+          '--audit', auditPath,
+          '--strict', '--verify-hash', '--json',
+        ]);
+        assertSuccessful(evolutionReport, 'candidate evolution report');
+        const runReport = JSON.parse(evolutionReport.stdout);
+        assert.equal(runReport.run.mode, 'candidate');
+        assert.equal(runReport.run.outcome, 'ready');
+        assert.equal(runReport.assurances.find((item) => item.id === 'candidate-audit').status, 'passed');
+        assert.equal(runReport.assurances.find((item) => item.id === 'crawl-review').status, 'passed');
+        assert.ok(runReport.operations.some((operation) => operation.result === 'applied'));
+        assert.ok(runReport.findings.filter((finding) => finding.phase === 'review').every((finding) => finding.status === 'resolved'));
+      } finally {
+        fs.rmSync(candidateRulesFixture.dir, { recursive: true, force: true });
+      }
+    } finally {
+      fs.rmSync(candidateFixture.dir, { recursive: true, force: true });
+    }
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }

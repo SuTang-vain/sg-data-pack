@@ -40,6 +40,16 @@
 
   function isObj(v) { return v !== null && typeof v === 'object' && !Array.isArray(v); }
 
+  function isHttpUrl(v) {
+    if (typeof v !== 'string' || /[\u0000-\u001f\u007f]/.test(v)) return false;
+    try {
+      var u = new URL(v);
+      return (u.protocol === 'http:' || u.protocol === 'https:') && !!u.hostname;
+    } catch (_) {
+      return false;
+    }
+  }
+
   function resolveAlias(pack, name) {
     if (pack && isObj(pack.aliases) && Object.prototype.hasOwnProperty.call(pack.aliases, name)) {
       return pack.aliases[name];
@@ -135,6 +145,11 @@
     if (!isObj(pack.meta) || typeof pack.meta.title !== 'string' || !pack.meta.title) {
       errors.push('E2: meta.title must be a non-empty string');
     }
+    if (isObj(pack.meta) && pack.meta.confidenceThreshold !== undefined &&
+        (typeof pack.meta.confidenceThreshold !== 'number' || !isFinite(pack.meta.confidenceThreshold) ||
+         pack.meta.confidenceThreshold < 0 || pack.meta.confidenceThreshold > 1)) {
+      errors.push('E2: meta.confidenceThreshold must be a number between 0 and 1');
+    }
 
     /* E3 */
     var entities = pack.entities;
@@ -145,8 +160,11 @@
     var nameFields = isObj(pack.kindNameFields) ? pack.kindNameFields : {};
     Object.keys(entities).forEach(function (id) {
       var e = entities[id];
+      if (!/^[a-z][a-z0-9_-]*$/.test(id) || id === '__proto__' || id === 'prototype' || id === 'constructor') {
+        errors.push('E3: entities.' + id + ' must use a safe stable slug id');
+      }
       if (!isObj(e)) { errors.push('E3: entities.' + id + ' must be an object'); return; }
-      var nf = nameFields[e.kind] || 'name';
+      var nf = Object.prototype.hasOwnProperty.call(nameFields, e.kind) && nameFields[e.kind] ? nameFields[e.kind] : 'name';
       if (typeof e[nf] !== 'string' || !e[nf]) {
         errors.push('E3: entities.' + id + '.' + nf + ' must be a non-empty string' + (nf !== 'name' ? ' (nameField of kind:' + e.kind + ')' : ''));
       }
@@ -160,6 +178,9 @@
       aliases = {};
     }
     Object.keys(aliases).forEach(function (alias) {
+      if (alias === '__proto__' || alias === 'prototype' || alias === 'constructor') {
+        errors.push('E4: alias "' + alias + '" is a reserved object key');
+      }
       if (Object.prototype.hasOwnProperty.call(entities, alias)) {
         errors.push('E4: alias "' + alias + '" collides with an entity id');
       }
@@ -191,7 +212,7 @@
     if (pack.stages !== undefined && !Array.isArray(pack.stages)) {
       errors.push('E7: stages must be an array');
     }
-    var stageKeys = {};
+    var stageKeys = Object.create(null);
     stages.forEach(function (s) { if (isObj(s) && typeof s.key === 'string') stageKeys[s.key] = true; });
 
     /* E5/E6/E12/W3 */
@@ -199,7 +220,7 @@
     if (pack.relations !== undefined && !Array.isArray(pack.relations)) {
       errors.push('E5: relations must be an array');
     }
-    var referenced = {};
+    var referenced = Object.create(null);
     var relationIds = Object.create(null);
     var anonymousRelationIds = Object.create(null);
     relations.forEach(function (r, i) {
@@ -247,7 +268,7 @@
       }
       if (typeof s.name !== 'string' || !s.name) errors.push('E7: stages[' + i + '].name must be a non-empty string');
 
-      var memberSet = {};
+      var memberSet = Object.create(null);
       (Array.isArray(s.entities) ? s.entities : []).forEach(function (id) {
         var rid = resolveId(pack, id);
         if (!rid) errors.push('E7: stages[' + i + '].entities dangling reference "' + id + '"');
@@ -259,7 +280,7 @@
         else Object.keys(s.layout).forEach(function (id) {
           var rid = resolveId(pack, id);
           if (!rid) { errors.push('E7: stages[' + i + '].layout dangling reference "' + id + '"'); return; }
-          if (!memberSet[rid]) errors.push('E7: stages[' + i + '].layout."' + id + '" is not in this stage\'s entities');
+          if (!Object.prototype.hasOwnProperty.call(memberSet, rid)) errors.push('E7: stages[' + i + '].layout."' + id + '" is not in this stage\'s entities');
           var xy = s.layout[id];
           if (!Array.isArray(xy) || xy.length !== 2 || typeof xy[0] !== 'number' || typeof xy[1] !== 'number') {
             errors.push('E8: stages[' + i + '].layout."' + id + '" must be a numeric [x, y] pair');
@@ -425,7 +446,8 @@
       if (!isObj(pack.provenance)) {
         errors.push('E15: provenance must be an object');
       } else {
-        var threshold = (isObj(pack.meta) && typeof pack.meta.confidenceThreshold === 'number')
+        var threshold = (isObj(pack.meta) && typeof pack.meta.confidenceThreshold === 'number' &&
+          isFinite(pack.meta.confidenceThreshold) && pack.meta.confidenceThreshold >= 0 && pack.meta.confidenceThreshold <= 1)
           ? pack.meta.confidenceThreshold : 0.7;
         var checkProv = function (group, exists, describe) {
           var g = pack.provenance[group];
@@ -434,15 +456,56 @@
           Object.keys(g).forEach(function (key) {
             if (!exists(key)) { errors.push('E15: provenance.' + group + '."' + key + '" ' + describe); return; }
             var p = g[key];
-            if (!isObj(p) || typeof p.origin !== 'string' || !p.origin) {
+            if (!isObj(p)) {
+              errors.push('E15: ' + group + '."' + key + '" must be a provenance object');
+              return;
+            }
+            if (typeof p.origin !== 'string' || !p.origin) {
               warnings.push('W7: ' + group + '."' + key + '" missing origin (provenance should record where the data came from)');
             }
-            if (isObj(p) && typeof p.confidence === 'number' && p.confidence < threshold) {
+            if (p.confidence !== undefined &&
+                (typeof p.confidence !== 'number' || !isFinite(p.confidence) || p.confidence < 0 || p.confidence > 1)) {
+              errors.push('E15: ' + group + '."' + key + '" confidence must be a finite number between 0 and 1');
+            } else if (typeof p.confidence === 'number' && p.confidence < threshold) {
               warnings.push('W5: ' + group + '."' + key + '" confidence=' + p.confidence + ' is below threshold ' + threshold + ' (low-confidence data; manual review advised)');
             }
-            if (isObj(p) && typeof p.origin === 'string' && p.origin.indexOf('crawl:') === 0 &&
+            if (typeof p.origin === 'string' && p.origin.indexOf('crawl:') === 0 &&
                 (p.sourceUrl === undefined || p.sourceUrl === null || p.sourceUrl === '')) {
               warnings.push('W8: ' + group + '."' + key + '" origin is crawl:* but sourceUrl is missing');
+            } else if (p.sourceUrl !== undefined && p.sourceUrl !== null && p.sourceUrl !== '' && !isHttpUrl(p.sourceUrl)) {
+              errors.push('E15: ' + group + '."' + key + '" sourceUrl must be a valid HTTP(S) URL');
+            }
+            if (group === 'entities' && isObj(p)) {
+              if (p.fieldOrigins !== undefined && !isObj(p.fieldOrigins)) {
+                errors.push('E15: provenance.entities."' + key + '".fieldOrigins must be an object');
+              } else if (isObj(p.fieldOrigins)) {
+                Object.keys(p.fieldOrigins).forEach(function (field) {
+                  if (!isObj(entities[key]) || !Object.prototype.hasOwnProperty.call(entities[key], field)) {
+                    errors.push('E15: provenance.entities."' + key + '".fieldOrigins."' + field + '" points to a non-existent entity field');
+                    return;
+                  }
+                  var fp = p.fieldOrigins[field];
+                  if (!isObj(fp)) {
+                    errors.push('E15: entities."' + key + '".fieldOrigins."' + field + '" must be a provenance object');
+                    return;
+                  }
+                  if (typeof fp.origin !== 'string' || !fp.origin) {
+                    warnings.push('W7: entities."' + key + '".fieldOrigins."' + field + '" missing origin (provenance should record where the data came from)');
+                  }
+                  if (fp.confidence !== undefined &&
+                      (typeof fp.confidence !== 'number' || !isFinite(fp.confidence) || fp.confidence < 0 || fp.confidence > 1)) {
+                    errors.push('E15: entities."' + key + '".fieldOrigins."' + field + '" confidence must be a finite number between 0 and 1');
+                  } else if (typeof fp.confidence === 'number' && fp.confidence < threshold) {
+                    warnings.push('W5: entities."' + key + '".fieldOrigins."' + field + '" confidence=' + fp.confidence + ' is below threshold ' + threshold + ' (low-confidence data; manual review advised)');
+                  }
+                  if (typeof fp.origin === 'string' && fp.origin.indexOf('crawl:') === 0 &&
+                      (fp.sourceUrl === undefined || fp.sourceUrl === null || fp.sourceUrl === '')) {
+                    warnings.push('W8: entities."' + key + '".fieldOrigins."' + field + '" origin is crawl:* but sourceUrl is missing');
+                  } else if (fp.sourceUrl !== undefined && fp.sourceUrl !== null && fp.sourceUrl !== '' && !isHttpUrl(fp.sourceUrl)) {
+                    errors.push('E15: entities."' + key + '".fieldOrigins."' + field + '" sourceUrl must be a valid HTTP(S) URL');
+                  }
+                });
+              }
             }
           });
         };
@@ -473,8 +536,9 @@
       var resolvePath = function (expr) {
         // dotted path with optional '*' wildcard: walk pack sections
         var segs = String(expr).split('.');
-        var roots = { entities: 1, aliases: 1, relationTypes: 1, heroRelTypes: 1, relations: 1, stages: 1, attributeTypes: 1, attributeSources: 1, contents: 1, domain: 1, assets: 1, kindNameFields: 1, sameAs: 1, provenance: 1, derivations: 1, meta: 1 };
-        if (!roots[segs[0]]) return { rootOk: false, resolved: false };
+        var roots = Object.create(null);
+        ['entities', 'aliases', 'relationTypes', 'heroRelTypes', 'relations', 'stages', 'attributeTypes', 'attributeSources', 'contents', 'domain', 'assets', 'kindNameFields', 'sameAs', 'provenance', 'derivations', 'meta'].forEach(function (root) { roots[root] = true; });
+        if (!Object.prototype.hasOwnProperty.call(roots, segs[0])) return { rootOk: false, resolved: false };
         var nodes = [pack];
         for (var i = 0; i < segs.length; i++) {
           var next = [];
@@ -538,7 +602,7 @@
     var normName = function (s) {
       return String(s == null ? '' : s).replace(/[\s·・（）()《》〈〉\-—_]+/g, '').toLowerCase();
     };
-    var byNorm = {};
+    var byNorm = Object.create(null);
     Object.keys(entities).forEach(function (id) {
       var e = entities[id];
       if (!isObj(e)) return;

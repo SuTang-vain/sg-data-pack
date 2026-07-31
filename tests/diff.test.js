@@ -106,6 +106,21 @@ test('diff tracks standard stages by stage.key', () => {
     'a normal stage keyed by `key` must not be collapsed under undefined');
 });
 
+test('diff reports stage reordering as a structural change', () => {
+  const first = { key: 's1', name: 'First', entities: ['a'] };
+  const second = { key: 's2', name: 'Second', entities: ['a'] };
+  const derivations = { order: { kind: 'insertion-order', source: 'stages', consumers: ['engine'], note: 'stage order' } };
+  const r = runDiff(basePack({ stages: [first, second], derivations }), basePack({ stages: [second, first], derivations }));
+  assert.equal(r.stages.orderChanged, true);
+  assert.ok(r.derivationsImpacted.some((item) => item.name === 'order'));
+});
+
+test('diff does not lose a reserved-name alias removal through Object.prototype', () => {
+  const aliases = JSON.parse('{"constructor":"a"}');
+  const r = runDiff(basePack({ aliases }), basePack({ aliases: {} }));
+  assert.deepEqual(r.aliases.removed, ['constructor']);
+});
+
 test('diff keeps same-pair same-type relations distinct by scope', () => {
   const relations = [
     { a: 'a', b: 'b', type: 'friend', scope: ['s1'], label: 'one' },

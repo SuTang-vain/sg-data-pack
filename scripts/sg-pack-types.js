@@ -135,7 +135,15 @@ const out = `/* Auto-generated from data.json by sg-data-pack types (${libName})
 
 /* ---------- contract layer (universal Data Pack sections) ---------- */
 export interface SgRelation { id?: string; a: string; b: string; type: string; label?: string; scope?: string[]; }
-export interface SgProvenanceEntry { origin?: string; sourceUrl?: string | null; fetchedAt?: string; confidence?: number; note?: string; }
+export interface SgProvenanceEntry {
+  origin?: string;
+  sourceUrl?: string | null;
+  fetchedAt?: string;
+  confidence?: number;
+  note?: string;
+  fieldOrigins?: Record<string, SgProvenanceEntry>;
+  [k: string]: unknown;
+}
 export interface SgAssetEntry { exists?: boolean; bytes?: number; hash?: string; sourceUrl?: string; }
 export interface SgDerivation {
   kind: 'repeat' | 'insertion-order' | 'lookup-rebuild' | 'scope-resolution' | 'projection' | 'reference-only';

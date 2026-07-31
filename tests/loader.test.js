@@ -67,6 +67,12 @@ test('E3 rejects an entity missing its name field', () => {
   assert.ok(hasError(errorsOf(basePack({ entities: { a: { kind: 'person' } } })), 'E3'));
 });
 
+test('E3 rejects reserved or non-slug entity ids', () => {
+  const reserved = JSON.parse('{"constructor":{"kind":"person","name":"A"}}');
+  assert.ok(hasError(errorsOf(basePack({ entities: reserved })), 'safe stable slug'));
+  assert.ok(hasError(errorsOf(basePack({ entities: { 'Bad ID': { kind: 'person', name: 'A' } } })), 'safe stable slug'));
+});
+
 test('E3 reports a malformed entity without crashing warning checks', () => {
   const pack = basePack({ entities: { a: null } });
   assert.doesNotThrow(() => validate(pack));
@@ -75,6 +81,11 @@ test('E3 reports a malformed entity without crashing warning checks', () => {
 
 test('E4 rejects an alias pointing to a non-existent entity', () => {
   assert.ok(hasError(errorsOf(basePack({ aliases: { ghost: 'nope' } })), 'E4'));
+});
+
+test('E4 rejects reserved alias keys', () => {
+  const aliases = JSON.parse('{"constructor":"a"}');
+  assert.ok(hasError(errorsOf(basePack({ aliases })), 'reserved object key'));
 });
 
 test('E5 flags a dangling relation endpoint', () => {
@@ -216,6 +227,11 @@ test('E12 rejects a scoped edge outside its active stage even when it is the onl
   assert.ok(hasError(errorsOf(pack), 'E12'), 'a scoped edge must not resolve in another stage');
 });
 
+test('E12 rejects a reserved-name scope that is not a declared stage', () => {
+  const pack = basePack({ relations: [{ a: 'a', b: 'b', type: 'friend', scope: ['constructor'] }] });
+  assert.ok(hasError(errorsOf(pack), 'non-existent stage "constructor"'));
+});
+
 test('E12 rejects duplicate anonymous master relation identities', () => {
   const pack = basePack({
     relations: [
@@ -272,9 +288,46 @@ test('E16 accepts a valid alsoTouches path', () => {
 /* (current loader silently accepts empty provenance entries.   */
 /*  RED.)                                                        */
 /* ============================================================ */
+test('E15 rejects out-of-range record provenance confidence and invalid sourceUrl', () => {
+  const pack = basePack({ provenance: { entities: { a: { origin: 'crawl:test', confidence: 2, sourceUrl: 'https://' } } } });
+  const errors = errorsOf(pack);
+  assert.ok(hasError(errors, 'confidence must be a finite number between 0 and 1'));
+  assert.ok(hasError(errors, 'sourceUrl must be a valid HTTP(S) URL'));
+});
+
 test('W7 warns when a provenance entry lacks origin', () => {
   const pack = basePack({ provenance: { entities: { a: {} } } });
   assert.ok(hasWarning(warningsOf(pack), 'W7'), 'missing origin must produce a W7 warning');
+});
+
+test('E2 rejects an out-of-range confidence threshold', () => {
+  assert.ok(hasError(errorsOf(basePack({ meta: { id: 'demo', title: 'Demo', confidenceThreshold: 2 } })), 'confidenceThreshold'));
+});
+
+test('field-level provenance validates direct entity fields and emits crawl warnings', () => {
+  const pack = basePack({
+    provenance: {
+      entities: {
+        a: {
+          origin: 'engine-embedded-defaults',
+          fieldOrigins: {
+            name: { origin: 'crawl:test', sourceUrl: null, confidence: 0.5 },
+          },
+        },
+      },
+    },
+  });
+  const warnings = warningsOf(pack);
+  assert.ok(hasWarning(warnings, 'fieldOrigins'), 'field origin warnings should identify the field path');
+  assert.ok(hasWarning(warnings, 'W5'));
+  assert.ok(hasWarning(warnings, 'W8'));
+});
+
+test('E15 rejects field-level provenance for an absent entity field', () => {
+  const pack = basePack({
+    provenance: { entities: { a: { origin: 'test', fieldOrigins: { missing: { origin: 'test' } } } } },
+  });
+  assert.ok(hasError(errorsOf(pack), 'fieldOrigins."missing"'));
 });
 
 /* ============================================================ */

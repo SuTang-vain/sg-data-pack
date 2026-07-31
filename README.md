@@ -2,7 +2,7 @@
 
 <img src="docs/banner.svg" alt="sg-data-pack" width="100%"/>
 
-<h3>One schema for every component library's data —<br/>extracted, validated, and provenance-tracked.</h3>
+<h3>One contract for every component library's data —<br/>extracted, validated, reviewed, and explained.</h3>
 
 <p>
   <a href="https://github.com/SuTang-vain/sg-data-pack/blob/main/SKILL.md"><img src="https://img.shields.io/badge/agent%20skill-codex%20%C2%B7%20claude%20code%20%C2%B7%20zcode-31406B" alt="agent skill"/></a>
@@ -29,6 +29,11 @@ sg-data-pack turns that chaos into a single **Data Pack** — one `data.json` wi
 unique entities, ID-only references, reference-instead-of-duplicate stages, and record-level
 provenance — then patches the library engine to prefer injected data, with a **losslessness
 guarantee** proven by deep-equivalence testing.
+
+The product-facing entry point is `report`: it turns validation, library rules, extraction,
+diff, recrawl review, and Candidate audit into one deterministic **Library Evolution Report**.
+Instead of making users assemble several command outputs, it explains what was found, what
+changed, what was actually verified, what remains risky, and what developers should do next.
 
 <table>
 <tr>
@@ -132,6 +137,26 @@ pack is provided.
 
 <br clear="all"/>
 
+### 06 · Report — turn evidence into an engineering hand-off
+
+The `report` command is the product layer on top of the pipeline. It aggregates the existing
+facts from validation, library rules, extraction/equivalence, structural diff, recrawl review,
+and Candidate audit into one deterministic **Library Evolution Report**. It does not invent
+new business facts or silently apply crawl observations.
+
+```text
+Data Pack + evidence
+  → findings        what may be wrong
+  → changes         what was modified or completed
+  → assurances      what actually passed
+  → risks           what remains unverified or exposed
+  → next steps      who should do what, and when it is done
+```
+
+The human output is deliberately fixed to five sections: **发现的问题**, **已修改 / 已完善**,
+**验证范围**, **剩余风险**, and **下一步**. The JSON and Markdown files are projections of the
+same RunReport object, so counts and conclusions cannot drift between CI and developer views.
+
 ---
 
 ## Quick Start
@@ -160,12 +185,55 @@ node "$SK" diff <old.json> <new.json> [--json]
 node "$SK" templatize <instances.json> [--out dir]
 node "$SK" alias-candidates <data.json> <names.json|txt>
 node "$SK" recrawl-skeleton <data.json> <records.json> [--out dir]
+node "$SK" recrawl-skeleton <data.json> <records.json> --candidate-ready --origin crawl:site --source https://example.test/source --fetchedAt 2026-07-31 --out review/
+node "$SK" candidate <data.json> review/review-report.json review/decisions.json --records records.json --out candidate.json --audit candidate-audit.json
+node "$SK" report <libDir> [--config extract.config.js] [--baseline old-data.json] \
+  [--review review-report.json] [--audit candidate-audit.json] [--strict] \
+  [--verify-hash] [--out report/] [--json]
 node "$SK" types <data.json> [--out data-types.d.ts] [--name PackName]
 node "$SK" loader    # print runtime-validator path (copy into a library's lib/src/)
 node "$SK" schema    # print contract-schema path
 ```
 
 > Zero dependencies (acorn is vendored). Requires **Node ≥ 18**.
+
+### Recommended product workflow
+
+```bash
+# 1. Create or refresh the canonical pack
+node "$SK" extract path/to/extract.config.js
+
+# 2. Produce one human + CI hand-off
+node "$SK" report path/to/library \
+  --config path/to/extract.config.js \
+  --verify-hash \
+  --out report/
+
+# 3. For evolution or recrawl work, bind the related evidence
+node "$SK" report path/to/library \
+  --baseline old-data.json \
+  --review review/review-report.json \
+  --audit candidate-audit.json \
+  --strict --json > report.json
+```
+
+`--out report/` writes `report.json` and `REPORT.md` without modifying the library source.
+`--json` writes exactly one RunReport JSON object to stdout; collector progress is kept on stderr.
+The report never treats `NOT_ASSESSED` as a pass.
+
+### Report outcomes and exit codes
+
+| Outcome | Meaning | Exit code |
+|---|---|---:|
+| `ready` | No blocking finding in the supplied evidence | `0` |
+| `issues-found` | Non-blocking warnings remain | `0` |
+| `review-required` | Gap, conflict, miss, or unsupported item still needs a decision | `1` |
+| `blocked` | Validation, rules, equivalence, or asset integrity gate failed | `1` |
+| `input-error` | Argument, JSON, digest, or evidence input is invalid | `2` |
+
+`--strict` promotes validation, rules, extraction, and Candidate warnings to blocking failures.
+For the full RunReport contract, including maturity, assurance statuses, residual risks, and
+source immutability, see [`references/run-report-contract.md`](references/run-report-contract.md).
 
 ---
 
@@ -223,7 +291,7 @@ node "$SK" schema    # print contract-schema path
 | **E13** | Prose highlights referencing unknown entities — *wrong names in text are caught* |
 | **W5 / W6** | Low-confidence records for review · suspected duplicate entities |
 
-Full contract: [`references/data-pack-contract.md`](references/data-pack-contract.md)
+Full contract: [`references/data-pack-contract.md`](references/data-pack-contract.md). The explicit recrawl review loop is documented in [`references/review-candidate-contract.md`](references/review-candidate-contract.md): candidates are never applied without human decisions and a strict validation gate. The unified product-facing output is documented in [`references/run-report-contract.md`](references/run-report-contract.md): it explains discovered problems, changes, verification coverage, residual risks, and next steps.
 
 ---
 
@@ -233,6 +301,8 @@ Full contract: [`references/data-pack-contract.md`](references/data-pack-contrac
 |---|---|
 | [`SKILL.md`](SKILL.md) | Agent workflow + rules (loaded by Codex / Claude Code / ZCode) |
 | [`references/data-pack-contract.md`](references/data-pack-contract.md) | Data Pack v1.3 field-level contract |
+| [`references/review-candidate-contract.md`](references/review-candidate-contract.md) | Candidate-ready recrawl reports, explicit decisions, and audit contract |
+| [`references/run-report-contract.md`](references/run-report-contract.md) | Unified Library Evolution Report, coverage, risks, and exit codes |
 | [`references/extraction-config.md`](references/extraction-config.md) | Config guide + three real-world patterns |
 | [`references/engine-integration.md`](references/engine-integration.md) | Engine-patch standard template |
 | [`assets/extract.config.template.js`](assets/extract.config.template.js) | Annotated config template for a new library |

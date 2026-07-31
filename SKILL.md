@@ -28,6 +28,8 @@ node "$SK" diff <old.json> <new.json> [--json]            # structural diff betw
 node "$SK" templatize <instances.json> [--out dir]        # derive item template from repeated HTML instances (collection pages)
 node "$SK" alias-candidates <data.json> <names.json|txt>     # rank unresolved crawled names
 node "$SK" recrawl-skeleton <data.json> <records.json> [--out dir]  # generate cross-check/review report
+node "$SK" candidate <data.json> <review-report.json> <decisions.json> --records <records.json> --out <candidate.json>  # apply explicit Review Decisions
+node "$SK" report <libDir> [--config config.js] [--baseline old.json] [--review review-report.json] [--audit candidate-audit.json] [--strict] [--verify-hash] [--out report/] [--json]  # unified user-facing report
 node "$SK" types <data.json> [--out file.d.ts] [--name N]   # generate TypeScript declarations
 node "$SK" loader    # print runtime-validator path (copy into the library's lib/src/)
 node "$SK" schema    # print contract schema path
@@ -99,6 +101,19 @@ assets) and produce `lib/data/data-rules.json` (hard/soft rules with evidence, m
 content and assets. **Follow `references/data-rules-guide.md`** (format, check-expression
 convention, evidence discipline). Verify with `node "$SK" rules <libDir>`.
 
+### 7. Report: hand the result to humans and CI
+
+Run the unified product-facing report after extraction, validation, rules, diff, review, or Candidate work:
+
+```bash
+node "$SK" report <libDir> --config <config.js> --verify-hash --out report/
+```
+
+Read the five sections in `REPORT.md`: discovered problems, changes made, verification coverage,
+remaining risks, and next steps. Use `--json` for CI; JSON stdout contains only one RunReport object.
+`NOT_ASSESSED` means no evidence was supplied, never “passed”. The report is read-only and binds
+consumed inputs by SHA-256. Full field and exit-code semantics are in `references/run-report-contract.md`.
+
 ## Rule Cheat Sheet (enforced by the validator)
 
 | Rule | Meaning |
@@ -119,11 +134,15 @@ Crawl output may only consist of: `data.json` + `assets/` + the alias table. Req
 
 - Normalize entity names to canonical ids via `aliases` before writing any reference
 - Fill provenance with real `origin`/`sourceUrl`/`fetchedAt`/`confidence` (baseline data is 1.0; crawled data uses actual values)
-- Before committing, must pass: `node "$SK" validate data.json --strict --verify-hash`
+- Candidate values are observations, not facts: run `recrawl-skeleton --candidate-ready`, require one explicit Review Decision per gap/conflict/miss, then generate a Candidate with the `candidate` command
+- Fuzzy alias candidates never authorize an automatic top-1 mapping; `map-alias` must name an existing canonical entity id
+- Candidate output must pass: `node "$SK" validate candidate.json --strict --verify-hash` and the library's `rules --strict` gate before promotion
 
 ## Deep References
 
 - `references/data-pack-contract.md` — full Data Pack v1.3 contract (field level)
+- `references/review-candidate-contract.md` — candidate-ready reports, explicit decisions, and audit sidecars
+- `references/run-report-contract.md` — unified Library Evolution Report, coverage, risks, and exit codes
 - `references/extraction-config.md` — extraction-config guide with three typical patterns
 - `references/engine-integration.md` — engine-patch standard template (copy-paste grade)
 - `references/data-rules-guide.md` — library-level feature rules: format, check convention, evidence discipline
