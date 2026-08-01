@@ -1,0 +1,211 @@
+{
+  "runVersion": "1.0",
+  "runId": "task-run:6c4a7a66037f3e6a9cf0029744d4fc930e1cb95a7da420acd8e1a6552b622d09",
+  "task": {
+    "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+    "taskFileSha256": "sha256:ac33ff5e0049324b56141ea0687442ed5e344fb6305390f8257b02f2cd17a630",
+    "sourceRevision": "alias-relation-fixture-v1",
+    "contractTreeSha256": "sha256:fffbe5c6cd3b100ea754dfc73b72bb75adae0ccd8ca789fb18c00ed68b2cfc53",
+    "runnerSnapshotBeforeSha256": "sha256:6243526415fa11e029c8205e3ee3ddb2f0cb824e7e561c733480c3c8ecabb6c5",
+    "runnerSnapshotFinalSha256": "sha256:6243526415fa11e029c8205e3ee3ddb2f0cb824e7e561c733480c3c8ecabb6c5",
+    "sourceUnchanged": true,
+    "sourceFinalError": null,
+    "trialId": "alias-relation-r04"
+  },
+  "agent": {
+    "provider": "claude-code-2.1.185",
+    "model": "sonnet alias (provider metadata recorded)",
+    "argv": [
+      "/Users/tangyaoyue/.hermes/node/bin/node",
+      "/Users/tangyaoyue/DEV/sg-data-pack/research/agent-eval/providers/claude-patch-agent.js",
+      "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-2eg6Tq/workspace",
+      "/private/tmp/sg-agent-claude-final-release/trials/alias-relation-r04/agent.patch",
+      "/private/tmp/sg-agent-claude-final-release/trials/alias-relation-r04/TASK.md"
+    ],
+    "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-2eg6Tq/workspace",
+    "exitCode": 0,
+    "signal": null,
+    "timedOut": false,
+    "durationMs": 73701.680542,
+    "stdoutSha256": "sha256:199c2c187c96b09b5e70697152d66d1335a92ceea3f7a9b4d677bf9e26c63339",
+    "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "{\"provider\":\"claude-code\",\"declaredModel\":\"sonnet\",\"modelUsage\":{\"MiniMax-M3[1M]\":{\"inputTokens\":1286,\"outputTokens\":5806,\"cacheReadInputTokens\":128,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.151644,\"contextWindow\":1000000,\"maxOutputTokens\":32000}},\"usage\":{\"input_tokens\":1286,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":128,\"output_tokens\":5806,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"totalCostUsd\":0.151644,\"durationApiMs\":72771,\"stopReason\":\"end_turn\",\"permissionDenials\":[]}\n",
+    "stderr": "",
+    "stdoutTruncated": false,
+    "stderrTruncated": false,
+    "error": null,
+    "providerMetadata": {
+      "provider": "claude-code",
+      "declaredModel": "sonnet",
+      "modelUsage": {
+        "MiniMax-M3[1M]": {
+          "inputTokens": 1286,
+          "outputTokens": 5806,
+          "cacheReadInputTokens": 128,
+          "cacheCreationInputTokens": 0,
+          "webSearchRequests": 0,
+          "costUSD": 0.151644,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "usage": {
+        "input_tokens": 1286,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 128,
+        "output_tokens": 5806,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [],
+        "speed": "standard"
+      },
+      "totalCostUsd": 0.151644,
+      "durationApiMs": 72771,
+      "stopReason": "end_turn",
+      "permissionDenials": []
+    }
+  },
+  "patch": {
+    "auditVersion": "1.0",
+    "auditId": "patch-audit:58962824b347846848ef207ee264a07b7235d9a41d4bc8c0886b9b8df02978a2",
+    "kind": "patch-audit",
+    "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+    "status": "rejected",
+    "patchSha256": "sha256:fa5264e9c6a06ab351e3cbf709e1cd592bba6137f5bee92b6e41f71715deff1a",
+    "patchBytes": 568,
+    "beforeTreeSha256": "sha256:6243526415fa11e029c8205e3ee3ddb2f0cb824e7e561c733480c3c8ecabb6c5",
+    "afterTreeSha256": null,
+    "declaredOperations": [
+      {
+        "operation": "modify",
+        "path": "lib/data/data.json",
+        "hunks": 2,
+        "modes": {},
+        "policy": {
+          "allowed": true,
+          "reason": null,
+          "deniedBy": null,
+          "allowedBy": "lib/data/data.json"
+        }
+      }
+    ],
+    "actualOperations": [],
+    "preflight": {
+      "allowed": true,
+      "violations": []
+    },
+    "postflight": null,
+    "commands": {
+      "check": {
+        "argv": [
+          "git",
+          "apply",
+          "--check",
+          "--whitespace=error-all",
+          "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-83564-1785574098232-2bf4dc96cdd56.diff"
+        ],
+        "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-2eg6Tq/workspace",
+        "exitCode": 1,
+        "signal": null,
+        "timedOut": false,
+        "durationMs": 20.418917,
+        "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "sha256:48aa97bfde5200caeb85320f2011a37ecad6246ce3b5d6db6f757d676e115ad2",
+        "error": null
+      },
+      "apply": null
+    },
+    "failure": {
+      "kind": "patch-invalid",
+      "name": "PatchError",
+      "message": "git apply --check rejected the patch",
+      "details": {
+        "checkRun": {
+          "argv": [
+            "git",
+            "apply",
+            "--check",
+            "--whitespace=error-all",
+            "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-83564-1785574098232-2bf4dc96cdd56.diff"
+          ],
+          "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-2eg6Tq/workspace",
+          "status": 1,
+          "exitCode": 1,
+          "exit": 1,
+          "signal": null,
+          "timedOut": false,
+          "durationMs": 20.418917,
+          "duration": 20.418917,
+          "stdout": "",
+          "stderr": "error: patch failed: lib/data/data.json:23\nerror: lib/data/data.json: patch does not apply\n",
+          "stdoutTruncated": false,
+          "stderrTruncated": false,
+          "truncated": false
+        }
+      }
+    },
+    "capabilities": {
+      "osSandbox": false,
+      "networkIsolation": false,
+      "processIsolation": false,
+      "sourceTreeVerifiedByRunner": true,
+      "disposableWorkspace": true
+    }
+  },
+  "grades": [],
+  "secondaryErrors": [],
+  "artifacts": [
+    {
+      "id": "agent-patch",
+      "path": "agent.patch",
+      "mediaType": "text/x-diff",
+      "bytes": 568,
+      "sha256": "sha256:fa5264e9c6a06ab351e3cbf709e1cd592bba6137f5bee92b6e41f71715deff1a"
+    },
+    {
+      "id": "patch-audit",
+      "path": "patch-audit.json",
+      "mediaType": "application/json",
+      "bytes": 2712,
+      "sha256": "sha256:1b31172ae68116732dc082343edfc9421d3af9e811492161c637f4e36b96080f"
+    },
+    {
+      "id": "task-prompt",
+      "path": "TASK.md",
+      "mediaType": "text/markdown",
+      "bytes": 265,
+      "sha256": "sha256:a48c9c13252c885c6d147c5a877a8848442d2f66289648a6a48540ec686b8f9e"
+    }
+  ],
+  "verdict": "patch-invalid",
+  "termination": {
+    "kind": "completed",
+    "processExitCode": 1,
+    "semanticVerdict": "patch-invalid",
+    "message": "git apply --check rejected the patch"
+  },
+  "capabilities": {
+    "sourceCopy": true,
+    "disposableWorkspace": true,
+    "completeSecuritySnapshots": true,
+    "postAgentSourceTreeCheck": true,
+    "postPatchTreePolicy": true,
+    "postGraderTreeCheck": true,
+    "verifiedGraderStaging": true,
+    "verifiedToolStaging": true,
+    "candidateExtractionWorker": true,
+    "osSandbox": false,
+    "filesystemIsolation": false,
+    "networkIsolation": false,
+    "processIsolation": false,
+    "maliciousAgentGraderSecrecy": false
+  }
+}

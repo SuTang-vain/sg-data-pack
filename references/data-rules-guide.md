@@ -6,8 +6,10 @@ rules from the pack + engine + assets. Two artifacts, both living in `lib/data/`
 - `data-rules.json` — structured rules (machine-executable / machine-searchable)
 - `DATA-GUIDE.md` — human contributor guide generated from the rules
 
-Validate any rules file with: `node scripts/sg-data-pack rules <libDir> [--strict]`
-(hard-rule failures exit 1; soft failures are warnings unless --strict).
+Validate any rules file with: `node scripts/sg-data-pack rules <libDir> [--strict] [--rule <id>]`
+(hard-rule failures exit 1; soft failures are warnings unless --strict). `--rule <id>` selects one
+known rule after the complete rules document has been structurally validated; unknown or repeated
+options/ids are usage errors (exit 2).
 
 ## data-rules.json Format (rulesVersion 1.0)
 
@@ -29,7 +31,7 @@ Validate any rules file with: `node scripts/sg-data-pack rules <libDir> [--stric
     {
       "id": "<lib-prefix>-<kebab-case>",     // e.g. sdd-hero-big-exclusive
       "level": "hard | soft",
-      "subject": "anchor path, e.g. entities.*.avatar / stages.*.entities / assets.*",
+      "subject": "human locator string, e.g. entities.*.avatar / stages.*.entities / assets.*",
       "rule": "the rule text (concrete, actionable; no vague words like 'try to' / 'appropriate')",
       "rationale": "why — cite rendering logic or data evidence",
       "evidence": "measured evidence, e.g. '15/15 avatars are .png; 5 sampled at 160px width'",
@@ -42,12 +44,18 @@ Validate any rules file with: `node scripts/sg-data-pack rules <libDir> [--stric
 }
 ```
 
-## check Expression Convention (hard requirement)
+## subject, scope, and check conventions (hard requirement)
 
-- `check` is a **JS expression string**, evaluated with pack sections in scope:
+- `subject` is an **unparsed human locator string**. It tells a contributor where to look (for
+  example `entities.*.avatar` or `stages.*.entities`); the evaluator does not resolve it,
+  interpret wildcards, or use it to select records.
+- `check` is a **JavaScript expression string**, evaluated with pack sections in scope:
   `entities / relations / stages / contents / domain / assets / aliases / relationTypes /
-   attributeTypes / kindNameFields / meta / sameAs / provenance / pack`
-- Must evaluate to a truthy/falsy value. If you cannot write an executable expression, use `null`.
+   heroRelTypes / attributeTypes / attributeSources / kindNameFields / meta / sameAs /
+   provenance / derivations / pack`.
+  This scope must stay synchronized with the executor whenever a pack root becomes available
+  to rules. In particular, `heroRelTypes`, `attributeSources`, and `derivations` are supported.
+- The expression must evaluate to a truthy/falsy value. If you cannot write an executable expression, use `null`.
 - **Pseudo-DSL is forbidden** (`all(entities.*, e -> ...)` does not run). Write real JS:
   `Object.values(entities).every(e => ...)`
 - After writing, **evaluate every check against the real data.json with node — all must pass**.

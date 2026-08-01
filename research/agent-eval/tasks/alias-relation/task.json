@@ -1,0 +1,64 @@
+{
+  "taskVersion": "1.0",
+  "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+  "instructions": {
+    "text": "In lib/data/data.json, add alias Alicia that resolves to existing entity alice. Also add exactly one master relation with id alice-bob-friend, a alice, b bob, type friend, and label Friend. Do not create entities or modify existing names. Emit a unified diff only.",
+    "sha256": "sha256:086dfc6654ce4bfad81490cee2d902148cf6b95841772b23e174f51bdd4da26a"
+  },
+  "source": {
+    "root": "source",
+    "revision": "alias-relation-fixture-v1",
+    "treeSha256": "sha256:fffbe5c6cd3b100ea754dfc73b72bb75adae0ccd8ca789fb18c00ed68b2cfc53"
+  },
+  "inputs": [
+    {
+      "id": "input-1",
+      "path": "lib/data/data.json",
+      "role": "canonical-data",
+      "sha256": "sha256:0dd120528e6773e0dfc3a76bf4740870ba17fd32da59aae1b1abf7895ef676db"
+    }
+  ],
+  "filePolicy": {
+    "allowed": [
+      {
+        "pattern": "lib/data/data.json",
+        "operations": [
+          "modify"
+        ]
+      }
+    ],
+    "forbidden": [
+      ".git/**",
+      "lib/src/**",
+      "lib/examples/**"
+    ],
+    "denyPrecedence": true,
+    "allowSymlinks": false,
+    "allowHardlinks": false,
+    "maxChangedFiles": 1,
+    "maxPatchBytes": 262144
+  },
+  "patchPolicy": {
+    "format": "unified-diff",
+    "fuzz": 0,
+    "allowBinary": false
+  },
+  "graders": [
+    {
+      "id": "task-grader",
+      "spec": "grader/spec.json",
+      "sha256": "sha256:7385304cdc24160558f86af78778649418bdde41d33210a6faf5839ea021b8bf",
+      "treeSha256": "sha256:0ee2a51027d36d291b07592f36b41343ace51df8b3027e6fb5523c6b3b4011aa",
+      "weight": 1
+    }
+  ],
+  "evidence": {
+    "runtime": [],
+    "visual": []
+  },
+  "execution": {
+    "timeoutMs": 480000,
+    "network": "off",
+    "maxOutputBytes": 4194304
+  }
+}

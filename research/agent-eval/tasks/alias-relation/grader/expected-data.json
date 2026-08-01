@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.3",
+  "meta": {
+    "id": "agent-alias-relation",
+    "title": "Agent alias and relation fixture"
+  },
+  "entities": {
+    "alice": {
+      "kind": "person",
+      "name": "Alice"
+    },
+    "bob": {
+      "kind": "person",
+      "name": "Bob"
+    }
+  },
+  "aliases": {
+    "Alice": "alice",
+    "Bob": "bob",
+    "Alicia": "alice"
+  },
+  "relationTypes": {
+    "friend": {
+      "label": "Friend"
+    }
+  },
+  "relations": [
+    {
+      "id": "alice-bob-friend",
+      "a": "alice",
+      "b": "bob",
+      "type": "friend",
+      "label": "Friend"
+    }
+  ],
+  "stages": [
+    {
+      "key": "main",
+      "name": "Main",
+      "entities": [
+        "alice",
+        "bob"
+      ],
+      "relations": []
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sg.local/contracts/task-run-v1.json",
+  "title": "SG Agent TaskRun v1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["runVersion", "runId", "task", "agent", "patch", "grades", "secondaryErrors", "artifacts", "verdict", "termination", "capabilities"],
+  "properties": {
+    "runVersion": { "const": "1.0" },
+    "runId": { "type": "string", "pattern": "^task-run:[0-9a-f]{64}$" },
+    "task": { "type": "object" },
+    "agent": { "type": "object" },
+    "patch": { "type": ["object", "null"] },
+    "grades": { "type": "array" },
+    "secondaryErrors": { "type": "array" },
+    "artifacts": { "type": "array" },
+    "verdict": { "enum": ["passed", "agent-failed", "patch-invalid", "policy-violation", "grader-failed", "input-error", "infra-error"] },
+    "termination": { "type": "object" },
+    "capabilities": { "type": "object" }
+  }
+}

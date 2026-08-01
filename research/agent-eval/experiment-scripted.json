@@ -1,0 +1,43 @@
+{
+  "experimentVersion": "1.0",
+  "experimentId": "experiment:c914c326de4a45b64ab26744732c39e2d77885280e35269d009e233bc560cf3b",
+  "title": "deterministic-fixture agent task benchmark",
+  "agent": {
+    "kind": "scripted",
+    "provider": "deterministic-fixture",
+    "model": "scripted-v1",
+    "argv": [
+      "{node}",
+      "{adapter}",
+      "{workspace}",
+      "{patch}",
+      "{prompt}"
+    ],
+    "adapter": {
+      "path": "providers/scripted-patch-agent.js",
+      "sha256": "sha256:b67eeeb225c65f2e3f1aa55f1cc0818b9efece0c428a316b40a776157c5fd7b2"
+    }
+  },
+  "tasks": [
+    {
+      "id": "field-update",
+      "manifest": "tasks/field-update/task.json",
+      "taskId": "sha256:618930ecee265100be229a2d2efa73e733f70c7131e00b0ed7a4bbb8ba75a18f",
+      "manifestSha256": "sha256:27b37bf28fd1fcd4e0d160caef426afbaf27f9a4258e3e92b7795609b249798a"
+    },
+    {
+      "id": "alias-relation",
+      "manifest": "tasks/alias-relation/task.json",
+      "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+      "manifestSha256": "sha256:ac33ff5e0049324b56141ea0687442ed5e344fb6305390f8257b02f2cd17a630"
+    },
+    {
+      "id": "pattern-c-runtime",
+      "manifest": "tasks/pattern-c-runtime/task.json",
+      "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+      "manifestSha256": "sha256:9220e12596b83dbc1619f4859c54d2c3847b733b700818a50fb97aa88df3f8c7"
+    }
+  ],
+  "repetitions": 5,
+  "seed": "fixed-task-order-v1"
+}

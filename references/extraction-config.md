@@ -1,8 +1,12 @@
 # Extraction Config Guide
 
 A config is a CommonJS module that tells the CLI where the defaults live in the engine, how to
-convert them into a spec-compliant pack, and how to verify losslessness.
+convert them into a spec-compliant pack, and how to verify the configured equivalence surface.
 Template: `assets/extract.config.template.js`.
+
+`extract` is a source-to-pack bootstrap operation. Its baseline is the configured engine/HTML literals,
+not an existing `lib/data/data.json`. Use `--compare-existing` to compare the fresh in-memory pack with
+the current output. A divergent existing pack is never overwritten unless `--force` is explicit.
 
 ## Full Field Reference
 
@@ -13,8 +17,9 @@ module.exports = {
   engineFile: 'lib/src/my-lib.js',       // engine file (relative to libDir)
   globalName: 'MyLibrary',               // engine global name (read after requiring the engine)
   schemaVersion: '1.3',                  // optional, default 1.3
+  assetDir: 'lib/assets',                // optional physical asset root, relative to libDir
 
-  literals: [                            // default-data literal slicing (losslessness baseline)
+  literals: [                            // default-data literal slicing (equivalence baseline)
     // JS literal: pattern matches up to and including `||` or `=`; acorn parses the expression from there
     { key: 'chars', pattern: /var chars = \(options && options\.chars\) \|\|/, ctx: { IMG: '../assets/' } },
     // JSON embedded in HTML: `file` targets another file; with json:true, reads to the next </script>
@@ -25,9 +30,11 @@ module.exports = {
 
   buildPack(defaults) { /* defaults.<literal key> -> pack */ },
 
-  equivalence: [                         // losslessness check: fromPack(pack)[from] vs defaults[lit] (deep-equal)
+  equivalence: [                         // fromPack(pack)[from] vs defaults[lit] (deep-equal)
     { lit: 'chars', from: 'chars' }
   ],
+  // Every literal must be mapped or explicitly ignored with evidence:
+  // equivalenceIgnore: [{ lit: 'rendererDefaults', reason: 'Renderer-only; covered by visual regression VR-1' }],
   sortKeys: { chars: (x, y) => 0 },      // optional: sort arrays before comparing (order-insensitive)
   domainChecks(pack) { return { errors: [], warnings: [] }; },  // optional: library-level domain validation
   domainSchema: { type: 'object' }       // optional: domain extension written into data.schema.json
@@ -42,7 +49,11 @@ module.exports = {
   into a cooked string), then extract with regex inside buildPack. In minified files, comma-chained
   declarations make acorn overrun — split the declarations into separate statements first
 - The equivalence test `require`s the engine file: the engine must be an IIFE/UMD that only defines
-  functions on load and never touches the DOM (all sg-* engines satisfy this)
+  functions on load and never touches the DOM. This is a trusted-code requirement, not a sandbox.
+- `assetDir` controls the physical filesystem root. `meta.assetBase` remains the logical prefix used
+  to resolve bare asset references into manifest keys; the two settings are intentionally separate.
+- Equivalence only proves the declared mappings. Renderer constants and actual DOM mount/visual behavior
+  require runtime or visual evidence and must not be described as passed by this check.
 
 ## buildPack Conversion Patterns
 

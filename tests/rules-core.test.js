@@ -45,3 +45,41 @@ test('rules core rejects structural violations before executing checks', () => {
   assert.equal(result.results.length, 0);
   assert.equal(result.passed, false);
 });
+
+test('rules core filters by ruleIds only after validating the complete document', () => {
+  const document = { rulesVersion: '1.0', libId: 'rules-demo', profile: {}, rules: [
+    rule({ id: 'selected', check: 'true' }),
+    rule({ id: 'not-selected', check: 'false' }),
+  ] };
+  const selected = executeRules(document, pack, { ruleIds: ['selected'] });
+  assert.deepEqual(selected.results.map(item => item.id), ['selected']);
+  assert.equal(selected.counts.total, 1);
+  assert.equal(selected.passed, true);
+
+  const malformed = { ...document, rules: [document.rules[0], { ...document.rules[1], level: 'invalid' }] };
+  const rejected = executeRules(malformed, pack, { ruleIds: ['selected'] });
+  assert.ok(rejected.structuralErrors.some(error => /rules\[1\]\.level/.test(error)));
+  assert.equal(rejected.results.length, 0);
+});
+
+test('rules core reports unknown requested rule ids without executing checks', () => {
+  const document = { rulesVersion: '1.0', libId: 'rules-demo', profile: {}, rules: [rule()] };
+  const result = executeRules(document, pack, { ruleIds: ['missing', 'demo-rule'] });
+  assert.deepEqual(result.unknownRuleIds, ['missing']);
+  assert.equal(result.counts.total, 0);
+  assert.equal(result.results.length, 0);
+  assert.equal(result.passed, false);
+});
+
+test('rules checks receive heroRelTypes, attributeSources, and derivations in scope', () => {
+  const scopedPack = {
+    ...pack,
+    heroRelTypes: { family: { label: 'Family' } },
+    attributeSources: ['entities.*.facts'],
+    derivations: { cards: { kind: 'repeat' } },
+  };
+  const document = { rulesVersion: '1.0', libId: 'rules-demo', profile: {}, rules: [rule({
+    check: 'heroRelTypes.family.label === "Family" && attributeSources[0] === "entities.*.facts" && derivations.cards.kind === "repeat"',
+  })] };
+  assert.equal(executeRules(document, scopedPack).passed, true);
+});

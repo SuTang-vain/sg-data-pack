@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sg.local/agent-task.schema.json",
+  "title": "AgentTaskManifest v1",
+  "description": "Declarative, content-addressed task contract for an agent execution.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "taskVersion",
+    "taskId",
+    "instructions",
+    "source",
+    "inputs",
+    "filePolicy",
+    "patchPolicy",
+    "graders",
+    "evidence",
+    "execution"
+  ],
+  "properties": {
+    "taskVersion": { "const": "1.0" },
+    "taskId": { "$ref": "#/$defs/digest" },
+    "instructions": { "$ref": "#/$defs/instructions" },
+    "source": { "$ref": "#/$defs/source" },
+    "inputs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/input" },
+      "uniqueItems": true
+    },
+    "filePolicy": { "$ref": "#/$defs/filePolicy" },
+    "patchPolicy": { "$ref": "#/$defs/patchPolicy" },
+    "graders": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/grader" },
+      "uniqueItems": true
+    },
+    "evidence": { "$ref": "#/$defs/evidence" },
+    "execution": { "$ref": "#/$defs/execution" }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*\\u0000)(?!.*[*?{}\\[\\]])(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*//).+"
+    },
+    "relativePattern": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*\\u0000)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*//).+"
+    },
+    "relativeRoot": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?:\\.|(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*\\u0000)(?!.*[*?{}\\[\\]])(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*//).+)$"
+    },
+    "instructions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "sha256"],
+      "properties": {
+        "text": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["root", "revision", "treeSha256"],
+      "properties": {
+        "root": { "$ref": "#/$defs/relativeRoot" },
+        "revision": { "type": "string", "minLength": 1 },
+        "treeSha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path", "role", "sha256"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "path": { "$ref": "#/$defs/relativePath" },
+        "role": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "filePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allowed",
+        "forbidden",
+        "denyPrecedence",
+        "allowSymlinks",
+        "allowHardlinks",
+        "maxChangedFiles",
+        "maxPatchBytes"
+      ],
+      "properties": {
+        "allowed": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/allowedRule" },
+          "uniqueItems": true
+        },
+        "forbidden": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/relativePattern" },
+          "uniqueItems": true
+        },
+        "denyPrecedence": { "const": true },
+        "allowSymlinks": { "const": false },
+        "allowHardlinks": { "const": false },
+        "maxChangedFiles": { "$ref": "#/$defs/nonNegativeBoundedInteger" },
+        "maxPatchBytes": { "$ref": "#/$defs/nonNegativeBoundedInteger" }
+      }
+    },
+    "allowedRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pattern", "operations"],
+      "properties": {
+        "pattern": { "$ref": "#/$defs/relativePattern" },
+        "operations": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "enum": ["add", "modify", "delete"] },
+          "uniqueItems": true
+        }
+      }
+    },
+    "patchPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "fuzz", "allowBinary"],
+      "properties": {
+        "format": { "const": "unified-diff" },
+        "fuzz": { "const": 0 },
+        "allowBinary": { "const": false }
+      }
+    },
+    "grader": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "spec", "sha256", "treeSha256", "weight"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "spec": { "$ref": "#/$defs/relativePath" },
+        "sha256": { "$ref": "#/$defs/digest" },
+        "treeSha256": { "$ref": "#/$defs/digest" },
+        "weight": { "type": "number", "exclusiveMinimum": 0, "maximum": 1000000 }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtime", "visual"],
+      "properties": {
+        "runtime": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "visual": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["timeoutMs", "network", "maxOutputBytes"],
+      "properties": {
+        "timeoutMs": { "type": "integer", "minimum": 1, "maximum": 86400000 },
+        "network": { "const": "off" },
+        "maxOutputBytes": { "type": "integer", "minimum": 1, "maximum": 1073741824 }
+      }
+    },
+    "nonNegativeBoundedInteger": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1073741824
+    }
+  }
+}

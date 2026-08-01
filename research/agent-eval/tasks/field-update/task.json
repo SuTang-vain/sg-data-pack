@@ -1,0 +1,64 @@
+{
+  "taskVersion": "1.0",
+  "taskId": "sha256:618930ecee265100be229a2d2efa73e733f70c7131e00b0ed7a4bbb8ba75a18f",
+  "instructions": {
+    "text": "In lib/data/data.json, change only entities.alice.summary from summary-old to exactly summary-new. Preserve the valid Data Pack shape and every unrelated value. Emit a unified diff only.",
+    "sha256": "sha256:382f7cbdcf80e3c8dd094b94705d1b076f12f655c30c691593e887eb7bb86d58"
+  },
+  "source": {
+    "root": "source",
+    "revision": "field-update-fixture-v1",
+    "treeSha256": "sha256:5f3c536db01e9f4c2c1dbaabf9216bb532afc6f067ea18a7d13d89255105b35a"
+  },
+  "inputs": [
+    {
+      "id": "input-1",
+      "path": "lib/data/data.json",
+      "role": "canonical-data",
+      "sha256": "sha256:4af3f1f6eb137aed5e32146530a068601252760103e63e400f1ba89aadb5bd5e"
+    }
+  ],
+  "filePolicy": {
+    "allowed": [
+      {
+        "pattern": "lib/data/data.json",
+        "operations": [
+          "modify"
+        ]
+      }
+    ],
+    "forbidden": [
+      ".git/**",
+      "lib/src/**",
+      "lib/examples/**"
+    ],
+    "denyPrecedence": true,
+    "allowSymlinks": false,
+    "allowHardlinks": false,
+    "maxChangedFiles": 1,
+    "maxPatchBytes": 262144
+  },
+  "patchPolicy": {
+    "format": "unified-diff",
+    "fuzz": 0,
+    "allowBinary": false
+  },
+  "graders": [
+    {
+      "id": "task-grader",
+      "spec": "grader/spec.json",
+      "sha256": "sha256:35f684c1d0930525680da04d37f6e45124dc1cf974bdbdec6f69cfd14ce0d747",
+      "treeSha256": "sha256:8dd56f9c268b1fef1c3b31176150817e278993fc87759b73be7ffaae0d20ee44",
+      "weight": 1
+    }
+  ],
+  "evidence": {
+    "runtime": [],
+    "visual": []
+  },
+  "execution": {
+    "timeoutMs": 480000,
+    "network": "off",
+    "maxOutputBytes": 4194304
+  }
+}

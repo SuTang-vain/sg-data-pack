@@ -1,0 +1,65 @@
+{
+  "evidenceVersion": "1.0",
+  "kind": "visual-evidence",
+  "evidenceId": "visual:b3d9ffed355ba9dda006f8c7b3962445098fec0479e09b6a39ddfde0e64a010f",
+  "referenceTreeSha256": "sha256:b48495ceef97ecc05c4a6f85ab102ff5a3858110275202b3fae365252af113db",
+  "candidateTreeSha256": "sha256:b48495ceef97ecc05c4a6f85ab102ff5a3858110275202b3fae365252af113db",
+  "configurationSha256": "sha256:a6a063638a9b86f8d9c89b8dede46bc2069caf1067400f293fdf3ff6c185a41e",
+  "producer": {
+    "name": "headless-chrome-pillow",
+    "version": "1.2.0"
+  },
+  "thresholds": {
+    "maxPixelDiffRatio": 0.02,
+    "minComputedStyleScore": 0.98,
+    "minCoverage": 1
+  },
+  "scenarios": [
+    {
+      "id": "pattern-c-gallery-desktop",
+      "viewport": {
+        "width": 1100,
+        "height": 720
+      },
+      "pixelDiffRatio": 0,
+      "computedStyleScore": 1,
+      "coverage": 1,
+      "stabilityFailures": 0,
+      "referenceArtifact": "reference-screenshot",
+      "candidateArtifact": "candidate-screenshot",
+      "diffArtifact": "diff-screenshot"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "reference-screenshot",
+      "path": "reference.png",
+      "mediaType": "image/png",
+      "sha256": "sha256:369ad75f907e2fea0a06e5182a03c3d1d4f6570b531958dabf10396c2e2cd3ea"
+    },
+    {
+      "id": "candidate-screenshot",
+      "path": "candidate.png",
+      "mediaType": "image/png",
+      "sha256": "sha256:369ad75f907e2fea0a06e5182a03c3d1d4f6570b531958dabf10396c2e2cd3ea"
+    },
+    {
+      "id": "diff-screenshot",
+      "path": "visual-diff.png",
+      "mediaType": "image/png",
+      "sha256": "sha256:aef339735a9bff865bfe7912b73ab3c2ee6f41c2aa4482ed0cf006381a82b775"
+    },
+    {
+      "id": "candidate-stability-screenshot",
+      "path": "candidate-stability.png",
+      "mediaType": "image/png",
+      "sha256": "sha256:369ad75f907e2fea0a06e5182a03c3d1d4f6570b531958dabf10396c2e2cd3ea"
+    },
+    {
+      "id": "stability-diff-screenshot",
+      "path": "stability-diff.png",
+      "mediaType": "image/png",
+      "sha256": "sha256:aef339735a9bff865bfe7912b73ab3c2ee6f41c2aa4482ed0cf006381a82b775"
+    }
+  ]
+}

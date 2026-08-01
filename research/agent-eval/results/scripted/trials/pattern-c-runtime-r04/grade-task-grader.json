@@ -1,0 +1,153 @@
+{
+  "gradeVersion": "1.0",
+  "gradeId": "grade:e0430c07230d0796c40ba9492fbacfc420084105a477689a53f5d1e63d99aa33",
+  "graderId": "agent-pattern-c-grader",
+  "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+  "treeSha256": "sha256:b48495ceef97ecc05c4a6f85ab102ff5a3858110275202b3fae365252af113db",
+  "verdict": "passed",
+  "score": 8,
+  "maximumScore": 8,
+  "results": [
+    {
+      "id": "data-pack-contract",
+      "type": "data-pack-contract",
+      "required": true,
+      "weight": 1,
+      "status": "passed",
+      "score": 1,
+      "findings": [],
+      "evidence": {
+        "errors": [],
+        "warnings": [],
+        "strict": true
+      }
+    },
+    {
+      "id": "hidden-property",
+      "type": "command",
+      "required": true,
+      "weight": 2,
+      "status": "passed",
+      "score": 2,
+      "findings": [],
+      "evidence": {
+        "argv": [
+          "/Users/tangyaoyue/.hermes/node/bin/node",
+          "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-yeS8zz/trusted-graders/task-grader/assert-task.js",
+          "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-yeS8zz/workspace",
+          "pattern-c"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "signal": null,
+        "timedOut": false,
+        "durationMs": 28.897709,
+        "stdoutSha256": "sha256:14aa7fc7ee2174870b13c88f2eefc39873ff15b29013e54803fc3b21cf099c88",
+        "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout": "pattern-c: complete hidden candidate passed\n",
+        "stderr": "",
+        "stdoutTruncated": false,
+        "stderrTruncated": false,
+        "error": null
+      }
+    },
+    {
+      "id": "browser-producer",
+      "type": "command",
+      "required": true,
+      "weight": 1,
+      "status": "passed",
+      "score": 1,
+      "findings": [],
+      "evidence": {
+        "argv": [
+          "/Users/tangyaoyue/.hermes/node/bin/node",
+          "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-yeS8zz/trusted-graders/task-grader/browser-evidence.js",
+          "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-yeS8zz/workspace",
+          "/private/tmp/sg-agent-scripted-final-release/trials/pattern-c-runtime-r04",
+          "sha256:b48495ceef97ecc05c4a6f85ab102ff5a3858110275202b3fae365252af113db",
+          "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+          "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-yeS8zz/trusted-tools"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "signal": null,
+        "timedOut": false,
+        "durationMs": 13804.986625,
+        "stdoutSha256": "sha256:a0ceb59f74d219b4175dc3a2fdcbdd36bfe416f996194c9f65879f20fb15ac17",
+        "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout": "{\"runtime\":\"runtime:4e6931ce38037653f2a8230dd7c4fb7f0407acc5c63954f531480e21891caba1\",\"visual\":\"visual:b3d9ffed355ba9dda006f8c7b3962445098fec0479e09b6a39ddfde0e64a010f\",\"pixelDiffRatio\":0,\"stabilityDiffRatio\":0}\n",
+        "stderr": "",
+        "stdoutTruncated": false,
+        "stderrTruncated": false,
+        "error": null
+      }
+    },
+    {
+      "id": "runtime-mount",
+      "type": "runtime-evidence",
+      "required": true,
+      "weight": 2,
+      "status": "passed",
+      "score": 2,
+      "findings": [],
+      "evidence": {
+        "scenarioId": "pattern-c-gallery",
+        "file": "runtime-evidence.json",
+        "evidenceId": "runtime:4e6931ce38037653f2a8230dd7c4fb7f0407acc5c63954f531480e21891caba1",
+        "validation": {
+          "valid": true,
+          "errors": [],
+          "status": "passed",
+          "summary": {
+            "assertions": 4,
+            "passed": 4,
+            "failed": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "visual-regression",
+      "type": "visual-evidence",
+      "required": true,
+      "weight": 2,
+      "status": "passed",
+      "score": 2,
+      "findings": [],
+      "evidence": {
+        "scenarioId": "pattern-c-gallery-desktop",
+        "file": "visual-evidence.json",
+        "evidenceId": "visual:b3d9ffed355ba9dda006f8c7b3962445098fec0479e09b6a39ddfde0e64a010f",
+        "validation": {
+          "valid": true,
+          "errors": [],
+          "status": "passed",
+          "scenarios": [
+            {
+              "id": "pattern-c-gallery-desktop",
+              "status": "passed",
+              "errors": []
+            }
+          ],
+          "summary": {
+            "total": 1,
+            "passed": 1,
+            "failed": 0,
+            "notAssessed": 0
+          }
+        }
+      }
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "passed": 5,
+    "failed": 0,
+    "notAssessed": 0,
+    "invalid": 0,
+    "infraErrors": 0,
+    "requiredIncomplete": 0
+  },
+  "manifestWeight": 1
+}

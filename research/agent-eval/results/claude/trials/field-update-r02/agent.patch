@@ -1,0 +1,11 @@
+diff --git a/lib/data/data.json b/lib/data/data.json
+--- a/lib/data/data.json
++++ b/lib/data/data.json
+@@ -11,7 +11,7 @@
+       "kind": "person",
+       "name": "Alice",
+-      "summary": "summary-old"
++      "summary": "summary-new"
+     }
+   },
+   "aliases": {

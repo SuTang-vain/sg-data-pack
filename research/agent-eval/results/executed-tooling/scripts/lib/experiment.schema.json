@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sg.local/contracts/agent-experiment-v1.json",
+  "title": "SG Agent ExperimentSpec v1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["experimentVersion", "experimentId", "title", "agent", "tasks", "repetitions", "seed"],
+  "properties": {
+    "experimentVersion": { "const": "1.0" },
+    "experimentId": { "type": "string", "pattern": "^experiment:[0-9a-f]{64}$" },
+    "title": { "type": "string", "minLength": 1 },
+    "agent": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "provider", "model", "argv", "adapter"],
+      "properties": {
+        "kind": { "enum": ["scripted", "ai"] },
+        "provider": { "type": "string", "minLength": 1 },
+        "model": { "type": "string", "minLength": 1 },
+          "argv": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+          "adapter": { "type": "object", "additionalProperties": false, "required": ["path", "sha256"], "properties": { "path": { "type": "string", "minLength": 1 }, "sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" } } },
+          "infraExitCodes": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "integer", "minimum": 1, "maximum": 255 } }
+
+      }
+    },
+    "tasks": {
+      "type": "array", "minItems": 1,
+      "items": { "type": "object", "additionalProperties": false, "required": ["id", "manifest", "taskId", "manifestSha256"], "properties": { "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$" }, "manifest": { "type": "string", "minLength": 1 }, "taskId": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }, "manifestSha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" } } }
+    },
+    "repetitions": { "type": "integer", "minimum": 1, "maximum": 100 },
+    "seed": { "type": ["integer", "string"] }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "auditVersion": "1.0",
+  "auditId": "patch-audit:1a9a7582d7b0bb67b887c5473ca55af0908657d6bb17eb8665dfb13cf5542153",
+  "kind": "patch-audit",
+  "taskId": "sha256:618930ecee265100be229a2d2efa73e733f70c7131e00b0ed7a4bbb8ba75a18f",
+  "status": "rejected",
+  "patchSha256": "sha256:4206f16fb681c139719b49e6d94abbadf93959839702dc360bce26aa058ff61f",
+  "patchBytes": 232,
+  "beforeTreeSha256": "sha256:793d34d30db2b23ad60b518e1ef2ba63af8a1731be03baa813eb0a5730bbf76e",
+  "afterTreeSha256": null,
+  "declaredOperations": [
+    {
+      "operation": "modify",
+      "path": "lib/data/data.json",
+      "hunks": 1,
+      "modes": {},
+      "policy": {
+        "allowed": true,
+        "reason": null,
+        "deniedBy": null,
+        "allowedBy": "lib/data/data.json"
+      }
+    }
+  ],
+  "actualOperations": [],
+  "preflight": {
+    "allowed": true,
+    "violations": []
+  },
+  "postflight": null,
+  "commands": {
+    "check": {
+      "argv": [
+        "git",
+        "apply",
+        "--check",
+        "--whitespace=error-all",
+        "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-83564-1785573843472-ce2fa6682c38e.diff"
+      ],
+      "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-jm9X14/workspace",
+      "exitCode": 128,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 14.504417,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:97e03fbd499c7f04af57d26fa8bda99067c2d301e271adc5f1462c40cd89bba3",
+      "error": null
+    },
+    "apply": null
+  },
+  "failure": {
+    "kind": "patch-invalid",
+    "name": "PatchError",
+    "message": "git apply --check rejected the patch",
+    "details": {
+      "checkRun": {
+        "argv": [
+          "git",
+          "apply",
+          "--check",
+          "--whitespace=error-all",
+          "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-83564-1785573843472-ce2fa6682c38e.diff"
+        ],
+        "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-jm9X14/workspace",
+        "status": 128,
+        "exitCode": 128,
+        "exit": 128,
+        "signal": null,
+        "timedOut": false,
+        "durationMs": 14.504417,
+        "duration": 14.504417,
+        "stdout": "",
+        "stderr": "error: corrupt patch at line 9\n",
+        "stdoutTruncated": false,
+        "stderrTruncated": false,
+        "truncated": false
+      }
+    }
+  },
+  "capabilities": {
+    "osSandbox": false,
+    "networkIsolation": false,
+    "processIsolation": false,
+    "sourceTreeVerifiedByRunner": true,
+    "disposableWorkspace": true
+  }
+}

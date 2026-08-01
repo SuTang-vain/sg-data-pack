@@ -14,8 +14,9 @@ module.exports = {
   libDir: LIB_DIR,
   engineFile: 'lib/src/your-lib.js',
   globalName: 'YourLibrary', // engine global name (global.X = {mount, create})
+  assetDir: 'lib/assets',    // physical asset root relative to libDir; independent from meta.assetBase
 
-  // Default-data literal slicing (losslessness baseline). Pattern match end = expression start.
+  // Default-data literal slicing (equivalence baseline). Pattern match end = expression start.
   literals: [
     { key: 'chars', pattern: /var chars = \(options && options\.chars\) \|\|/, ctx: { IMG: '../assets/' } },
     // { key: 'edges', pattern: /var edges = \(options && options\.edges\) \|\|/ },
@@ -81,11 +82,13 @@ module.exports = {
     return pack;
   },
 
-  // Losslessness check: fromPack(pack)[from] deep-equals defaults[lit]
+  // Configured equivalence check: fromPack(pack)[from] deep-equals defaults[lit]
   equivalence: [
     { lit: 'chars', from: 'chars' },
     // { lit: 'edges', from: 'allEdges' },
   ],
+  // Every literal must be mapped above or explicitly ignored with an evidence-backed reason:
+  // equivalenceIgnore: [{ lit: 'rendererDefaults', reason: 'Renderer-only; covered by visual regression VR-1' }],
 
   // sortKeys: { edges: (x, y) => edgeKey(x).localeCompare(edgeKey(y)) },
 

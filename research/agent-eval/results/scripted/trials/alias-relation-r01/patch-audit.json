@@ -1,0 +1,102 @@
+{
+  "auditVersion": "1.0",
+  "auditId": "patch-audit:4a06d74f09f92fa4965f8eb4a376044dc8394c626273ac809f5dc845fedef630",
+  "kind": "patch-audit",
+  "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+  "status": "applied",
+  "patchSha256": "sha256:e79768f491710194954343186bd483148a3bfde7ae977df68fc6bd28efcb3054",
+  "patchBytes": 1534,
+  "beforeTreeSha256": "sha256:6243526415fa11e029c8205e3ee3ddb2f0cb824e7e561c733480c3c8ecabb6c5",
+  "afterTreeSha256": "sha256:d15e90de86ac2a539d31318731e8ccb186e2e26e6ae3dc53511c4f66a29afbfa",
+  "declaredOperations": [
+    {
+      "operation": "modify",
+      "path": "lib/data/data.json",
+      "hunks": 1,
+      "modes": {},
+      "policy": {
+        "allowed": true,
+        "reason": null,
+        "deniedBy": null,
+        "allowedBy": "lib/data/data.json"
+      }
+    }
+  ],
+  "actualOperations": [
+    {
+      "operation": "modify",
+      "path": "lib/data/data.json",
+      "allowed": true,
+      "reason": null,
+      "before": {
+        "path": "lib/data/data.json",
+        "relativePath": "lib/data/data.json",
+        "kind": "file",
+        "mode": 420,
+        "sha256": "0dd120528e6773e0dfc3a76bf4740870ba17fd32da59aae1b1abf7895ef676db",
+        "size": 586,
+        "target": null
+      },
+      "after": {
+        "path": "lib/data/data.json",
+        "relativePath": "lib/data/data.json",
+        "kind": "file",
+        "mode": 420,
+        "sha256": "bb91d39a32f25c9410a70d06d5314a43bcba7bcf2f97fa9603d4122e29524970",
+        "size": 742,
+        "target": null
+      }
+    }
+  ],
+  "preflight": {
+    "allowed": true,
+    "violations": []
+  },
+  "postflight": {
+    "allowed": true,
+    "violations": []
+  },
+  "commands": {
+    "check": {
+      "argv": [
+        "git",
+        "apply",
+        "--check",
+        "--whitespace=error-all",
+        "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-81453-1785573721971-42a8f19ea75c9.diff"
+      ],
+      "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-zokJtU/workspace",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 14.939625,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    },
+    "apply": {
+      "argv": [
+        "git",
+        "apply",
+        "--whitespace=error-all",
+        "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-81453-1785573721971-42a8f19ea75c9.diff"
+      ],
+      "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-zokJtU/workspace",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 20.078334,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    }
+  },
+  "failure": null,
+  "capabilities": {
+    "osSandbox": false,
+    "networkIsolation": false,
+    "processIsolation": false,
+    "sourceTreeVerifiedByRunner": true,
+    "disposableWorkspace": true
+  }
+}

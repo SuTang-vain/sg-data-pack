@@ -1,0 +1,1 @@
+Extend the Pattern C card gallery with a third card. In lib/data/data.json add entity gamma with kind card, title Gamma Card, and color #8b5cf6; add alias Gamma Card -> gamma; append gamma to the gallery stage entities and domain.cardOrder. Update lib/data/data.js so SG_DATA_PACK exactly mirrors data.json. Do not modify the engine or HTML. Emit a unified diff only.
