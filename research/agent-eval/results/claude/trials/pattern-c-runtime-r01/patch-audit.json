@@ -1,0 +1,99 @@
+{
+  "auditVersion": "1.0",
+  "auditId": "patch-audit:7d65facd435834371e9a0a14897f625ff8b9b3c4d0e51f464cf0ae3d016c659b",
+  "kind": "patch-audit",
+  "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+  "status": "rejected",
+  "patchSha256": "sha256:770dcba500dd445b1ee43e2717686d3ef2fbd57756a26d347f9c4104a2b991c3",
+  "patchBytes": 2461,
+  "beforeTreeSha256": "sha256:2f5a60bc694ee969c17914c85b53df4960565372eb274588e287a2715478b865",
+  "afterTreeSha256": null,
+  "declaredOperations": [
+    {
+      "operation": "modify",
+      "path": "lib/data/data.js",
+      "hunks": 1,
+      "modes": {},
+      "policy": {
+        "allowed": true,
+        "reason": null,
+        "deniedBy": null,
+        "allowedBy": "lib/data/data.js"
+      }
+    },
+    {
+      "operation": "modify",
+      "path": "lib/data/data.json",
+      "hunks": 4,
+      "modes": {},
+      "policy": {
+        "allowed": true,
+        "reason": null,
+        "deniedBy": null,
+        "allowedBy": "lib/data/data.json"
+      }
+    }
+  ],
+  "actualOperations": [],
+  "preflight": {
+    "allowed": true,
+    "violations": []
+  },
+  "postflight": null,
+  "commands": {
+    "check": {
+      "argv": [
+        "git",
+        "apply",
+        "--check",
+        "--whitespace=error-all",
+        "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-83564-1785574435828-e4a2bdeb6ab5a.diff"
+      ],
+      "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-T3JOxv/workspace",
+      "exitCode": 128,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 21.056834,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:8eb5fb3f1054381643c3673f6e5fa294934f64c17fbd0817aab44c6b4aacb205",
+      "error": null
+    },
+    "apply": null
+  },
+  "failure": {
+    "kind": "patch-invalid",
+    "name": "PatchError",
+    "message": "git apply --check rejected the patch",
+    "details": {
+      "checkRun": {
+        "argv": [
+          "git",
+          "apply",
+          "--check",
+          "--whitespace=error-all",
+          "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-83564-1785574435828-e4a2bdeb6ab5a.diff"
+        ],
+        "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-T3JOxv/workspace",
+        "status": 128,
+        "exitCode": 128,
+        "exit": 128,
+        "signal": null,
+        "timedOut": false,
+        "durationMs": 21.056834,
+        "duration": 21.056834,
+        "stdout": "",
+        "stderr": "error: corrupt patch at line 24\n",
+        "stdoutTruncated": false,
+        "stderrTruncated": false,
+        "truncated": false
+      }
+    }
+  },
+  "capabilities": {
+    "osSandbox": false,
+    "networkIsolation": false,
+    "processIsolation": false,
+    "sourceTreeVerifiedByRunner": true,
+    "disposableWorkspace": true
+  }
+}

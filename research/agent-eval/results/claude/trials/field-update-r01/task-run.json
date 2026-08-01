@@ -1,0 +1,211 @@
+{
+  "runVersion": "1.0",
+  "runId": "task-run:eda458f8bd0740b373639a702e700e17e55e8fb73e2dda8c5b0b187a3de0fe7c",
+  "task": {
+    "taskId": "sha256:618930ecee265100be229a2d2efa73e733f70c7131e00b0ed7a4bbb8ba75a18f",
+    "taskFileSha256": "sha256:27b37bf28fd1fcd4e0d160caef426afbaf27f9a4258e3e92b7795609b249798a",
+    "sourceRevision": "field-update-fixture-v1",
+    "contractTreeSha256": "sha256:5f3c536db01e9f4c2c1dbaabf9216bb532afc6f067ea18a7d13d89255105b35a",
+    "runnerSnapshotBeforeSha256": "sha256:793d34d30db2b23ad60b518e1ef2ba63af8a1731be03baa813eb0a5730bbf76e",
+    "runnerSnapshotFinalSha256": "sha256:793d34d30db2b23ad60b518e1ef2ba63af8a1731be03baa813eb0a5730bbf76e",
+    "sourceUnchanged": true,
+    "sourceFinalError": null,
+    "trialId": "field-update-r01"
+  },
+  "agent": {
+    "provider": "claude-code-2.1.185",
+    "model": "sonnet alias (provider metadata recorded)",
+    "argv": [
+      "/Users/tangyaoyue/.hermes/node/bin/node",
+      "/Users/tangyaoyue/DEV/sg-data-pack/research/agent-eval/providers/claude-patch-agent.js",
+      "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-jm9X14/workspace",
+      "/private/tmp/sg-agent-claude-final-release/trials/field-update-r01/agent.patch",
+      "/private/tmp/sg-agent-claude-final-release/trials/field-update-r01/TASK.md"
+    ],
+    "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-jm9X14/workspace",
+    "exitCode": 0,
+    "signal": null,
+    "timedOut": false,
+    "durationMs": 3840.298,
+    "stdoutSha256": "sha256:a364c42cc6397efb63db1521e33ada563734cc4f4c33600fa8a7689090d4076e",
+    "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "{\"provider\":\"claude-code\",\"declaredModel\":\"sonnet\",\"modelUsage\":{\"MiniMax-M3[1M]\":{\"inputTokens\":1205,\"outputTokens\":135,\"cacheReadInputTokens\":128,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.009463999999999998,\"contextWindow\":1000000,\"maxOutputTokens\":32000}},\"usage\":{\"input_tokens\":1205,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":128,\"output_tokens\":135,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"totalCostUsd\":0.009463999999999998,\"durationApiMs\":2651,\"stopReason\":\"end_turn\",\"permissionDenials\":[]}\n",
+    "stderr": "",
+    "stdoutTruncated": false,
+    "stderrTruncated": false,
+    "error": null,
+    "providerMetadata": {
+      "provider": "claude-code",
+      "declaredModel": "sonnet",
+      "modelUsage": {
+        "MiniMax-M3[1M]": {
+          "inputTokens": 1205,
+          "outputTokens": 135,
+          "cacheReadInputTokens": 128,
+          "cacheCreationInputTokens": 0,
+          "webSearchRequests": 0,
+          "costUSD": 0.009463999999999998,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "usage": {
+        "input_tokens": 1205,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 128,
+        "output_tokens": 135,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [],
+        "speed": "standard"
+      },
+      "totalCostUsd": 0.009463999999999998,
+      "durationApiMs": 2651,
+      "stopReason": "end_turn",
+      "permissionDenials": []
+    }
+  },
+  "patch": {
+    "auditVersion": "1.0",
+    "auditId": "patch-audit:1a9a7582d7b0bb67b887c5473ca55af0908657d6bb17eb8665dfb13cf5542153",
+    "kind": "patch-audit",
+    "taskId": "sha256:618930ecee265100be229a2d2efa73e733f70c7131e00b0ed7a4bbb8ba75a18f",
+    "status": "rejected",
+    "patchSha256": "sha256:4206f16fb681c139719b49e6d94abbadf93959839702dc360bce26aa058ff61f",
+    "patchBytes": 232,
+    "beforeTreeSha256": "sha256:793d34d30db2b23ad60b518e1ef2ba63af8a1731be03baa813eb0a5730bbf76e",
+    "afterTreeSha256": null,
+    "declaredOperations": [
+      {
+        "operation": "modify",
+        "path": "lib/data/data.json",
+        "hunks": 1,
+        "modes": {},
+        "policy": {
+          "allowed": true,
+          "reason": null,
+          "deniedBy": null,
+          "allowedBy": "lib/data/data.json"
+        }
+      }
+    ],
+    "actualOperations": [],
+    "preflight": {
+      "allowed": true,
+      "violations": []
+    },
+    "postflight": null,
+    "commands": {
+      "check": {
+        "argv": [
+          "git",
+          "apply",
+          "--check",
+          "--whitespace=error-all",
+          "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-83564-1785573843472-ce2fa6682c38e.diff"
+        ],
+        "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-jm9X14/workspace",
+        "exitCode": 128,
+        "signal": null,
+        "timedOut": false,
+        "durationMs": 14.504417,
+        "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "sha256:97e03fbd499c7f04af57d26fa8bda99067c2d301e271adc5f1462c40cd89bba3",
+        "error": null
+      },
+      "apply": null
+    },
+    "failure": {
+      "kind": "patch-invalid",
+      "name": "PatchError",
+      "message": "git apply --check rejected the patch",
+      "details": {
+        "checkRun": {
+          "argv": [
+            "git",
+            "apply",
+            "--check",
+            "--whitespace=error-all",
+            "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-83564-1785573843472-ce2fa6682c38e.diff"
+          ],
+          "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-jm9X14/workspace",
+          "status": 128,
+          "exitCode": 128,
+          "exit": 128,
+          "signal": null,
+          "timedOut": false,
+          "durationMs": 14.504417,
+          "duration": 14.504417,
+          "stdout": "",
+          "stderr": "error: corrupt patch at line 9\n",
+          "stdoutTruncated": false,
+          "stderrTruncated": false,
+          "truncated": false
+        }
+      }
+    },
+    "capabilities": {
+      "osSandbox": false,
+      "networkIsolation": false,
+      "processIsolation": false,
+      "sourceTreeVerifiedByRunner": true,
+      "disposableWorkspace": true
+    }
+  },
+  "grades": [],
+  "secondaryErrors": [],
+  "artifacts": [
+    {
+      "id": "agent-patch",
+      "path": "agent.patch",
+      "mediaType": "text/x-diff",
+      "bytes": 232,
+      "sha256": "sha256:4206f16fb681c139719b49e6d94abbadf93959839702dc360bce26aa058ff61f"
+    },
+    {
+      "id": "patch-audit",
+      "path": "patch-audit.json",
+      "mediaType": "application/json",
+      "bytes": 2659,
+      "sha256": "sha256:6db3ee7991dbedd397d84346be1518c7b24b2c600f6d1bee00a953f0025d84cc"
+    },
+    {
+      "id": "task-prompt",
+      "path": "TASK.md",
+      "mediaType": "text/markdown",
+      "bytes": 187,
+      "sha256": "sha256:21f3f361c74972d195f556886659d9f83a5f002e17ea3ad0dd8bc004a46d7e62"
+    }
+  ],
+  "verdict": "patch-invalid",
+  "termination": {
+    "kind": "completed",
+    "processExitCode": 1,
+    "semanticVerdict": "patch-invalid",
+    "message": "git apply --check rejected the patch"
+  },
+  "capabilities": {
+    "sourceCopy": true,
+    "disposableWorkspace": true,
+    "completeSecuritySnapshots": true,
+    "postAgentSourceTreeCheck": true,
+    "postPatchTreePolicy": true,
+    "postGraderTreeCheck": true,
+    "verifiedGraderStaging": true,
+    "verifiedToolStaging": true,
+    "candidateExtractionWorker": true,
+    "osSandbox": false,
+    "filesystemIsolation": false,
+    "networkIsolation": false,
+    "processIsolation": false,
+    "maliciousAgentGraderSecrecy": false
+  }
+}

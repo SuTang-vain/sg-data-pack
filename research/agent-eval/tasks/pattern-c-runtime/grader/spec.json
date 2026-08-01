@@ -1,0 +1,68 @@
+{
+  "graderVersion": "1.0",
+  "graderId": "agent-pattern-c-grader",
+  "title": "Pattern C contract, mount, and visual grader",
+  "checks": [
+    {
+      "id": "data-pack-contract",
+      "type": "data-pack-contract",
+      "weight": 1,
+      "required": true,
+      "path": "lib/data/data.json",
+      "strict": true
+    },
+    {
+      "id": "hidden-property",
+      "type": "command",
+      "weight": 2,
+      "required": true,
+      "argv": [
+        "{node}",
+        "{grader}/assert-task.js",
+        "{workspace}",
+        "pattern-c"
+      ],
+      "expectedExit": 0,
+      "infraExitCodes": [
+        3
+      ]
+    },
+    {
+      "id": "browser-producer",
+      "type": "command",
+      "weight": 1,
+      "required": true,
+      "argv": [
+        "{node}",
+        "{grader}/browser-evidence.js",
+        "{workspace}",
+        "{artifacts}",
+        "{treeSha256}",
+        "{taskId}",
+        "{toolRoot}"
+      ],
+      "expectedExit": 0,
+      "timeoutMs": 120000,
+      "maxOutputBytes": 1048576,
+      "infraExitCodes": [
+        3
+      ]
+    },
+    {
+      "id": "runtime-mount",
+      "type": "runtime-evidence",
+      "weight": 2,
+      "required": true,
+      "path": "runtime-evidence.json",
+      "scenarioId": "pattern-c-gallery"
+    },
+    {
+      "id": "visual-regression",
+      "type": "visual-evidence",
+      "weight": 2,
+      "required": true,
+      "path": "visual-evidence.json",
+      "scenarioId": "pattern-c-gallery-desktop"
+    }
+  ]
+}

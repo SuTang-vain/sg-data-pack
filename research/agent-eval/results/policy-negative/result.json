@@ -1,0 +1,12 @@
+{
+  "resultVersion": "1.0",
+  "taskId": "sha256:618930ecee265100be229a2d2efa73e733f70c7131e00b0ed7a4bbb8ba75a18f",
+  "verdict": "policy-violation",
+  "message": "patch violates file policy",
+  "auditId": "patch-audit:291908859af0ec4fb13dbe01ffe25b2bbf2fcc30295b0dd6de3f1546d7e25993",
+  "patchSha256": "sha256:02b47b841673309c63ff596de48a07cc9bfcfa373dfd58ec91bb7876097d32d3",
+  "violations": [
+    "add .git/config: forbidden by .git/**"
+  ],
+  "sourceUnchanged": true
+}

@@ -1,0 +1,74 @@
+{
+  "runVersion": "1.0",
+  "runId": "task-run:1e758add780932a28d4a8805f1027723d18ea577ceef2b37205920c827061b04",
+  "task": {
+    "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+    "taskFileSha256": "sha256:9220e12596b83dbc1619f4859c54d2c3847b733b700818a50fb97aa88df3f8c7",
+    "sourceRevision": "pattern-c-runtime-fixture-v1",
+    "contractTreeSha256": "sha256:0e1e4d837256995597bcf684eb3a2c613df90918e21bfdf7e8f3998a8f5e554c",
+    "runnerSnapshotBeforeSha256": "sha256:2f5a60bc694ee969c17914c85b53df4960565372eb274588e287a2715478b865",
+    "runnerSnapshotFinalSha256": "sha256:2f5a60bc694ee969c17914c85b53df4960565372eb274588e287a2715478b865",
+    "sourceUnchanged": true,
+    "sourceFinalError": null,
+    "trialId": "pattern-c-runtime-r02"
+  },
+  "agent": {
+    "provider": "claude-code-2.1.185",
+    "model": "sonnet alias (provider metadata recorded)",
+    "argv": [
+      "/Users/tangyaoyue/.hermes/node/bin/node",
+      "/Users/tangyaoyue/DEV/sg-data-pack/research/agent-eval/providers/claude-patch-agent.js",
+      "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-M2v46R/workspace",
+      "/private/tmp/sg-agent-claude-final-release/trials/pattern-c-runtime-r02/agent.patch",
+      "/private/tmp/sg-agent-claude-final-release/trials/pattern-c-runtime-r02/TASK.md"
+    ],
+    "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-M2v46R/workspace",
+    "exitCode": 3,
+    "signal": null,
+    "timedOut": false,
+    "durationMs": 300049.4625,
+    "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSha256": "sha256:84c3787d7bf666ffee1ef31f289ba12d19f9551653d0082863d107d4b37668f9",
+    "stdout": "",
+    "stderr": "Error: spawnSync claude ETIMEDOUT\n    at Object.spawnSync (node:internal/child_process:1120:20)\n    at spawnSync (node:child_process:902:24)\n    at Object.<anonymous> (/Users/tangyaoyue/DEV/sg-data-pack/research/agent-eval/providers/claude-patch-agent.js:41:18)\n    at Module._compile (node:internal/modules/cjs/loader:1781:14)\n    at Object..js (node:internal/modules/cjs/loader:1913:10)\n    at Module.load (node:internal/modules/cjs/loader:1505:32)\n    at Function._load (node:internal/modules/cjs/loader:1309:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:254:19)\n    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)\n    at node:internal/main/run_main_module:36:49\n",
+    "stdoutTruncated": false,
+    "stderrTruncated": false,
+    "error": null,
+    "providerMetadata": null
+  },
+  "patch": null,
+  "grades": [],
+  "secondaryErrors": [],
+  "artifacts": [
+    {
+      "id": "task-prompt",
+      "path": "TASK.md",
+      "mediaType": "text/markdown",
+      "bytes": 368,
+      "sha256": "sha256:8d6d410df008eb20405838885369f435267b07b38267305d013cd4661c971d29"
+    }
+  ],
+  "verdict": "infra-error",
+  "termination": {
+    "kind": "infrastructure-error",
+    "processExitCode": 3,
+    "semanticVerdict": "infra-error",
+    "message": "agent command failed"
+  },
+  "capabilities": {
+    "sourceCopy": true,
+    "disposableWorkspace": true,
+    "completeSecuritySnapshots": true,
+    "postAgentSourceTreeCheck": true,
+    "postPatchTreePolicy": true,
+    "postGraderTreeCheck": true,
+    "verifiedGraderStaging": true,
+    "verifiedToolStaging": true,
+    "candidateExtractionWorker": true,
+    "osSandbox": false,
+    "filesystemIsolation": false,
+    "networkIsolation": false,
+    "processIsolation": false,
+    "maliciousAgentGraderSecrecy": false
+  }
+}

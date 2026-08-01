@@ -1,0 +1,99 @@
+{
+  "auditVersion": "1.0",
+  "auditId": "patch-audit:3596347f157a38d17316843de64d66c921dfb4a34e364eb2279d7dfa4baea45c",
+  "kind": "patch-audit",
+  "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+  "status": "rejected",
+  "patchSha256": "sha256:2649706bf415a7b28cf09ce7075f9d6d3017a869cf66e8015c13dda437d174e8",
+  "patchBytes": 2537,
+  "beforeTreeSha256": "sha256:2f5a60bc694ee969c17914c85b53df4960565372eb274588e287a2715478b865",
+  "afterTreeSha256": null,
+  "declaredOperations": [
+    {
+      "operation": "modify",
+      "path": "lib/data/data.json",
+      "hunks": 4,
+      "modes": {},
+      "policy": {
+        "allowed": true,
+        "reason": null,
+        "deniedBy": null,
+        "allowedBy": "lib/data/data.json"
+      }
+    },
+    {
+      "operation": "modify",
+      "path": "lib/data/data.js",
+      "hunks": 1,
+      "modes": {},
+      "policy": {
+        "allowed": true,
+        "reason": null,
+        "deniedBy": null,
+        "allowedBy": "lib/data/data.js"
+      }
+    }
+  ],
+  "actualOperations": [],
+  "preflight": {
+    "allowed": true,
+    "violations": []
+  },
+  "postflight": null,
+  "commands": {
+    "check": {
+      "argv": [
+        "git",
+        "apply",
+        "--check",
+        "--whitespace=error-all",
+        "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-83564-1785575176925-f9951cf8b0d45.diff"
+      ],
+      "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-mzh4Hq/workspace",
+      "exitCode": 128,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 26.0165,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:62ccebd4d1a58360a0ab84d7032ef868076a6b813b79dd5f2292710f327e0bcb",
+      "error": null
+    },
+    "apply": null
+  },
+  "failure": {
+    "kind": "patch-invalid",
+    "name": "PatchError",
+    "message": "git apply --check rejected the patch",
+    "details": {
+      "checkRun": {
+        "argv": [
+          "git",
+          "apply",
+          "--check",
+          "--whitespace=error-all",
+          "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-83564-1785575176925-f9951cf8b0d45.diff"
+        ],
+        "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-mzh4Hq/workspace",
+        "status": 128,
+        "exitCode": 128,
+        "exit": 128,
+        "signal": null,
+        "timedOut": false,
+        "durationMs": 26.0165,
+        "duration": 26.0165,
+        "stdout": "",
+        "stderr": "error: patch fragment without header at line 20: @@ -22,5 +27,6 @@\n",
+        "stdoutTruncated": false,
+        "stderrTruncated": false,
+        "truncated": false
+      }
+    }
+  },
+  "capabilities": {
+    "osSandbox": false,
+    "networkIsolation": false,
+    "processIsolation": false,
+    "sourceTreeVerifiedByRunner": true,
+    "disposableWorkspace": true
+  }
+}

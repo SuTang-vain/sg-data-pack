@@ -1,0 +1,65 @@
+{
+  "gradeVersion": "1.0",
+  "gradeId": "grade:de3460d0a27d9d8dacb4d334c764851f053273e7289529dcfdc8936f12a5b8db",
+  "graderId": "agent-alias-relation-grader",
+  "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+  "treeSha256": "sha256:d15e90de86ac2a539d31318731e8ccb186e2e26e6ae3dc53511c4f66a29afbfa",
+  "verdict": "passed",
+  "score": 3,
+  "maximumScore": 3,
+  "results": [
+    {
+      "id": "data-pack-contract",
+      "type": "data-pack-contract",
+      "required": true,
+      "weight": 1,
+      "status": "passed",
+      "score": 1,
+      "findings": [],
+      "evidence": {
+        "errors": [],
+        "warnings": [],
+        "strict": true
+      }
+    },
+    {
+      "id": "hidden-property",
+      "type": "command",
+      "required": true,
+      "weight": 2,
+      "status": "passed",
+      "score": 2,
+      "findings": [],
+      "evidence": {
+        "argv": [
+          "/Users/tangyaoyue/.hermes/node/bin/node",
+          "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-zokJtU/trusted-graders/task-grader/assert-task.js",
+          "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-zokJtU/workspace",
+          "alias-relation"
+        ],
+        "cwd": ".",
+        "exitCode": 0,
+        "signal": null,
+        "timedOut": false,
+        "durationMs": 30.075458,
+        "stdoutSha256": "sha256:4a3966d3a5a5052d2f32c8dc8a3aed53e4834383504caa9459c2442b66a0aded",
+        "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout": "alias-relation: complete hidden candidate passed\n",
+        "stderr": "",
+        "stdoutTruncated": false,
+        "stderrTruncated": false,
+        "error": null
+      }
+    }
+  ],
+  "summary": {
+    "total": 2,
+    "passed": 2,
+    "failed": 0,
+    "notAssessed": 0,
+    "invalid": 0,
+    "infraErrors": 0,
+    "requiredIncomplete": 0
+  },
+  "manifestWeight": 1
+}

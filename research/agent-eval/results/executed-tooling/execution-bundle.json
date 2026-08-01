@@ -1,0 +1,17 @@
+{
+  "bundleVersion": "1.0",
+  "kind": "executed-tooling",
+  "scriptsTreeSha256": "sha256:76864eb0e641bbe39bbd2694b0102985c23382150307e5710c558b26d2138283",
+  "source": "scripts/",
+  "usedBy": [
+    "scripted/experiment.raw.json",
+    "claude/experiment.raw.json"
+  ],
+  "capabilities": {
+    "osSandbox": false,
+    "filesystemIsolation": false,
+    "networkIsolation": false,
+    "processIsolation": false,
+    "maliciousAgentGraderSecrecy": false
+  }
+}

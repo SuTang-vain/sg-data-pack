@@ -1,0 +1,1 @@
+In lib/data/data.json, add alias Alicia that resolves to existing entity alice. Also add exactly one master relation with id alice-bob-friend, a alice, b bob, type friend, and label Friend. Do not create entities or modify existing names. Emit a unified diff only.

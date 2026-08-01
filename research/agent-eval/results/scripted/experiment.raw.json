@@ -1,0 +1,376 @@
+{
+  "reportVersion": "1.0",
+  "resultId": "experiment-result:ef44e721234db91d12ca3154dab1daa9156e463195ada83d30e757cedff296e8",
+  "experimentId": "experiment:c914c326de4a45b64ab26744732c39e2d77885280e35269d009e233bc560cf3b",
+  "specSha256": "sha256:d7bf7564fa4283c928ffe7930b4cbaeac2d91f6ca14f994f5ebd1533967d62c2",
+  "seed": "fixed-task-order-v1",
+  "agent": {
+    "kind": "scripted",
+    "provider": "deterministic-fixture",
+    "model": "scripted-v1"
+  },
+  "taskSetSha256": "sha256:f47d3569a2df49c15aa0d82c8125ea2e4c1efcce3d7de4d2b6333f6967ca6ea7",
+  "repetitions": 5,
+  "summary": {
+    "totalTrials": 15,
+    "validTrials": 15,
+    "invalidTrials": 0,
+    "infraErrors": 0,
+    "passed": 15,
+    "passRate": 1,
+    "confidence95": {
+      "lower": 0.7961166989641515,
+      "upper": 1
+    },
+    "verdicts": {
+      "passed": 15
+    },
+    "stages": {
+      "agentCompleted": {
+        "passed": 15,
+        "total": 15
+      },
+      "patchApplied": {
+        "passed": 15,
+        "total": 15
+      },
+      "policyCompliant": {
+        "passed": 15,
+        "total": 15
+      },
+      "graderPassed": {
+        "passed": 15,
+        "total": 15
+      },
+      "runtimePassed": {
+        "passed": 5,
+        "total": 5
+      },
+      "visualPassed": {
+        "passed": 5,
+        "total": 5
+      }
+    },
+    "provider": {
+      "actualModels": [],
+      "usage": {
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "cacheReadInputTokens": 0,
+        "totalCostUsd": 0
+      }
+    },
+    "durationMs": {
+      "mean": 4809.651158333333,
+      "median": 149.003167
+    },
+    "claimLevel": "harness-only"
+  },
+  "trials": [
+    {
+      "trialId": "field-update-r01",
+      "taskSlug": "field-update",
+      "taskId": "sha256:618930ecee265100be229a2d2efa73e733f70c7131e00b0ed7a4bbb8ba75a18f",
+      "runId": "task-run:a20c9e911b0ae8f51e29aefcfcb4e6e4c2d6f0246eb175cba2d32bb361799750",
+      "verdict": "passed",
+      "agentExitCode": 0,
+      "patchStatus": "applied",
+      "gradeVerdicts": [
+        "passed"
+      ],
+      "runtimeRequired": 0,
+      "visualRequired": 0,
+      "runtimeStatuses": [],
+      "visualStatuses": [],
+      "providerMetadata": null,
+      "durationMs": 184.151833,
+      "artifactPath": "../../private/tmp/sg-agent-scripted-final-release/trials/field-update-r01/task-run.json"
+    },
+    {
+      "trialId": "field-update-r02",
+      "taskSlug": "field-update",
+      "taskId": "sha256:618930ecee265100be229a2d2efa73e733f70c7131e00b0ed7a4bbb8ba75a18f",
+      "runId": "task-run:89368c64a1817b63bd000583abdf2cda7fa4ff60b7203cf7c3693adcd2bb0887",
+      "verdict": "passed",
+      "agentExitCode": 0,
+      "patchStatus": "applied",
+      "gradeVerdicts": [
+        "passed"
+      ],
+      "runtimeRequired": 0,
+      "visualRequired": 0,
+      "runtimeStatuses": [],
+      "visualStatuses": [],
+      "providerMetadata": null,
+      "durationMs": 142.220292,
+      "artifactPath": "../../private/tmp/sg-agent-scripted-final-release/trials/field-update-r02/task-run.json"
+    },
+    {
+      "trialId": "field-update-r03",
+      "taskSlug": "field-update",
+      "taskId": "sha256:618930ecee265100be229a2d2efa73e733f70c7131e00b0ed7a4bbb8ba75a18f",
+      "runId": "task-run:5f5c6f361856b91756fffeddbc25a0fc36d08fdaaa115554ee25612e1885ad82",
+      "verdict": "passed",
+      "agentExitCode": 0,
+      "patchStatus": "applied",
+      "gradeVerdicts": [
+        "passed"
+      ],
+      "runtimeRequired": 0,
+      "visualRequired": 0,
+      "runtimeStatuses": [],
+      "visualStatuses": [],
+      "providerMetadata": null,
+      "durationMs": 143.814,
+      "artifactPath": "../../private/tmp/sg-agent-scripted-final-release/trials/field-update-r03/task-run.json"
+    },
+    {
+      "trialId": "field-update-r04",
+      "taskSlug": "field-update",
+      "taskId": "sha256:618930ecee265100be229a2d2efa73e733f70c7131e00b0ed7a4bbb8ba75a18f",
+      "runId": "task-run:f4ec184511bca5f7e3047e32a41c6e3ac7eba4d3334521211450e034e72f93c2",
+      "verdict": "passed",
+      "agentExitCode": 0,
+      "patchStatus": "applied",
+      "gradeVerdicts": [
+        "passed"
+      ],
+      "runtimeRequired": 0,
+      "visualRequired": 0,
+      "runtimeStatuses": [],
+      "visualStatuses": [],
+      "providerMetadata": null,
+      "durationMs": 139.635209,
+      "artifactPath": "../../private/tmp/sg-agent-scripted-final-release/trials/field-update-r04/task-run.json"
+    },
+    {
+      "trialId": "field-update-r05",
+      "taskSlug": "field-update",
+      "taskId": "sha256:618930ecee265100be229a2d2efa73e733f70c7131e00b0ed7a4bbb8ba75a18f",
+      "runId": "task-run:d91a816ac0f7c801c78d00dde786a7d3f9ac0e74f320210b6e9bb588aa82eb89",
+      "verdict": "passed",
+      "agentExitCode": 0,
+      "patchStatus": "applied",
+      "gradeVerdicts": [
+        "passed"
+      ],
+      "runtimeRequired": 0,
+      "visualRequired": 0,
+      "runtimeStatuses": [],
+      "visualStatuses": [],
+      "providerMetadata": null,
+      "durationMs": 143.597625,
+      "artifactPath": "../../private/tmp/sg-agent-scripted-final-release/trials/field-update-r05/task-run.json"
+    },
+    {
+      "trialId": "alias-relation-r01",
+      "taskSlug": "alias-relation",
+      "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+      "runId": "task-run:3f918c2b577c2aed80fcfa91a910a413ca87761bff8a510f192c5e005ea4e578",
+      "verdict": "passed",
+      "agentExitCode": 0,
+      "patchStatus": "applied",
+      "gradeVerdicts": [
+        "passed"
+      ],
+      "runtimeRequired": 0,
+      "visualRequired": 0,
+      "runtimeStatuses": [],
+      "visualStatuses": [],
+      "providerMetadata": null,
+      "durationMs": 149.003167,
+      "artifactPath": "../../private/tmp/sg-agent-scripted-final-release/trials/alias-relation-r01/task-run.json"
+    },
+    {
+      "trialId": "alias-relation-r02",
+      "taskSlug": "alias-relation",
+      "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+      "runId": "task-run:686c12eb1614013f31befae59bdb5405acf0b4df6792b27c5e9a4d79d0f37536",
+      "verdict": "passed",
+      "agentExitCode": 0,
+      "patchStatus": "applied",
+      "gradeVerdicts": [
+        "passed"
+      ],
+      "runtimeRequired": 0,
+      "visualRequired": 0,
+      "runtimeStatuses": [],
+      "visualStatuses": [],
+      "providerMetadata": null,
+      "durationMs": 142.01675,
+      "artifactPath": "../../private/tmp/sg-agent-scripted-final-release/trials/alias-relation-r02/task-run.json"
+    },
+    {
+      "trialId": "alias-relation-r03",
+      "taskSlug": "alias-relation",
+      "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+      "runId": "task-run:78ca17960d17a371f02064bb50ed580efbce3f1be6fb3db215c733dc4e6dc3fd",
+      "verdict": "passed",
+      "agentExitCode": 0,
+      "patchStatus": "applied",
+      "gradeVerdicts": [
+        "passed"
+      ],
+      "runtimeRequired": 0,
+      "visualRequired": 0,
+      "runtimeStatuses": [],
+      "visualStatuses": [],
+      "providerMetadata": null,
+      "durationMs": 141.600208,
+      "artifactPath": "../../private/tmp/sg-agent-scripted-final-release/trials/alias-relation-r03/task-run.json"
+    },
+    {
+      "trialId": "alias-relation-r04",
+      "taskSlug": "alias-relation",
+      "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+      "runId": "task-run:427708a2b76b75740276d244b9c644e53cd2a5d583af0ffd467f5694025ed7f3",
+      "verdict": "passed",
+      "agentExitCode": 0,
+      "patchStatus": "applied",
+      "gradeVerdicts": [
+        "passed"
+      ],
+      "runtimeRequired": 0,
+      "visualRequired": 0,
+      "runtimeStatuses": [],
+      "visualStatuses": [],
+      "providerMetadata": null,
+      "durationMs": 139.519292,
+      "artifactPath": "../../private/tmp/sg-agent-scripted-final-release/trials/alias-relation-r04/task-run.json"
+    },
+    {
+      "trialId": "alias-relation-r05",
+      "taskSlug": "alias-relation",
+      "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+      "runId": "task-run:b0e9bc3308199c93aa0ecf3f1c0dd6356900be925ff7859cd052ed9f3b3e978b",
+      "verdict": "passed",
+      "agentExitCode": 0,
+      "patchStatus": "applied",
+      "gradeVerdicts": [
+        "passed"
+      ],
+      "runtimeRequired": 0,
+      "visualRequired": 0,
+      "runtimeStatuses": [],
+      "visualStatuses": [],
+      "providerMetadata": null,
+      "durationMs": 164.696833,
+      "artifactPath": "../../private/tmp/sg-agent-scripted-final-release/trials/alias-relation-r05/task-run.json"
+    },
+    {
+      "trialId": "pattern-c-runtime-r01",
+      "taskSlug": "pattern-c-runtime",
+      "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+      "runId": "task-run:cff1d5ef6d7878a868d6b1926170ca0b86a400e1a6ac42a313674df4b1e3d12c",
+      "verdict": "passed",
+      "agentExitCode": 0,
+      "patchStatus": "applied",
+      "gradeVerdicts": [
+        "passed"
+      ],
+      "runtimeRequired": 1,
+      "visualRequired": 1,
+      "runtimeStatuses": [
+        "passed"
+      ],
+      "visualStatuses": [
+        "passed"
+      ],
+      "providerMetadata": null,
+      "durationMs": 14895.812417,
+      "artifactPath": "../../private/tmp/sg-agent-scripted-final-release/trials/pattern-c-runtime-r01/task-run.json"
+    },
+    {
+      "trialId": "pattern-c-runtime-r02",
+      "taskSlug": "pattern-c-runtime",
+      "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+      "runId": "task-run:ede9b03b19180a591922ff9a7dc696fd54bfe31cedb7dd77c81b72381fd55250",
+      "verdict": "passed",
+      "agentExitCode": 0,
+      "patchStatus": "applied",
+      "gradeVerdicts": [
+        "passed"
+      ],
+      "runtimeRequired": 1,
+      "visualRequired": 1,
+      "runtimeStatuses": [
+        "passed"
+      ],
+      "visualStatuses": [
+        "passed"
+      ],
+      "providerMetadata": null,
+      "durationMs": 13904.781833,
+      "artifactPath": "../../private/tmp/sg-agent-scripted-final-release/trials/pattern-c-runtime-r02/task-run.json"
+    },
+    {
+      "trialId": "pattern-c-runtime-r03",
+      "taskSlug": "pattern-c-runtime",
+      "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+      "runId": "task-run:26b4217e2b6c4ee90889a995a5113555d4678ed2626d6420be76a14e8f643048",
+      "verdict": "passed",
+      "agentExitCode": 0,
+      "patchStatus": "applied",
+      "gradeVerdicts": [
+        "passed"
+      ],
+      "runtimeRequired": 1,
+      "visualRequired": 1,
+      "runtimeStatuses": [
+        "passed"
+      ],
+      "visualStatuses": [
+        "passed"
+      ],
+      "providerMetadata": null,
+      "durationMs": 13993.146375,
+      "artifactPath": "../../private/tmp/sg-agent-scripted-final-release/trials/pattern-c-runtime-r03/task-run.json"
+    },
+    {
+      "trialId": "pattern-c-runtime-r04",
+      "taskSlug": "pattern-c-runtime",
+      "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+      "runId": "task-run:5c1c68839904edc34e3ef1fcd3504d7a831217deec745502fc2974f5bab5dc94",
+      "verdict": "passed",
+      "agentExitCode": 0,
+      "patchStatus": "applied",
+      "gradeVerdicts": [
+        "passed"
+      ],
+      "runtimeRequired": 1,
+      "visualRequired": 1,
+      "runtimeStatuses": [
+        "passed"
+      ],
+      "visualStatuses": [
+        "passed"
+      ],
+      "providerMetadata": null,
+      "durationMs": 13966.9465,
+      "artifactPath": "../../private/tmp/sg-agent-scripted-final-release/trials/pattern-c-runtime-r04/task-run.json"
+    },
+    {
+      "trialId": "pattern-c-runtime-r05",
+      "taskSlug": "pattern-c-runtime",
+      "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+      "runId": "task-run:79b70d6c1693358899430f03611b9b838e45970cbcef1cf5df414d83347589a2",
+      "verdict": "passed",
+      "agentExitCode": 0,
+      "patchStatus": "applied",
+      "gradeVerdicts": [
+        "passed"
+      ],
+      "runtimeRequired": 1,
+      "visualRequired": 1,
+      "runtimeStatuses": [
+        "passed"
+      ],
+      "visualStatuses": [
+        "passed"
+      ],
+      "providerMetadata": null,
+      "durationMs": 13893.825041,
+      "artifactPath": "../../private/tmp/sg-agent-scripted-final-release/trials/pattern-c-runtime-r05/task-run.json"
+    }
+  ]
+}

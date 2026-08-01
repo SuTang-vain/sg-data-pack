@@ -63,6 +63,35 @@ test('E1 accepts all supported schemaVersions', () => {
   }
 });
 
+test('E3/W1/W6 use one kindNameFields display field without legacy name/title fallbacks', () => {
+  const pack = basePack({
+    kindNameFields: { work: 'title' },
+    entities: {
+      a: { kind: 'work', title: 'Same title', name: 'Different legacy name' },
+      b: { kind: 'work', title: 'Same title', name: 'Another legacy name' },
+    },
+  });
+  const result = validate(pack);
+  assert.deepEqual(result.errors, []);
+  assert.ok(hasWarning(result.warnings, 'W1: entity "a" (Same title)'));
+  assert.ok(hasWarning(result.warnings, 'W6: entities "a" and "b"'));
+
+  const legacyOnly = basePack({
+    kindNameFields: { work: 'title' },
+    entities: { a: { kind: 'work', name: 'Only legacy name' } },
+  });
+  assert.ok(hasError(errorsOf(legacyOnly), 'entities.a.title'));
+
+  const legacyCollisionOnly = basePack({
+    kindNameFields: { work: 'title' },
+    entities: {
+      a: { kind: 'work', title: 'Alpha', name: 'Same legacy name' },
+      b: { kind: 'work', title: 'Beta', name: 'Same legacy name' },
+    },
+  });
+  assert.ok(!hasWarning(warningsOf(legacyCollisionOnly), 'W6'));
+});
+
 test('E3 rejects an entity missing its name field', () => {
   assert.ok(hasError(errorsOf(basePack({ entities: { a: { kind: 'person' } } })), 'E3'));
 });

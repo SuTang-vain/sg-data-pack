@@ -1,0 +1,298 @@
+{
+  "runVersion": "1.0",
+  "runId": "task-run:9c06d2f4dcd88ef9c0894e318e07d4e61331b53315b665487b9bb4a441fa921b",
+  "task": {
+    "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+    "taskFileSha256": "sha256:ac33ff5e0049324b56141ea0687442ed5e344fb6305390f8257b02f2cd17a630",
+    "sourceRevision": "alias-relation-fixture-v1",
+    "contractTreeSha256": "sha256:fffbe5c6cd3b100ea754dfc73b72bb75adae0ccd8ca789fb18c00ed68b2cfc53",
+    "runnerSnapshotBeforeSha256": "sha256:6243526415fa11e029c8205e3ee3ddb2f0cb824e7e561c733480c3c8ecabb6c5",
+    "runnerSnapshotFinalSha256": "sha256:6243526415fa11e029c8205e3ee3ddb2f0cb824e7e561c733480c3c8ecabb6c5",
+    "sourceUnchanged": true,
+    "sourceFinalError": null,
+    "trialId": "alias-relation-r05"
+  },
+  "agent": {
+    "provider": "claude-code-2.1.185",
+    "model": "sonnet alias (provider metadata recorded)",
+    "argv": [
+      "/Users/tangyaoyue/.hermes/node/bin/node",
+      "/Users/tangyaoyue/DEV/sg-data-pack/research/agent-eval/providers/claude-patch-agent.js",
+      "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-EkLU1A/workspace",
+      "/private/tmp/sg-agent-claude-final-release/trials/alias-relation-r05/agent.patch",
+      "/private/tmp/sg-agent-claude-final-release/trials/alias-relation-r05/TASK.md"
+    ],
+    "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-EkLU1A/workspace",
+    "exitCode": 0,
+    "signal": null,
+    "timedOut": false,
+    "durationMs": 105836.185208,
+    "stdoutSha256": "sha256:45844b49a4ea873a8b7713e4e17c35a212e4920a461ede6132deede722b35f52",
+    "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "{\"provider\":\"claude-code\",\"declaredModel\":\"sonnet\",\"modelUsage\":{\"MiniMax-M3[1M]\":{\"inputTokens\":1285,\"outputTokens\":9192,\"cacheReadInputTokens\":128,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.236289,\"contextWindow\":1000000,\"maxOutputTokens\":32000}},\"usage\":{\"input_tokens\":1285,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":128,\"output_tokens\":9192,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"totalCostUsd\":0.236289,\"durationApiMs\":105475,\"stopReason\":\"end_turn\",\"permissionDenials\":[]}\n",
+    "stderr": "",
+    "stdoutTruncated": false,
+    "stderrTruncated": false,
+    "error": null,
+    "providerMetadata": {
+      "provider": "claude-code",
+      "declaredModel": "sonnet",
+      "modelUsage": {
+        "MiniMax-M3[1M]": {
+          "inputTokens": 1285,
+          "outputTokens": 9192,
+          "cacheReadInputTokens": 128,
+          "cacheCreationInputTokens": 0,
+          "webSearchRequests": 0,
+          "costUSD": 0.236289,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "usage": {
+        "input_tokens": 1285,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 128,
+        "output_tokens": 9192,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [],
+        "speed": "standard"
+      },
+      "totalCostUsd": 0.236289,
+      "durationApiMs": 105475,
+      "stopReason": "end_turn",
+      "permissionDenials": []
+    }
+  },
+  "patch": {
+    "auditVersion": "1.0",
+    "auditId": "patch-audit:83ef939bf7d18de346035e9515ca83d6422ac6d4e41d920a97878422a7249610",
+    "kind": "patch-audit",
+    "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+    "status": "applied",
+    "patchSha256": "sha256:747f47bb2d06693339aa25fd1bbecafe07858afa3997c3f882e0a4eb58d6ff88",
+    "patchBytes": 525,
+    "beforeTreeSha256": "sha256:6243526415fa11e029c8205e3ee3ddb2f0cb824e7e561c733480c3c8ecabb6c5",
+    "afterTreeSha256": "sha256:cfb2b07547916e565b567b263a219e91d34738cdfce5ceeb5957ca974260102d",
+    "declaredOperations": [
+      {
+        "operation": "modify",
+        "path": "lib/data/data.json",
+        "hunks": 2,
+        "modes": {},
+        "policy": {
+          "allowed": true,
+          "reason": null,
+          "deniedBy": null,
+          "allowedBy": "lib/data/data.json"
+        }
+      }
+    ],
+    "actualOperations": [
+      {
+        "operation": "modify",
+        "path": "lib/data/data.json",
+        "allowed": true,
+        "reason": null,
+        "before": {
+          "path": "lib/data/data.json",
+          "relativePath": "lib/data/data.json",
+          "kind": "file",
+          "mode": 420,
+          "sha256": "0dd120528e6773e0dfc3a76bf4740870ba17fd32da59aae1b1abf7895ef676db",
+          "size": 586,
+          "target": null
+        },
+        "after": {
+          "path": "lib/data/data.json",
+          "relativePath": "lib/data/data.json",
+          "kind": "file",
+          "mode": 420,
+          "sha256": "41b5ca0d459b453de00b5d66ef8578e23bffad35792a069ee460eebd4282366e",
+          "size": 742,
+          "target": null
+        }
+      }
+    ],
+    "preflight": {
+      "allowed": true,
+      "violations": []
+    },
+    "postflight": {
+      "allowed": true,
+      "violations": []
+    },
+    "commands": {
+      "check": {
+        "argv": [
+          "git",
+          "apply",
+          "--check",
+          "--whitespace=error-all",
+          "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-83564-1785574204129-3ae3332958316.diff"
+        ],
+        "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-EkLU1A/workspace",
+        "exitCode": 0,
+        "signal": null,
+        "timedOut": false,
+        "durationMs": 26.777375,
+        "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": null
+      },
+      "apply": {
+        "argv": [
+          "git",
+          "apply",
+          "--whitespace=error-all",
+          "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-83564-1785574204129-3ae3332958316.diff"
+        ],
+        "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-EkLU1A/workspace",
+        "exitCode": 0,
+        "signal": null,
+        "timedOut": false,
+        "durationMs": 14.642125,
+        "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": null
+      }
+    },
+    "failure": null,
+    "capabilities": {
+      "osSandbox": false,
+      "networkIsolation": false,
+      "processIsolation": false,
+      "sourceTreeVerifiedByRunner": true,
+      "disposableWorkspace": true
+    }
+  },
+  "grades": [
+    {
+      "gradeVersion": "1.0",
+      "gradeId": "grade:123a7cb648054d988999f93754d90d13fc90faecf90da4a7e2c07cf168a4f70c",
+      "graderId": "agent-alias-relation-grader",
+      "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+      "treeSha256": "sha256:cfb2b07547916e565b567b263a219e91d34738cdfce5ceeb5957ca974260102d",
+      "verdict": "passed",
+      "score": 3,
+      "maximumScore": 3,
+      "results": [
+        {
+          "id": "data-pack-contract",
+          "type": "data-pack-contract",
+          "required": true,
+          "weight": 1,
+          "status": "passed",
+          "score": 1,
+          "findings": [],
+          "evidence": {
+            "errors": [],
+            "warnings": [],
+            "strict": true
+          }
+        },
+        {
+          "id": "hidden-property",
+          "type": "command",
+          "required": true,
+          "weight": 2,
+          "status": "passed",
+          "score": 2,
+          "findings": [],
+          "evidence": {
+            "argv": [
+              "/Users/tangyaoyue/.hermes/node/bin/node",
+              "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-EkLU1A/trusted-graders/task-grader/assert-task.js",
+              "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-EkLU1A/workspace",
+              "alias-relation"
+            ],
+            "cwd": ".",
+            "exitCode": 0,
+            "signal": null,
+            "timedOut": false,
+            "durationMs": 30.407375,
+            "stdoutSha256": "sha256:4a3966d3a5a5052d2f32c8dc8a3aed53e4834383504caa9459c2442b66a0aded",
+            "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdout": "alias-relation: complete hidden candidate passed\n",
+            "stderr": "",
+            "stdoutTruncated": false,
+            "stderrTruncated": false,
+            "error": null
+          }
+        }
+      ],
+      "summary": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "notAssessed": 0,
+        "invalid": 0,
+        "infraErrors": 0,
+        "requiredIncomplete": 0
+      },
+      "manifestWeight": 1
+    }
+  ],
+  "secondaryErrors": [],
+  "artifacts": [
+    {
+      "id": "agent-patch",
+      "path": "agent.patch",
+      "mediaType": "text/x-diff",
+      "bytes": 525,
+      "sha256": "sha256:747f47bb2d06693339aa25fd1bbecafe07858afa3997c3f882e0a4eb58d6ff88"
+    },
+    {
+      "id": "grade-task-grader",
+      "path": "grade-task-grader.json",
+      "mediaType": "application/json",
+      "bytes": 1938,
+      "sha256": "sha256:a8f6a64d8ffdadeca391ea33d0714af070641418a62811dc7880430434670515"
+    },
+    {
+      "id": "patch-audit",
+      "path": "patch-audit.json",
+      "mediaType": "application/json",
+      "bytes": 3227,
+      "sha256": "sha256:15b7c1092b97afa5ce5502c82f97c7677100fa76f9f96979e3d1de751344bbdd"
+    },
+    {
+      "id": "task-prompt",
+      "path": "TASK.md",
+      "mediaType": "text/markdown",
+      "bytes": 265,
+      "sha256": "sha256:a48c9c13252c885c6d147c5a877a8848442d2f66289648a6a48540ec686b8f9e"
+    }
+  ],
+  "verdict": "passed",
+  "termination": {
+    "kind": "completed",
+    "processExitCode": 0,
+    "semanticVerdict": "passed"
+  },
+  "capabilities": {
+    "sourceCopy": true,
+    "disposableWorkspace": true,
+    "completeSecuritySnapshots": true,
+    "postAgentSourceTreeCheck": true,
+    "postPatchTreePolicy": true,
+    "postGraderTreeCheck": true,
+    "verifiedGraderStaging": true,
+    "verifiedToolStaging": true,
+    "candidateExtractionWorker": true,
+    "osSandbox": false,
+    "filesystemIsolation": false,
+    "networkIsolation": false,
+    "processIsolation": false,
+    "maliciousAgentGraderSecrecy": false
+  }
+}

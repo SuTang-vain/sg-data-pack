@@ -1,0 +1,105 @@
+{
+  "auditVersion": "1.0",
+  "auditId": "relocation-audit:15adcf52d9ccaa7fc9fa97407a2436e931891a56029cadf2aaa8e299d3721731",
+  "kind": "experiment-relocation",
+  "reason": "Canonicalize trial TaskRun references after copying an experiment produced through a symlinked output-root spelling.",
+  "experimentId": "experiment:20c81f58da37a1b7f17b7239e57dd9d7036ebce72529827e387f7ba48d536de3",
+  "raw": {
+    "resultId": "experiment-result:56bbca6f13b5ea63f767f6ef4edcb2588959dfa59cb409e66c26981af559de91",
+    "sha256": "sha256:cdc25ee69647fa93529b4d1b02de72cc912dbf5953461fe78ea16563766e74c4",
+    "file": "experiment.raw.json"
+  },
+  "relocated": {
+    "resultId": "experiment-result:43c9a914a08639bd2adbe306d81cddef9dfe863ae8eaa5205c7e3cf22c8e1581",
+    "sha256": "sha256:c1b84ad911e99ae38c1961e88711a64c26c0f2bb76423f3a21f9e80bae83a3e8",
+    "file": "experiment.json"
+  },
+  "transformations": [
+    {
+      "trialId": "field-update-r01",
+      "from": "../../private/tmp/sg-agent-claude-final-release/trials/field-update-r01/task-run.json",
+      "to": "trials/field-update-r01/task-run.json"
+    },
+    {
+      "trialId": "field-update-r02",
+      "from": "../../private/tmp/sg-agent-claude-final-release/trials/field-update-r02/task-run.json",
+      "to": "trials/field-update-r02/task-run.json"
+    },
+    {
+      "trialId": "field-update-r03",
+      "from": "../../private/tmp/sg-agent-claude-final-release/trials/field-update-r03/task-run.json",
+      "to": "trials/field-update-r03/task-run.json"
+    },
+    {
+      "trialId": "field-update-r04",
+      "from": "../../private/tmp/sg-agent-claude-final-release/trials/field-update-r04/task-run.json",
+      "to": "trials/field-update-r04/task-run.json"
+    },
+    {
+      "trialId": "field-update-r05",
+      "from": "../../private/tmp/sg-agent-claude-final-release/trials/field-update-r05/task-run.json",
+      "to": "trials/field-update-r05/task-run.json"
+    },
+    {
+      "trialId": "alias-relation-r01",
+      "from": "../../private/tmp/sg-agent-claude-final-release/trials/alias-relation-r01/task-run.json",
+      "to": "trials/alias-relation-r01/task-run.json"
+    },
+    {
+      "trialId": "alias-relation-r02",
+      "from": "../../private/tmp/sg-agent-claude-final-release/trials/alias-relation-r02/task-run.json",
+      "to": "trials/alias-relation-r02/task-run.json"
+    },
+    {
+      "trialId": "alias-relation-r03",
+      "from": "../../private/tmp/sg-agent-claude-final-release/trials/alias-relation-r03/task-run.json",
+      "to": "trials/alias-relation-r03/task-run.json"
+    },
+    {
+      "trialId": "alias-relation-r04",
+      "from": "../../private/tmp/sg-agent-claude-final-release/trials/alias-relation-r04/task-run.json",
+      "to": "trials/alias-relation-r04/task-run.json"
+    },
+    {
+      "trialId": "alias-relation-r05",
+      "from": "../../private/tmp/sg-agent-claude-final-release/trials/alias-relation-r05/task-run.json",
+      "to": "trials/alias-relation-r05/task-run.json"
+    },
+    {
+      "trialId": "pattern-c-runtime-r01",
+      "from": "../../private/tmp/sg-agent-claude-final-release/trials/pattern-c-runtime-r01/task-run.json",
+      "to": "trials/pattern-c-runtime-r01/task-run.json"
+    },
+    {
+      "trialId": "pattern-c-runtime-r02",
+      "from": "../../private/tmp/sg-agent-claude-final-release/trials/pattern-c-runtime-r02/task-run.json",
+      "to": "trials/pattern-c-runtime-r02/task-run.json"
+    },
+    {
+      "trialId": "pattern-c-runtime-r03",
+      "from": "../../private/tmp/sg-agent-claude-final-release/trials/pattern-c-runtime-r03/task-run.json",
+      "to": "trials/pattern-c-runtime-r03/task-run.json"
+    },
+    {
+      "trialId": "pattern-c-runtime-r04",
+      "from": "../../private/tmp/sg-agent-claude-final-release/trials/pattern-c-runtime-r04/task-run.json",
+      "to": "trials/pattern-c-runtime-r04/task-run.json"
+    },
+    {
+      "trialId": "pattern-c-runtime-r05",
+      "from": "../../private/tmp/sg-agent-claude-final-release/trials/pattern-c-runtime-r05/task-run.json",
+      "to": "trials/pattern-c-runtime-r05/task-run.json"
+    }
+  ],
+  "semanticFieldsUnchanged": [
+    "experimentId",
+    "specSha256",
+    "taskSetSha256",
+    "agent",
+    "seed",
+    "repetitions",
+    "summary",
+    "trial verdicts",
+    "runIds"
+  ]
+}

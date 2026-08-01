@@ -1,0 +1,261 @@
+{
+  "runVersion": "1.0",
+  "runId": "task-run:427708a2b76b75740276d244b9c644e53cd2a5d583af0ffd467f5694025ed7f3",
+  "task": {
+    "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+    "taskFileSha256": "sha256:ac33ff5e0049324b56141ea0687442ed5e344fb6305390f8257b02f2cd17a630",
+    "sourceRevision": "alias-relation-fixture-v1",
+    "contractTreeSha256": "sha256:fffbe5c6cd3b100ea754dfc73b72bb75adae0ccd8ca789fb18c00ed68b2cfc53",
+    "runnerSnapshotBeforeSha256": "sha256:6243526415fa11e029c8205e3ee3ddb2f0cb824e7e561c733480c3c8ecabb6c5",
+    "runnerSnapshotFinalSha256": "sha256:6243526415fa11e029c8205e3ee3ddb2f0cb824e7e561c733480c3c8ecabb6c5",
+    "sourceUnchanged": true,
+    "sourceFinalError": null,
+    "trialId": "alias-relation-r04"
+  },
+  "agent": {
+    "provider": "deterministic-fixture",
+    "model": "scripted-v1",
+    "argv": [
+      "/Users/tangyaoyue/.hermes/node/bin/node",
+      "/Users/tangyaoyue/DEV/sg-data-pack/research/agent-eval/providers/scripted-patch-agent.js",
+      "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-ZH6WVc/workspace",
+      "/private/tmp/sg-agent-scripted-final-release/trials/alias-relation-r04/agent.patch",
+      "/private/tmp/sg-agent-scripted-final-release/trials/alias-relation-r04/TASK.md"
+    ],
+    "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-ZH6WVc/workspace",
+    "exitCode": 0,
+    "signal": null,
+    "timedOut": false,
+    "durationMs": 28.302,
+    "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "",
+    "stderr": "",
+    "stdoutTruncated": false,
+    "stderrTruncated": false,
+    "error": null,
+    "providerMetadata": null
+  },
+  "patch": {
+    "auditVersion": "1.0",
+    "auditId": "patch-audit:6a6cf803578441d69182d65c87f6ef12a653efe6e1a87bb007edc21179fe7415",
+    "kind": "patch-audit",
+    "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+    "status": "applied",
+    "patchSha256": "sha256:e79768f491710194954343186bd483148a3bfde7ae977df68fc6bd28efcb3054",
+    "patchBytes": 1534,
+    "beforeTreeSha256": "sha256:6243526415fa11e029c8205e3ee3ddb2f0cb824e7e561c733480c3c8ecabb6c5",
+    "afterTreeSha256": "sha256:d15e90de86ac2a539d31318731e8ccb186e2e26e6ae3dc53511c4f66a29afbfa",
+    "declaredOperations": [
+      {
+        "operation": "modify",
+        "path": "lib/data/data.json",
+        "hunks": 1,
+        "modes": {},
+        "policy": {
+          "allowed": true,
+          "reason": null,
+          "deniedBy": null,
+          "allowedBy": "lib/data/data.json"
+        }
+      }
+    ],
+    "actualOperations": [
+      {
+        "operation": "modify",
+        "path": "lib/data/data.json",
+        "allowed": true,
+        "reason": null,
+        "before": {
+          "path": "lib/data/data.json",
+          "relativePath": "lib/data/data.json",
+          "kind": "file",
+          "mode": 420,
+          "sha256": "0dd120528e6773e0dfc3a76bf4740870ba17fd32da59aae1b1abf7895ef676db",
+          "size": 586,
+          "target": null
+        },
+        "after": {
+          "path": "lib/data/data.json",
+          "relativePath": "lib/data/data.json",
+          "kind": "file",
+          "mode": 420,
+          "sha256": "bb91d39a32f25c9410a70d06d5314a43bcba7bcf2f97fa9603d4122e29524970",
+          "size": 742,
+          "target": null
+        }
+      }
+    ],
+    "preflight": {
+      "allowed": true,
+      "violations": []
+    },
+    "postflight": {
+      "allowed": true,
+      "violations": []
+    },
+    "commands": {
+      "check": {
+        "argv": [
+          "git",
+          "apply",
+          "--check",
+          "--whitespace=error-all",
+          "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-81453-1785573722404-7d213b0a93928.diff"
+        ],
+        "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-ZH6WVc/workspace",
+        "exitCode": 0,
+        "signal": null,
+        "timedOut": false,
+        "durationMs": 15.450042,
+        "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": null
+      },
+      "apply": {
+        "argv": [
+          "git",
+          "apply",
+          "--whitespace=error-all",
+          "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-81453-1785573722404-7d213b0a93928.diff"
+        ],
+        "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-ZH6WVc/workspace",
+        "exitCode": 0,
+        "signal": null,
+        "timedOut": false,
+        "durationMs": 15.333542,
+        "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": null
+      }
+    },
+    "failure": null,
+    "capabilities": {
+      "osSandbox": false,
+      "networkIsolation": false,
+      "processIsolation": false,
+      "sourceTreeVerifiedByRunner": true,
+      "disposableWorkspace": true
+    }
+  },
+  "grades": [
+    {
+      "gradeVersion": "1.0",
+      "gradeId": "grade:b05c5aa6bbbd71b33c840bd40378038290e46f143c7932fa30b46db06d0f4e51",
+      "graderId": "agent-alias-relation-grader",
+      "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+      "treeSha256": "sha256:d15e90de86ac2a539d31318731e8ccb186e2e26e6ae3dc53511c4f66a29afbfa",
+      "verdict": "passed",
+      "score": 3,
+      "maximumScore": 3,
+      "results": [
+        {
+          "id": "data-pack-contract",
+          "type": "data-pack-contract",
+          "required": true,
+          "weight": 1,
+          "status": "passed",
+          "score": 1,
+          "findings": [],
+          "evidence": {
+            "errors": [],
+            "warnings": [],
+            "strict": true
+          }
+        },
+        {
+          "id": "hidden-property",
+          "type": "command",
+          "required": true,
+          "weight": 2,
+          "status": "passed",
+          "score": 2,
+          "findings": [],
+          "evidence": {
+            "argv": [
+              "/Users/tangyaoyue/.hermes/node/bin/node",
+              "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-ZH6WVc/trusted-graders/task-grader/assert-task.js",
+              "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-ZH6WVc/workspace",
+              "alias-relation"
+            ],
+            "cwd": ".",
+            "exitCode": 0,
+            "signal": null,
+            "timedOut": false,
+            "durationMs": 29.989666,
+            "stdoutSha256": "sha256:4a3966d3a5a5052d2f32c8dc8a3aed53e4834383504caa9459c2442b66a0aded",
+            "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdout": "alias-relation: complete hidden candidate passed\n",
+            "stderr": "",
+            "stdoutTruncated": false,
+            "stderrTruncated": false,
+            "error": null
+          }
+        }
+      ],
+      "summary": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "notAssessed": 0,
+        "invalid": 0,
+        "infraErrors": 0,
+        "requiredIncomplete": 0
+      },
+      "manifestWeight": 1
+    }
+  ],
+  "secondaryErrors": [],
+  "artifacts": [
+    {
+      "id": "agent-patch",
+      "path": "agent.patch",
+      "mediaType": "text/x-diff",
+      "bytes": 1534,
+      "sha256": "sha256:e79768f491710194954343186bd483148a3bfde7ae977df68fc6bd28efcb3054"
+    },
+    {
+      "id": "grade-task-grader",
+      "path": "grade-task-grader.json",
+      "mediaType": "application/json",
+      "bytes": 1938,
+      "sha256": "sha256:fe3eda1771a25e773370756f3210e573d7c99e785eb6768548b6446547a1910d"
+    },
+    {
+      "id": "patch-audit",
+      "path": "patch-audit.json",
+      "mediaType": "application/json",
+      "bytes": 3228,
+      "sha256": "sha256:d89dac9f4dab218df4018a5e6992edea4fbe63800d3685c1c6daed4bf60abe74"
+    },
+    {
+      "id": "task-prompt",
+      "path": "TASK.md",
+      "mediaType": "text/markdown",
+      "bytes": 265,
+      "sha256": "sha256:a48c9c13252c885c6d147c5a877a8848442d2f66289648a6a48540ec686b8f9e"
+    }
+  ],
+  "verdict": "passed",
+  "termination": {
+    "kind": "completed",
+    "processExitCode": 0,
+    "semanticVerdict": "passed"
+  },
+  "capabilities": {
+    "sourceCopy": true,
+    "disposableWorkspace": true,
+    "completeSecuritySnapshots": true,
+    "postAgentSourceTreeCheck": true,
+    "postPatchTreePolicy": true,
+    "postGraderTreeCheck": true,
+    "verifiedGraderStaging": true,
+    "verifiedToolStaging": true,
+    "candidateExtractionWorker": true,
+    "osSandbox": false,
+    "filesystemIsolation": false,
+    "networkIsolation": false,
+    "processIsolation": false,
+    "maliciousAgentGraderSecrecy": false
+  }
+}

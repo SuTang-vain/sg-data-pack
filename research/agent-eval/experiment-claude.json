@@ -1,0 +1,46 @@
+{
+  "experimentVersion": "1.0",
+  "experimentId": "experiment:20c81f58da37a1b7f17b7239e57dd9d7036ebce72529827e387f7ba48d536de3",
+  "title": "claude-code-2.1.185 agent task benchmark",
+  "agent": {
+    "kind": "ai",
+    "provider": "claude-code-2.1.185",
+    "model": "sonnet alias (provider metadata recorded)",
+    "argv": [
+      "{node}",
+      "{adapter}",
+      "{workspace}",
+      "{patch}",
+      "{prompt}"
+    ],
+    "adapter": {
+      "path": "providers/claude-patch-agent.js",
+      "sha256": "sha256:81bb58c7df706063d66686fdd2d888a1e3143e57e60d631ace40bc28218a27e0"
+    },
+    "infraExitCodes": [
+      3
+    ]
+  },
+  "tasks": [
+    {
+      "id": "field-update",
+      "manifest": "tasks/field-update/task.json",
+      "taskId": "sha256:618930ecee265100be229a2d2efa73e733f70c7131e00b0ed7a4bbb8ba75a18f",
+      "manifestSha256": "sha256:27b37bf28fd1fcd4e0d160caef426afbaf27f9a4258e3e92b7795609b249798a"
+    },
+    {
+      "id": "alias-relation",
+      "manifest": "tasks/alias-relation/task.json",
+      "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+      "manifestSha256": "sha256:ac33ff5e0049324b56141ea0687442ed5e344fb6305390f8257b02f2cd17a630"
+    },
+    {
+      "id": "pattern-c-runtime",
+      "manifest": "tasks/pattern-c-runtime/task.json",
+      "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+      "manifestSha256": "sha256:9220e12596b83dbc1619f4859c54d2c3847b733b700818a50fb97aa88df3f8c7"
+    }
+  ],
+  "repetitions": 5,
+  "seed": "fixed-task-order-v1"
+}

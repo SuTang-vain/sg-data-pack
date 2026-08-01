@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "1.3",
+  "meta": {
+    "id": "agent-pattern-c",
+    "title": "Pattern C runtime fixture"
+  },
+  "kindNameFields": {
+    "card": "title"
+  },
+  "entities": {
+    "alpha": {
+      "kind": "card",
+      "title": "Alpha Card",
+      "color": "#2563eb"
+    },
+    "beta": {
+      "kind": "card",
+      "title": "Beta Card",
+      "color": "#059669"
+    },
+    "gamma": {
+      "kind": "card",
+      "title": "Gamma Card",
+      "color": "#8b5cf6"
+    }
+  },
+  "aliases": {
+    "Alpha Card": "alpha",
+    "Beta Card": "beta",
+    "Gamma Card": "gamma"
+  },
+  "stages": [
+    {
+      "key": "gallery",
+      "name": "Gallery",
+      "entities": [
+        "alpha",
+        "beta",
+        "gamma"
+      ]
+    }
+  ],
+  "domain": {
+    "cardOrder": [
+      "alpha",
+      "beta",
+      "gamma"
+    ]
+  },
+  "derivations": {
+    "cardGallery": {
+      "kind": "projection",
+      "source": "domain.cardOrder",
+      "note": "Projects canonical card entities into the Pattern C gallery options shape.",
+      "alsoTouches": [
+        "entities.*.title",
+        "entities.*.color"
+      ],
+      "consumers": [
+        "__fromPack",
+        "#mount .card"
+      ],
+      "affects": [
+        "#mount .card"
+      ]
+    }
+  }
+}

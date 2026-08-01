@@ -36,7 +36,7 @@ The default terminal and `REPORT.md` output answer these questions in order:
 4. **剩余风险** — warnings, unassessed capabilities, derivation impacts, no-check rules, and known library boundaries;
 5. **下一步** — prioritized owner, command, and done-when condition.
 
-`NOT_ASSESSED` is never treated as a pass. Runtime DOM mount, visual regression, and live production crawl remain `not-assessed` unless a future evidence collector is connected.
+`NOT_ASSESSED` is never treated as a pass. Library Evolution Report v1 does not execute browsers, so runtime DOM mount, visual regression, and live production crawl remain `not-assessed` here. Agent TaskRun has separate RuntimeEvidence/VisualEvidence collectors; those task artifacts are not silently projected into this older report contract.
 
 ## Outcomes and exit codes
 

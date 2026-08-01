@@ -1,0 +1,13 @@
+{
+  "graderVersion": "1.0",
+  "graderId": "fixture-grader",
+  "checks": [
+    {
+      "id": "input-present",
+      "type": "command",
+      "weight": 1,
+      "required": true,
+      "argv": ["node", "-e", "process.exit(0)"]
+    }
+  ]
+}

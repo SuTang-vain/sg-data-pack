@@ -122,6 +122,27 @@ test('RunReport contract and public CLI expose the unified report command', () =
   assert.match(read('references/run-report-contract.md'), /NOT_ASSESSED/);
 });
 
+test('Agent task, grader, evidence, TaskRun, and experiment contracts are exposed consistently', () => {
+  const cli = read('scripts/sg-data-pack');
+  for (const command of ['task', 'grade', 'evidence', 'experiment', 'compile']) assert.match(cli, new RegExp(`case '${command}'`));
+  const taskSchema = readJson('scripts/lib/agent-task.schema.json');
+  assert.equal(taskSchema.properties.taskVersion.const, '1.0');
+  assert.deepEqual(taskSchema.$defs.grader.required, ['id', 'spec', 'sha256', 'treeSha256', 'weight']);
+  assert.equal(readJson('scripts/lib/task-run.schema.json').properties.runVersion.const, '1.0');
+  assert.equal(readJson('scripts/lib/experiment.schema.json').properties.experimentVersion.const, '1.0');
+  for (const rel of ['README.md', 'SKILL.md']) {
+    const source = read(rel);
+    assert.match(source, /node "\$SK" task/);
+    assert.match(source, /node "\$SK" experiment/);
+    assert.match(source, /NOT_ASSESSED|not-assessed/);
+  }
+  for (const rel of [
+    'references/agent-task-contract.md', 'references/patch-execution-contract.md',
+    'references/grader-contract.md', 'references/task-run-contract.md',
+    'references/runtime-visual-evidence-contract.md', 'references/agent-experiment-contract.md',
+  ]) assert.ok(read(rel).length > 100, `${rel} must be substantive`);
+});
+
 test('CLI help aliases print usage and exit successfully', () => {
   const cli = path.join(ROOT, 'scripts', 'sg-data-pack');
   for (const flag of ['--help', '-h', 'help']) {

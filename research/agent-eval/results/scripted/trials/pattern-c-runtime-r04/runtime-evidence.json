@@ -1,0 +1,54 @@
+{
+  "evidenceVersion": "1.0",
+  "kind": "runtime-evidence",
+  "evidenceId": "runtime:4e6931ce38037653f2a8230dd7c4fb7f0407acc5c63954f531480e21891caba1",
+  "scenarioId": "pattern-c-gallery",
+  "subjectTreeSha256": "sha256:b48495ceef97ecc05c4a6f85ab102ff5a3858110275202b3fae365252af113db",
+  "producer": {
+    "name": "headless-chrome-pattern-c",
+    "version": "1.2.0"
+  },
+  "environment": {
+    "browser": "Google Chrome 151.0.7922.71",
+    "platform": "darwin",
+    "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670"
+  },
+  "assertions": [
+    {
+      "id": "error-collector",
+      "status": "passed"
+    },
+    {
+      "id": "mount-status",
+      "status": "passed",
+      "actual": "passed"
+    },
+    {
+      "id": "card-count",
+      "status": "passed",
+      "actual": 3,
+      "expected": 3
+    },
+    {
+      "id": "gamma-visible",
+      "status": "passed"
+    }
+  ],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "networkFailures": [],
+  "artifacts": [
+    {
+      "id": "candidate-dom",
+      "path": "candidate.dom.html",
+      "mediaType": "text/html",
+      "sha256": "sha256:19aeed698f2408742b66ca6d4cc7b63ef9dd6abe55458a7e55d49b95c5c1d9a3"
+    },
+    {
+      "id": "candidate-browser-log",
+      "path": "candidate.chrome.log",
+      "mediaType": "text/plain",
+      "sha256": "sha256:304f5516547bc906d69007baae2e640c07a12cc704fc551bec70b4f1f4fb9b96"
+    }
+  ]
+}

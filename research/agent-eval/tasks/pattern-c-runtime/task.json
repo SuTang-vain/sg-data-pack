@@ -1,0 +1,92 @@
+{
+  "taskVersion": "1.0",
+  "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+  "instructions": {
+    "text": "Extend the Pattern C card gallery with a third card. In lib/data/data.json add entity gamma with kind card, title Gamma Card, and color #8b5cf6; add alias Gamma Card -> gamma; append gamma to the gallery stage entities and domain.cardOrder. Update lib/data/data.js so SG_DATA_PACK exactly mirrors data.json. Do not modify the engine or HTML. Emit a unified diff only.",
+    "sha256": "sha256:b524ebb365df08d17a6957b4965d23315142a94f9760deedd1bf9878fbd2e291"
+  },
+  "source": {
+    "root": "source",
+    "revision": "pattern-c-runtime-fixture-v1",
+    "treeSha256": "sha256:0e1e4d837256995597bcf684eb3a2c613df90918e21bfdf7e8f3998a8f5e554c"
+  },
+  "inputs": [
+    {
+      "id": "input-1",
+      "path": "lib/data/data.json",
+      "role": "canonical-data",
+      "sha256": "sha256:c63bb685fd7d6ebdb624eee3a04edd4258fe7ba5ab7594b3302cc05adc29d814"
+    },
+    {
+      "id": "input-2",
+      "path": "lib/data/data.js",
+      "role": "integration-input",
+      "sha256": "sha256:088f58c2e5beb40627f2c6f5c8439d13166593fe055b92e8592d1497561d73e9"
+    },
+    {
+      "id": "input-3",
+      "path": "lib/src/cards.js",
+      "role": "integration-input",
+      "sha256": "sha256:4ea82923e95c60867bf064f7c1010046c9dfa85fc873721433e5fd82dd2cd7ee"
+    },
+    {
+      "id": "input-4",
+      "path": "lib/examples/index.html",
+      "role": "integration-input",
+      "sha256": "sha256:aa7470c5f04ead7fa392a57306f137f1b4583101e101bfb13032b6239ebe1ab3"
+    }
+  ],
+  "filePolicy": {
+    "allowed": [
+      {
+        "pattern": "lib/data/data.json",
+        "operations": [
+          "modify"
+        ]
+      },
+      {
+        "pattern": "lib/data/data.js",
+        "operations": [
+          "modify"
+        ]
+      }
+    ],
+    "forbidden": [
+      ".git/**",
+      "lib/src/**",
+      "lib/examples/**"
+    ],
+    "denyPrecedence": true,
+    "allowSymlinks": false,
+    "allowHardlinks": false,
+    "maxChangedFiles": 2,
+    "maxPatchBytes": 262144
+  },
+  "patchPolicy": {
+    "format": "unified-diff",
+    "fuzz": 0,
+    "allowBinary": false
+  },
+  "graders": [
+    {
+      "id": "task-grader",
+      "spec": "grader/spec.json",
+      "sha256": "sha256:0dc9af71563e5e011a435eadfc5bcb85fa8e4461d03caae4fca867846fbc0b8c",
+      "treeSha256": "sha256:98fc41ee2bacf9423b006b43957153db45bbedbf1ca833493de886601eaffdce",
+      "weight": 1
+    }
+  ],
+  "evidence": {
+    "runtime": [
+      "pattern-c-gallery"
+    ],
+    "visual": [
+      "pattern-c-gallery-desktop"
+    ]
+  },
+  "execution": {
+    "timeoutMs": 480000,
+    "network": "off",
+    "maxOutputBytes": 4194304
+  }
+}

@@ -65,8 +65,8 @@ Entity / relation / content records can be traced in the parallel `provenance` s
 </td>
 <td width="33%" valign="top">
 
-### 🧪 Lossless by construction
-`__fromPack(pack)` must deep-equal the engine's embedded defaults — extraction bugs surface as path-level diffs, not production surprises.
+### 🧪 Scoped equivalence by construction
+Every extracted literal must be mapped to `__fromPack(pack)` or explicitly ignored with evidence. The configured surface deep-equals engine defaults; runtime/visual behavior needs separate evidence.
 
 </td>
 <td width="33%" valign="top">
@@ -97,8 +97,8 @@ and how entities reference each other.
 
 ### 02 · Extract — normalize without losing a byte
 
-The CLI slices default-data literals straight from the engine source with acorn,
-then your config's `buildPack()` normalizes them: entities get stable slug IDs,
+The CLI slices default-data literals straight from the engine source with acorn as a
+**bootstrap baseline**, then your config's `buildPack()` normalizes them: entities get stable slug IDs,
 crawled names become `aliases`, per-stage duplicated copies collapse into
 `{a,b}` references, and prose lifts out of templates into `contents`.
 
@@ -121,8 +121,8 @@ an asset manifest with sha1, entity-identity `sameAs`, and record-level
 
 `SGDataLoader` checks **E1–E16** on mount (dangling refs, illegal enums,
 coordinate range, asset registration, scope disambiguation, derivation paths…) and reports
-**W1–W8** honestly. The equivalence test proves `__fromPack(pack)` deep-equals
-the engine defaults; `--verify-hash` catches replaced assets.
+**W1–W8** honestly. Equivalence proves only the configured literal mappings; coverage is explicit.
+`--compare-existing` catches output drift and `--verify-hash` catches replaced assets.
 
 <br clear="all"/>
 
@@ -157,6 +157,24 @@ The human output is deliberately fixed to five sections: **发现的问题**, **
 **验证范围**, **剩余风险**, and **下一步**. The JSON and Markdown files are projections of the
 same RunReport object, so counts and conclusions cannot drift between CI and developer views.
 
+### 07 · Agent evaluation — test modifications, not just data
+
+The next layer asks a stricter question: can an AI use these contracts to make a correct component-
+library change? An `AgentTaskManifest` binds instructions, source/input trees, allowed/forbidden
+files, patch limits, grader bytes and runtime/visual evidence requirements. “Hidden” means omitted from the prompt and candidate workspace, not secret from a malicious host process without an OS sandbox. The agent emits a patch only; the runner applies it in a disposable workspace, rechecks the complete tree diff (including `.git/**`), runs task-specific graders from digest-verified per-trial staging copies, and records every artifact digest in TaskRun.
+
+```text
+AgentTaskManifest
+  → patch-only agent
+  → preflight + exact apply + postflight file policy
+  → Data Pack / hidden / command graders
+  → runtime + visual evidence
+  → TaskRun → repeated ExperimentReport
+```
+
+`research/agent-eval/` contains a three-task benchmark and scripted/real-provider experiment specs.
+A scripted run proves the harness only. A real-provider success rate is reported with its valid trial denominator, Wilson 95% interval, actual provider model metadata, tokens, cost, and failure taxonomy. Candidate timeout/crash/evidence failure and post-agent integrity drift remain valid failures; only verified pre-subject infrastructure failures are excluded. It is not generalized into a claim about arbitrary production libraries. TaskRun explicitly records that the portable runner has no OS, network, process, or malicious-agent grader-secrecy sandbox.
+
 ---
 
 ## Quick Start
@@ -177,10 +195,12 @@ ln -s "$PWD/sg-data-pack" ~/.claude/skills/sg-data-pack   # Claude Code
 ```bash
 SK=~/.zcode/skills/sg-data-pack/scripts/sg-data-pack
 
-node "$SK" extract <path/to/config.js>          # extract + validate + equivalence test
-node "$SK" extract <path/to/config.js> --check  # validate only (regression)
-node "$SK" validate <data.json> --strict --verify-hash
-node "$SK" rules <libDir> [--strict]
+node "$SK" extract <path/to/config.js>                 # bootstrap from source literals; refuses divergent existing data.json
+node "$SK" extract <path/to/config.js> --check         # source-equivalence only; does not read current data.json
+node "$SK" extract <path/to/config.js> --compare-existing  # compare fresh pack with current data.json
+node "$SK" compile <data.json> [--domain-schema fragment.json] [--check]  # reviewed data.json -> data.js + schema; explicit custom domain contract
+node "$SK" validate <data.json> --strict --verify-hash [--asset-root dir]
+node "$SK" rules <libDir> [--strict] [--rule id]
 node "$SK" diff <old.json> <new.json> [--json]
 node "$SK" templatize <instances.json> [--out dir]
 node "$SK" alias-candidates <data.json> <names.json|txt>
@@ -192,6 +212,11 @@ node "$SK" report <libDir> [--config extract.config.js] [--baseline old-data.jso
   [--review review-report.json] [--audit candidate-audit.json] [--strict] \
   [--verify-hash] [--out report/] [--json]
 node "$SK" types <data.json> [--out data-types.d.ts] [--name PackName]
+node "$SK" task validate <task.json> [--json]
+node "$SK" task run <task.json> --agent-command <exe> --agent-arg '<arg>' --artifacts <dir> [--json]
+node "$SK" grade <grader.json> <workspace> [--artifacts dir] [--json]
+node "$SK" evidence <runtime|visual> <evidence.json> [--json]
+node "$SK" experiment <experiment.json> --out <dir> [--json]
 node "$SK" loader    # print runtime-validator path (copy into a library's lib/src/)
 node "$SK" schema    # print contract-schema path
 ```
@@ -203,16 +228,20 @@ node "$SK" schema    # print contract-schema path
 ### Recommended product workflow
 
 ```bash
-# 1. Create or refresh the canonical pack
+# 1. Bootstrap the canonical pack once; later detect, do not overwrite, reviewed evolution
 node "$SK" extract path/to/extract.config.js
+node "$SK" extract path/to/extract.config.js --compare-existing
 
-# 2. Produce one human + CI hand-off
+# 2. After reviewing/editing data.json, regenerate browser/schema artifacts from that canonical source
+node "$SK" compile path/to/library/lib/data/data.json
+
+# 3. Produce one human + CI hand-off
 node "$SK" report path/to/library \
   --config path/to/extract.config.js \
   --verify-hash \
   --out report/
 
-# 3. For evolution or recrawl work, bind the related evidence
+# 4. For evolution or recrawl work, bind the related evidence
 node "$SK" report path/to/library \
   --baseline old-data.json \
   --review review/review-report.json \
@@ -310,6 +339,12 @@ Full contract: [`references/data-pack-contract.md`](references/data-pack-contrac
 | [`references/data-pack-contract.md`](references/data-pack-contract.md) | Data Pack v1.3 field-level contract |
 | [`references/review-candidate-contract.md`](references/review-candidate-contract.md) | Candidate-ready recrawl reports, explicit decisions, and audit contract |
 | [`references/run-report-contract.md`](references/run-report-contract.md) | Unified Library Evolution Report, coverage, risks, and exit codes |
+| [`references/agent-task-contract.md`](references/agent-task-contract.md) | Content-bound task, source/input, file-policy and grader contract |
+| [`references/patch-execution-contract.md`](references/patch-execution-contract.md) | Patch-only execution, postflight file enforcement and PatchAudit |
+| [`references/grader-contract.md`](references/grader-contract.md) | Task-specific checks, score and GradeReport |
+| [`references/task-run-contract.md`](references/task-run-contract.md) | One agent execution and artifact audit |
+| [`references/runtime-visual-evidence-contract.md`](references/runtime-visual-evidence-contract.md) | Runtime/visual producer evidence and recomputed gates |
+| [`references/agent-experiment-contract.md`](references/agent-experiment-contract.md) | Repeated TaskRuns, success rate, Wilson interval and failure taxonomy |
 | [`references/extraction-config.md`](references/extraction-config.md) | Config guide + three real-world patterns |
 | [`references/engine-integration.md`](references/engine-integration.md) | Engine-patch standard template |
 | [`assets/extract.config.template.js`](assets/extract.config.template.js) | Annotated config template for a new library |
@@ -323,7 +358,13 @@ the TypeScript generator, and cross-artifact version consistency:
 node --test tests/*.test.js
 ```
 
-The same suite runs in CI via `.github/workflows/smoke.yml`. Three reproducible v1.3 synthetic pilots and their machine-readable result live under `research/`; rerun them with `node research/run-v1.3-pilots.js`. The suite also contains a hermetic real-engine integration fixture for the Qinshihuang event graph at `tests/fixtures/integration/qinshihuang-0716-ts/`, covering external HTML JSON extraction, deep equivalence, committed asset baselines plus tamper detection, library rules, generated types, and real derivation impact.
+The same suite runs in CI via `.github/workflows/smoke.yml`. Three reproducible v1.3 synthetic pilots and their machine-readable result live under `research/`; rerun them with `node research/run-v1.3-pilots.js`. The suite also contains a hermetic real-engine integration fixture for the Qinshihuang event graph at `tests/fixtures/integration/qinshihuang-0716-ts/`, covering external HTML JSON extraction, configured equivalence, committed asset baselines plus tamper detection, library rules, generated types, and real derivation impact.
+
+Agent evaluation fixtures live under `research/agent-eval/`: three content-bound tasks, hidden graders,
+patch-only providers, a real headless-Chrome/Pillow evidence producer, and scripted/AI experiment specs.
+Regenerate their task/experiment ids with `node research/agent-eval/build-fixtures.js`. Committed result
+reports state their narrow benchmark scope and preserve failures rather than presenting a green test
+suite as proof of general AI capability.
 
 ## License
 

@@ -1,0 +1,138 @@
+{
+  "auditVersion": "1.0",
+  "auditId": "patch-audit:71797791c1925890fd330ecbb26f2d483cf7a0e34a103fc8a6867a4039510185",
+  "kind": "patch-audit",
+  "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+  "status": "applied",
+  "patchSha256": "sha256:fbd1f3cf9582212db5f48c34217ddf4a7fd31144cce8cd8659daf512ba67636d",
+  "patchBytes": 2492,
+  "beforeTreeSha256": "sha256:2f5a60bc694ee969c17914c85b53df4960565372eb274588e287a2715478b865",
+  "afterTreeSha256": "sha256:b48495ceef97ecc05c4a6f85ab102ff5a3858110275202b3fae365252af113db",
+  "declaredOperations": [
+    {
+      "operation": "modify",
+      "path": "lib/data/data.js",
+      "hunks": 1,
+      "modes": {},
+      "policy": {
+        "allowed": true,
+        "reason": null,
+        "deniedBy": null,
+        "allowedBy": "lib/data/data.js"
+      }
+    },
+    {
+      "operation": "modify",
+      "path": "lib/data/data.json",
+      "hunks": 1,
+      "modes": {},
+      "policy": {
+        "allowed": true,
+        "reason": null,
+        "deniedBy": null,
+        "allowedBy": "lib/data/data.json"
+      }
+    }
+  ],
+  "actualOperations": [
+    {
+      "operation": "modify",
+      "path": "lib/data/data.js",
+      "allowed": true,
+      "reason": null,
+      "before": {
+        "path": "lib/data/data.js",
+        "relativePath": "lib/data/data.js",
+        "kind": "file",
+        "mode": 420,
+        "sha256": "088f58c2e5beb40627f2c6f5c8439d13166593fe055b92e8592d1497561d73e9",
+        "size": 743,
+        "target": null
+      },
+      "after": {
+        "path": "lib/data/data.js",
+        "relativePath": "lib/data/data.js",
+        "kind": "file",
+        "mode": 420,
+        "sha256": "e286223efbf752e0acffdb10ff5c18ecd0853831b44762cf39c1a7bbbd5c511c",
+        "size": 843,
+        "target": null
+      }
+    },
+    {
+      "operation": "modify",
+      "path": "lib/data/data.json",
+      "allowed": true,
+      "reason": null,
+      "before": {
+        "path": "lib/data/data.json",
+        "relativePath": "lib/data/data.json",
+        "kind": "file",
+        "mode": 420,
+        "sha256": "c63bb685fd7d6ebdb624eee3a04edd4258fe7ba5ab7594b3302cc05adc29d814",
+        "size": 1079,
+        "target": null
+      },
+      "after": {
+        "path": "lib/data/data.json",
+        "relativePath": "lib/data/data.json",
+        "kind": "file",
+        "mode": 420,
+        "sha256": "44a4a32b20a0795ec3bde9ee5a5464bb951b34fa49db0184bbc73ef6fe01b094",
+        "size": 1236,
+        "target": null
+      }
+    }
+  ],
+  "preflight": {
+    "allowed": true,
+    "violations": []
+  },
+  "postflight": {
+    "allowed": true,
+    "violations": []
+  },
+  "commands": {
+    "check": {
+      "argv": [
+        "git",
+        "apply",
+        "--check",
+        "--whitespace=error-all",
+        "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-83564-1785574963625-2400b6c2df569.diff"
+      ],
+      "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-O4TaVb/workspace",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 34.301417,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    },
+    "apply": {
+      "argv": [
+        "git",
+        "apply",
+        "--whitespace=error-all",
+        "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-83564-1785574963625-2400b6c2df569.diff"
+      ],
+      "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-O4TaVb/workspace",
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 15.816708,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "error": null
+    }
+  },
+  "failure": null,
+  "capabilities": {
+    "osSandbox": false,
+    "networkIsolation": false,
+    "processIsolation": false,
+    "sourceTreeVerifiedByRunner": true,
+    "disposableWorkspace": true
+  }
+}

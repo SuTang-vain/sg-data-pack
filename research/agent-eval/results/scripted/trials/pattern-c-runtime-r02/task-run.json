@@ -1,0 +1,476 @@
+{
+  "runVersion": "1.0",
+  "runId": "task-run:ede9b03b19180a591922ff9a7dc696fd54bfe31cedb7dd77c81b72381fd55250",
+  "task": {
+    "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+    "taskFileSha256": "sha256:9220e12596b83dbc1619f4859c54d2c3847b733b700818a50fb97aa88df3f8c7",
+    "sourceRevision": "pattern-c-runtime-fixture-v1",
+    "contractTreeSha256": "sha256:0e1e4d837256995597bcf684eb3a2c613df90918e21bfdf7e8f3998a8f5e554c",
+    "runnerSnapshotBeforeSha256": "sha256:2f5a60bc694ee969c17914c85b53df4960565372eb274588e287a2715478b865",
+    "runnerSnapshotFinalSha256": "sha256:2f5a60bc694ee969c17914c85b53df4960565372eb274588e287a2715478b865",
+    "sourceUnchanged": true,
+    "sourceFinalError": null,
+    "trialId": "pattern-c-runtime-r02"
+  },
+  "agent": {
+    "provider": "deterministic-fixture",
+    "model": "scripted-v1",
+    "argv": [
+      "/Users/tangyaoyue/.hermes/node/bin/node",
+      "/Users/tangyaoyue/DEV/sg-data-pack/research/agent-eval/providers/scripted-patch-agent.js",
+      "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-d7WYMG/workspace",
+      "/private/tmp/sg-agent-scripted-final-release/trials/pattern-c-runtime-r02/agent.patch",
+      "/private/tmp/sg-agent-scripted-final-release/trials/pattern-c-runtime-r02/TASK.md"
+    ],
+    "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-d7WYMG/workspace",
+    "exitCode": 0,
+    "signal": null,
+    "timedOut": false,
+    "durationMs": 28.413959,
+    "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "",
+    "stderr": "",
+    "stdoutTruncated": false,
+    "stderrTruncated": false,
+    "error": null,
+    "providerMetadata": null
+  },
+  "patch": {
+    "auditVersion": "1.0",
+    "auditId": "patch-audit:5b52b0c2bafc1a190c3162294dcc7f29f983751386ccfc8269fb49bd2c466765",
+    "kind": "patch-audit",
+    "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+    "status": "applied",
+    "patchSha256": "sha256:7ae5caddebd3ebea4f8ac3634f6afcc9c5d9355c701e025ec5b723881c1d4cf9",
+    "patchBytes": 4263,
+    "beforeTreeSha256": "sha256:2f5a60bc694ee969c17914c85b53df4960565372eb274588e287a2715478b865",
+    "afterTreeSha256": "sha256:b48495ceef97ecc05c4a6f85ab102ff5a3858110275202b3fae365252af113db",
+    "declaredOperations": [
+      {
+        "operation": "modify",
+        "path": "lib/data/data.json",
+        "hunks": 1,
+        "modes": {},
+        "policy": {
+          "allowed": true,
+          "reason": null,
+          "deniedBy": null,
+          "allowedBy": "lib/data/data.json"
+        }
+      },
+      {
+        "operation": "modify",
+        "path": "lib/data/data.js",
+        "hunks": 1,
+        "modes": {},
+        "policy": {
+          "allowed": true,
+          "reason": null,
+          "deniedBy": null,
+          "allowedBy": "lib/data/data.js"
+        }
+      }
+    ],
+    "actualOperations": [
+      {
+        "operation": "modify",
+        "path": "lib/data/data.js",
+        "allowed": true,
+        "reason": null,
+        "before": {
+          "path": "lib/data/data.js",
+          "relativePath": "lib/data/data.js",
+          "kind": "file",
+          "mode": 420,
+          "sha256": "088f58c2e5beb40627f2c6f5c8439d13166593fe055b92e8592d1497561d73e9",
+          "size": 743,
+          "target": null
+        },
+        "after": {
+          "path": "lib/data/data.js",
+          "relativePath": "lib/data/data.js",
+          "kind": "file",
+          "mode": 420,
+          "sha256": "e286223efbf752e0acffdb10ff5c18ecd0853831b44762cf39c1a7bbbd5c511c",
+          "size": 843,
+          "target": null
+        }
+      },
+      {
+        "operation": "modify",
+        "path": "lib/data/data.json",
+        "allowed": true,
+        "reason": null,
+        "before": {
+          "path": "lib/data/data.json",
+          "relativePath": "lib/data/data.json",
+          "kind": "file",
+          "mode": 420,
+          "sha256": "c63bb685fd7d6ebdb624eee3a04edd4258fe7ba5ab7594b3302cc05adc29d814",
+          "size": 1079,
+          "target": null
+        },
+        "after": {
+          "path": "lib/data/data.json",
+          "relativePath": "lib/data/data.json",
+          "kind": "file",
+          "mode": 420,
+          "sha256": "44a4a32b20a0795ec3bde9ee5a5464bb951b34fa49db0184bbc73ef6fe01b094",
+          "size": 1236,
+          "target": null
+        }
+      }
+    ],
+    "preflight": {
+      "allowed": true,
+      "violations": []
+    },
+    "postflight": {
+      "allowed": true,
+      "violations": []
+    },
+    "commands": {
+      "check": {
+        "argv": [
+          "git",
+          "apply",
+          "--check",
+          "--whitespace=error-all",
+          "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-81453-1785573737607-02a40c3d603c6.diff"
+        ],
+        "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-d7WYMG/workspace",
+        "exitCode": 0,
+        "signal": null,
+        "timedOut": false,
+        "durationMs": 18.528167,
+        "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": null
+      },
+      "apply": {
+        "argv": [
+          "git",
+          "apply",
+          "--whitespace=error-all",
+          "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-81453-1785573737607-02a40c3d603c6.diff"
+        ],
+        "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-d7WYMG/workspace",
+        "exitCode": 0,
+        "signal": null,
+        "timedOut": false,
+        "durationMs": 15.677167,
+        "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "error": null
+      }
+    },
+    "failure": null,
+    "capabilities": {
+      "osSandbox": false,
+      "networkIsolation": false,
+      "processIsolation": false,
+      "sourceTreeVerifiedByRunner": true,
+      "disposableWorkspace": true
+    }
+  },
+  "grades": [
+    {
+      "gradeVersion": "1.0",
+      "gradeId": "grade:7743862088b3eeb86f72c537e3e8f361ab7317de16c02cb9c63ecfb30d50863e",
+      "graderId": "agent-pattern-c-grader",
+      "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+      "treeSha256": "sha256:b48495ceef97ecc05c4a6f85ab102ff5a3858110275202b3fae365252af113db",
+      "verdict": "passed",
+      "score": 8,
+      "maximumScore": 8,
+      "results": [
+        {
+          "id": "data-pack-contract",
+          "type": "data-pack-contract",
+          "required": true,
+          "weight": 1,
+          "status": "passed",
+          "score": 1,
+          "findings": [],
+          "evidence": {
+            "errors": [],
+            "warnings": [],
+            "strict": true
+          }
+        },
+        {
+          "id": "hidden-property",
+          "type": "command",
+          "required": true,
+          "weight": 2,
+          "status": "passed",
+          "score": 2,
+          "findings": [],
+          "evidence": {
+            "argv": [
+              "/Users/tangyaoyue/.hermes/node/bin/node",
+              "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-d7WYMG/trusted-graders/task-grader/assert-task.js",
+              "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-d7WYMG/workspace",
+              "pattern-c"
+            ],
+            "cwd": ".",
+            "exitCode": 0,
+            "signal": null,
+            "timedOut": false,
+            "durationMs": 30.477208,
+            "stdoutSha256": "sha256:14aa7fc7ee2174870b13c88f2eefc39873ff15b29013e54803fc3b21cf099c88",
+            "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdout": "pattern-c: complete hidden candidate passed\n",
+            "stderr": "",
+            "stdoutTruncated": false,
+            "stderrTruncated": false,
+            "error": null
+          }
+        },
+        {
+          "id": "browser-producer",
+          "type": "command",
+          "required": true,
+          "weight": 1,
+          "status": "passed",
+          "score": 1,
+          "findings": [],
+          "evidence": {
+            "argv": [
+              "/Users/tangyaoyue/.hermes/node/bin/node",
+              "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-d7WYMG/trusted-graders/task-grader/browser-evidence.js",
+              "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-d7WYMG/workspace",
+              "/private/tmp/sg-agent-scripted-final-release/trials/pattern-c-runtime-r02",
+              "sha256:b48495ceef97ecc05c4a6f85ab102ff5a3858110275202b3fae365252af113db",
+              "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+              "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-d7WYMG/trusted-tools"
+            ],
+            "cwd": ".",
+            "exitCode": 0,
+            "signal": null,
+            "timedOut": false,
+            "durationMs": 13738.082833,
+            "stdoutSha256": "sha256:44bab48262744942813bfdc897490cc305a87e3b597a2d2366dac54eb17b4bc5",
+            "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdout": "{\"runtime\":\"runtime:33b0efb9521aaee93d7ea0861f330a8010a8d21c389af676d723ab319decbb77\",\"visual\":\"visual:b3d9ffed355ba9dda006f8c7b3962445098fec0479e09b6a39ddfde0e64a010f\",\"pixelDiffRatio\":0,\"stabilityDiffRatio\":0}\n",
+            "stderr": "",
+            "stdoutTruncated": false,
+            "stderrTruncated": false,
+            "error": null
+          }
+        },
+        {
+          "id": "runtime-mount",
+          "type": "runtime-evidence",
+          "required": true,
+          "weight": 2,
+          "status": "passed",
+          "score": 2,
+          "findings": [],
+          "evidence": {
+            "scenarioId": "pattern-c-gallery",
+            "file": "runtime-evidence.json",
+            "evidenceId": "runtime:33b0efb9521aaee93d7ea0861f330a8010a8d21c389af676d723ab319decbb77",
+            "validation": {
+              "valid": true,
+              "errors": [],
+              "status": "passed",
+              "summary": {
+                "assertions": 4,
+                "passed": 4,
+                "failed": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "visual-regression",
+          "type": "visual-evidence",
+          "required": true,
+          "weight": 2,
+          "status": "passed",
+          "score": 2,
+          "findings": [],
+          "evidence": {
+            "scenarioId": "pattern-c-gallery-desktop",
+            "file": "visual-evidence.json",
+            "evidenceId": "visual:b3d9ffed355ba9dda006f8c7b3962445098fec0479e09b6a39ddfde0e64a010f",
+            "validation": {
+              "valid": true,
+              "errors": [],
+              "status": "passed",
+              "scenarios": [
+                {
+                  "id": "pattern-c-gallery-desktop",
+                  "status": "passed",
+                  "errors": []
+                }
+              ],
+              "summary": {
+                "total": 1,
+                "passed": 1,
+                "failed": 0,
+                "notAssessed": 0
+              }
+            }
+          }
+        }
+      ],
+      "summary": {
+        "total": 5,
+        "passed": 5,
+        "failed": 0,
+        "notAssessed": 0,
+        "invalid": 0,
+        "infraErrors": 0,
+        "requiredIncomplete": 0
+      },
+      "manifestWeight": 1
+    }
+  ],
+  "secondaryErrors": [],
+  "artifacts": [
+    {
+      "id": "agent-patch",
+      "path": "agent.patch",
+      "mediaType": "text/x-diff",
+      "bytes": 4263,
+      "sha256": "sha256:7ae5caddebd3ebea4f8ac3634f6afcc9c5d9355c701e025ec5b723881c1d4cf9"
+    },
+    {
+      "id": "generated-candidate-stability.chrome.log",
+      "path": "candidate-stability.chrome.log",
+      "mediaType": "text/plain",
+      "bytes": 267,
+      "sha256": "sha256:da085c29ec3dc468b624d7256c09b7bb20014f4aed7c94611d81e983b3a953a6"
+    },
+    {
+      "id": "generated-candidate-stability.dom.html",
+      "path": "candidate-stability.dom.html",
+      "mediaType": "text/html",
+      "bytes": 2108,
+      "sha256": "sha256:19aeed698f2408742b66ca6d4cc7b63ef9dd6abe55458a7e55d49b95c5c1d9a3"
+    },
+    {
+      "id": "generated-candidate-stability.png",
+      "path": "candidate-stability.png",
+      "mediaType": "image/png",
+      "bytes": 91725,
+      "sha256": "sha256:369ad75f907e2fea0a06e5182a03c3d1d4f6570b531958dabf10396c2e2cd3ea"
+    },
+    {
+      "id": "generated-candidate.chrome.log",
+      "path": "candidate.chrome.log",
+      "mediaType": "text/plain",
+      "bytes": 1553,
+      "sha256": "sha256:4acf52d45108aa92057b18da7fd2c999bce2e46fcf0e38983b5af16e47c487e0"
+    },
+    {
+      "id": "generated-candidate.dom.html",
+      "path": "candidate.dom.html",
+      "mediaType": "text/html",
+      "bytes": 2108,
+      "sha256": "sha256:19aeed698f2408742b66ca6d4cc7b63ef9dd6abe55458a7e55d49b95c5c1d9a3"
+    },
+    {
+      "id": "generated-candidate.png",
+      "path": "candidate.png",
+      "mediaType": "image/png",
+      "bytes": 91725,
+      "sha256": "sha256:369ad75f907e2fea0a06e5182a03c3d1d4f6570b531958dabf10396c2e2cd3ea"
+    },
+    {
+      "id": "grade-task-grader",
+      "path": "grade-task-grader.json",
+      "mediaType": "application/json",
+      "bytes": 4936,
+      "sha256": "sha256:cafab5b39915e65f82c17c5fdbaa4b9c187a343d8925abe3f28b0d7bb34b9e41"
+    },
+    {
+      "id": "patch-audit",
+      "path": "patch-audit.json",
+      "mediaType": "application/json",
+      "bytes": 4167,
+      "sha256": "sha256:d661ec548bbff8d9f3ac85964d33b60194246a2005daf9fc473bfc5ec71c1701"
+    },
+    {
+      "id": "generated-reference.chrome.log",
+      "path": "reference.chrome.log",
+      "mediaType": "text/plain",
+      "bytes": 257,
+      "sha256": "sha256:b33b940c57de58eec2dd37bf7858cab61387664d11f917e89309be33005a377d"
+    },
+    {
+      "id": "generated-reference.dom.html",
+      "path": "reference.dom.html",
+      "mediaType": "text/html",
+      "bytes": 2108,
+      "sha256": "sha256:19aeed698f2408742b66ca6d4cc7b63ef9dd6abe55458a7e55d49b95c5c1d9a3"
+    },
+    {
+      "id": "generated-reference.png",
+      "path": "reference.png",
+      "mediaType": "image/png",
+      "bytes": 91725,
+      "sha256": "sha256:369ad75f907e2fea0a06e5182a03c3d1d4f6570b531958dabf10396c2e2cd3ea"
+    },
+    {
+      "id": "generated-runtime-evidence.json",
+      "path": "runtime-evidence.json",
+      "mediaType": "application/json",
+      "bytes": 1411,
+      "sha256": "sha256:18445f4911ebfb0a0bd24570f3b75391662e6e4f74a3c95d239df453c297c9d0"
+    },
+    {
+      "id": "generated-stability-diff.png",
+      "path": "stability-diff.png",
+      "mediaType": "image/png",
+      "bytes": 3150,
+      "sha256": "sha256:aef339735a9bff865bfe7912b73ab3c2ee6f41c2aa4482ed0cf006381a82b775"
+    },
+    {
+      "id": "task-prompt",
+      "path": "TASK.md",
+      "mediaType": "text/markdown",
+      "bytes": 368,
+      "sha256": "sha256:8d6d410df008eb20405838885369f435267b07b38267305d013cd4661c971d29"
+    },
+    {
+      "id": "generated-visual-diff.png",
+      "path": "visual-diff.png",
+      "mediaType": "image/png",
+      "bytes": 3150,
+      "sha256": "sha256:aef339735a9bff865bfe7912b73ab3c2ee6f41c2aa4482ed0cf006381a82b775"
+    },
+    {
+      "id": "generated-visual-evidence.json",
+      "path": "visual-evidence.json",
+      "mediaType": "application/json",
+      "bytes": 2101,
+      "sha256": "sha256:4a873f05810c949bd2357d3d90872e5238a9a49f2424d35d15858e4faecdf902"
+    }
+  ],
+  "verdict": "passed",
+  "termination": {
+    "kind": "completed",
+    "processExitCode": 0,
+    "semanticVerdict": "passed"
+  },
+  "capabilities": {
+    "sourceCopy": true,
+    "disposableWorkspace": true,
+    "completeSecuritySnapshots": true,
+    "postAgentSourceTreeCheck": true,
+    "postPatchTreePolicy": true,
+    "postGraderTreeCheck": true,
+    "verifiedGraderStaging": true,
+    "verifiedToolStaging": true,
+    "candidateExtractionWorker": true,
+    "osSandbox": false,
+    "filesystemIsolation": false,
+    "networkIsolation": false,
+    "processIsolation": false,
+    "maliciousAgentGraderSecrecy": false
+  }
+}

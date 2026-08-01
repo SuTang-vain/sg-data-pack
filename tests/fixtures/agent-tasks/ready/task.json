@@ -1,0 +1,62 @@
+{
+  "taskVersion": "1.0",
+  "taskId": "sha256:81b83df41ec3d120166cbd416cb8c056be0d38a9a16da7c5447c00fe46bb68e6",
+  "instructions": {
+    "text": "Update the fixture safely.",
+    "sha256": "sha256:f252924589418ab3710e24be081500dd41ec2248a31661bfc96eee926bf218a7"
+  },
+  "source": {
+    "root": "source",
+    "revision": "fixture-revision",
+    "treeSha256": "sha256:01af4ed183d65f66a8e97a1c76c5ba9fc930cd3d2321dadd8f2ddd63370fdf22"
+  },
+  "inputs": [
+    {
+      "id": "fixture-input",
+      "path": "input.txt",
+      "role": "source",
+      "sha256": "sha256:6b75d59783a40a1229f5bd059c63daf4c95b31f22cb7a66c0b00ad69595c11d0"
+    }
+  ],
+  "filePolicy": {
+    "allowed": [
+      {
+        "pattern": "**/*.txt",
+        "operations": [
+          "modify"
+        ]
+      }
+    ],
+    "forbidden": [
+      ".git/**"
+    ],
+    "denyPrecedence": true,
+    "allowSymlinks": false,
+    "allowHardlinks": false,
+    "maxChangedFiles": 1,
+    "maxPatchBytes": 4096
+  },
+  "patchPolicy": {
+    "format": "unified-diff",
+    "fuzz": 0,
+    "allowBinary": false
+  },
+  "graders": [
+    {
+      "id": "fixture-grader",
+      "spec": "grader/spec.json",
+      "sha256": "sha256:798a17e10949cc26813ce468b646a28bd9bae0015e0eabe23b62f9e55932f208",
+      "treeSha256": "sha256:a9053f547928e501aca328ba572a84ec73d3790dc2e185d7cc266b559f067123",
+      "weight": 1
+    }
+  ],
+  "evidence": {
+    "runtime": [],
+    "visual": []
+  },
+  "execution": {
+    "timeoutMs": 30000,
+    "network": "off",
+    "maxOutputBytes": 65536
+  }
+}

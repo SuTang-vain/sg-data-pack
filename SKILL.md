@@ -20,10 +20,12 @@ A Data Pack is the **single entry point** for a component library's business dat
 ```bash
 SK=~/.zcode/skills/sg-data-pack/scripts/sg-data-pack   # or the codex/claude install path
 
-node "$SK" extract <path/to/xxx.config.js>          # extract + validate + equivalence test; writes lib/data/{data.json,data.js,data.schema.json}
-node "$SK" extract <path/to/xxx.config.js> --check  # validate + equivalence only (no writes)
-node "$SK" validate <data.json> [--strict] [--verify-hash]  # standalone validation (--verify-hash detects replaced assets)
-node "$SK" rules <libDir> [--strict]                      # execute library-level data rules (data-rules.json)
+node "$SK" extract <path/to/xxx.config.js>          # bootstrap from source literals; divergent existing data.json requires --force
+node "$SK" extract <path/to/xxx.config.js> --check  # source-equivalence only; does not read current data.json
+node "$SK" extract <path/to/xxx.config.js> --compare-existing  # fresh in-memory pack vs current data.json
+node "$SK" compile <data.json> [--domain-schema fragment.json] [--check]  # preserve explicit custom domain schema
+node "$SK" validate <data.json> [--strict] [--verify-hash] [--asset-root dir]
+node "$SK" rules <libDir> [--strict] [--rule id]      # execute all or one library rule
 node "$SK" diff <old.json> <new.json> [--json]            # structural diff between two packs (evolution / recrawl review)
 node "$SK" templatize <instances.json> [--out dir]        # derive item template from repeated HTML instances (collection pages)
 node "$SK" alias-candidates <data.json> <names.json|txt>     # rank unresolved crawled names
@@ -31,6 +33,11 @@ node "$SK" recrawl-skeleton <data.json> <records.json> [--out dir]  # generate c
 node "$SK" data-surface-import <ui-dismantler-manifest.json> [--out report.json] [--allow-review-required]  # read-only interface handoff; never generate a Data Pack
 node "$SK" candidate <data.json> <review-report.json> <decisions.json> --records <records.json> --out <candidate.json>  # apply explicit Review Decisions
 node "$SK" report <libDir> [--config config.js] [--baseline old.json] [--review review-report.json] [--audit candidate-audit.json] [--strict] [--verify-hash] [--out report/] [--json]  # unified user-facing report
+node "$SK" task validate <task.json> [--json]              # validate source/input/grader-bound AgentTaskManifest
+node "$SK" task run <task.json> --agent-command <exe> --agent-arg '<arg>' --artifacts <dir> [--json]  # patch-only disposable TaskRun
+node "$SK" grade <grader.json> <workspace> [--artifacts dir] [--json]
+node "$SK" evidence <runtime|visual> <evidence.json> [--json]
+node "$SK" experiment <experiment.json> --out <dir> [--json]
 node "$SK" types <data.json> [--out file.d.ts] [--name N]   # generate TypeScript declarations
 node "$SK" loader    # print runtime-validator path (copy into the library's lib/src/)
 node "$SK" schema    # print contract schema path
@@ -84,9 +91,10 @@ cp "$(node "$SK" loader)" <lib>/lib/src/sg-data-loader.js
 node "$SK" extract <config>          # must be fully green: 0 validation errors, equivalence passed
 ```
 
-The equivalence test is the **losslessness guarantee**: `__fromPack(pack)` must deep-equal the
-embedded defaults. Common failure causes: missing fields in fromPack / key-order changes /
-undeduplicated duplicates — fix item by item using the reported diff paths.
+The equivalence test is a **configured-surface guarantee**: every extracted literal must map to an
+own field returned by `__fromPack(pack)` or be explicitly ignored with an evidence-backed reason.
+It does not validate the current disk `data.json`, DOM mount, renderer constants, or pixels. Use
+`--compare-existing`, TaskRun runtime evidence, and visual evidence for those independent claims.
 
 ### 5. Integrate + regress
 
@@ -128,6 +136,24 @@ remaining risks, and next steps. Use `--json` for CI; JSON stdout contains only 
 `NOT_ASSESSED` means no evidence was supplied, never “passed”. The report is read-only and binds
 consumed inputs by SHA-256. Full field and exit-code semantics are in `references/run-report-contract.md`.
 
+### 8. Evaluate an AI modification under contract
+
+Use an AgentTaskManifest only after the Data Pack, file policy, hidden grader and required runtime/
+visual scenarios are explicit. “Hidden” means absent from the prompt/workspace, not secret from an unsandboxed malicious local process. The agent must emit a unified diff; it must not edit source or the disposable workspace directly. TaskRun rechecks the complete tree including `.git/**`, revalidates task/adapter/grader/tool digests across stages, grades from per-trial verified staging copies, and preserves PatchAudit, GradeReport and evidence artifacts. Missing OS/filesystem/network/process isolation remains visible.
+
+```bash
+node "$SK" task validate path/to/task.json
+node "$SK" task run path/to/task.json --agent-command <provider-wrapper> \
+  --agent-arg '{workspace}' --agent-arg '{patch}' --agent-arg '{prompt}' \
+  --artifacts /tmp/task-run
+node "$SK" experiment research/agent-eval/experiment-claude.json --out /tmp/agent-experiment
+```
+
+Never treat a scripted provider as AI evidence. Never exclude invalid/infra trials silently. Report
+valid denominator, Wilson interval, actual provider model metadata, token/cost evidence, failure
+taxonomy, and which task subset had runtime/visual evidence. See the agent-task, patch-execution,
+grader, task-run, runtime/visual, and agent-experiment contracts in `references/`.
+
 ## Rule Cheat Sheet (enforced by the validator)
 
 | Rule | Meaning |
@@ -158,6 +184,12 @@ Crawl output may only consist of: `data.json` + `assets/` + the alias table. Req
 - `references/data-surface-manifest-import.md` — read-only Data Surface Manifest handoff and review gate
 - `references/review-candidate-contract.md` — candidate-ready reports, explicit decisions, and audit sidecars
 - `references/run-report-contract.md` — unified Library Evolution Report, coverage, risks, and exit codes
+- `references/agent-task-contract.md` — content-bound task/source/input/file/grader manifest
+- `references/patch-execution-contract.md` — patch-only application, file policy, PatchAudit and capability limits
+- `references/grader-contract.md` — task-specific checks, score and GradeReport
+- `references/task-run-contract.md` — one agent execution and all artifact digests
+- `references/runtime-visual-evidence-contract.md` — runtime/visual evidence and recomputed gates
+- `references/agent-experiment-contract.md` — repetitions, success rate, Wilson interval and failure taxonomy
 - `references/extraction-config.md` — extraction-config guide with three typical patterns
 - `references/engine-integration.md` — engine-patch standard template (copy-paste grade)
 - `references/data-rules-guide.md` — library-level feature rules: format, check convention, evidence discipline

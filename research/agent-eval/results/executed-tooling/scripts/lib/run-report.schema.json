@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sg.local/run-report.schema.json",
+  "title": "SG Data Pack Run Report v1.0",
+  "type": "object",
+  "required": [
+    "reportVersion",
+    "run",
+    "inputs",
+    "summary",
+    "inventory",
+    "findings",
+    "changes",
+    "assurances",
+    "coverage",
+    "risks",
+    "nextSteps",
+    "operations",
+    "impacts",
+    "artifacts",
+    "raw"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "reportVersion": { "const": "1.0" },
+    "run": {
+      "type": "object",
+      "required": ["id", "command", "exitCode", "libId", "mode", "outcome", "maturity"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^sha256:" },
+        "command": { "type": "string", "minLength": 1 },
+        "exitCode": { "type": "integer", "enum": [0, 1, 2] },
+        "libId": { "type": "string" },
+        "mode": { "enum": ["pack", "integration", "evolution", "review", "candidate"] },
+        "outcome": { "enum": ["ready", "issues-found", "review-required", "blocked", "input-error"] },
+        "maturity": { "enum": ["UNASSESSED", "ASSESSED", "DATA-VALID"] }
+      }
+    },
+    "inputs": { "type": "object", "additionalProperties": true },
+    "summary": {
+      "type": "object",
+      "required": ["findings", "errors", "warnings", "open", "resolved", "notAssessed", "changes", "nextSteps"],
+      "additionalProperties": false,
+      "properties": {
+        "findings": { "type": "integer", "minimum": 0 },
+        "errors": { "type": "integer", "minimum": 0 },
+        "warnings": { "type": "integer", "minimum": 0 },
+        "open": { "type": "integer", "minimum": 0 },
+        "resolved": { "type": "integer", "minimum": 0 },
+        "notAssessed": { "type": "integer", "minimum": 0 },
+        "changes": { "type": "integer", "minimum": 0 },
+        "nextSteps": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "inventory": { "type": "object", "additionalProperties": true },
+    "findings": { "type": "array", "items": { "$ref": "#/$defs/finding" } },
+    "changes": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "assurances": { "type": "array", "items": { "$ref": "#/$defs/assurance" } },
+    "coverage": { "type": "array", "items": { "$ref": "#/$defs/assurance" } },
+    "risks": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "nextSteps": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "operations": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "impacts": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "artifacts": { "type": "array", "items": { "type": "object", "additionalProperties": true } },
+    "raw": { "type": "object", "additionalProperties": true }
+  },
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "required": ["id", "code", "severity", "status", "category", "phase", "title", "message", "blocking"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string" },
+        "code": { "type": "string" },
+        "severity": { "enum": ["error", "warning", "info"] },
+        "status": { "enum": ["open", "resolved", "review-required", "accepted-risk", "not-assessed"] },
+        "category": { "type": "string" },
+        "phase": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "blocking": { "type": "boolean" }
+      }
+    },
+    "assurance": {
+      "type": "object",
+      "required": ["id", "title", "status", "blocking"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "status": { "enum": ["passed", "failed", "not-assessed", "not-applicable", "review-required"] },
+        "blocking": { "type": "boolean" }
+      }
+    }
+  }
+}

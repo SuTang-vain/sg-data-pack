@@ -5,7 +5,11 @@ must be byte-identical when `options.data` is absent**.
 Technique: convert the pack into the legacy options shape, reusing the existing
 `(options && options.x) || defaults` paths.
 
-## Standard Patch (3 spots)
+## Integration Shell (3 spots)
+
+The injection shell is universal; the body of `__fromPack` is an adapter for the library's legacy
+shape. The first example below is the **entity-graph adapter**, not a mandatory Data Pack shape.
+Plain collections and DOM JSON-script pages should use the dedicated adapters later in this guide.
 
 ### ① Insert at the top of the engine IIFE (before mount)
 
@@ -98,6 +102,68 @@ var heroRel = (options && options.heroRel) || { ... };
 global.MyLib = { mount: mount, create: create, __fromPack: __fromPack };
 ```
 
+## Pattern C: DOM JSON-script adapter
+
+When the legacy data is the whole options payload in a DOM JSON script, preserve that parse path as
+the no-pack fallback and make the injected path additive:
+
+```js
+function __fromPack(pack) {
+  // Rebuild the exact legacy JSON object. Keep this adapter library-specific.
+  return {
+    items: Object.keys(pack.entities || {}).map(function (id) {
+      var entity = pack.entities[id];
+      return { id: id, label: entity.label, image: entity.image };
+    }),
+    categories: (pack.domain && pack.domain.categories) || []
+  };
+}
+
+function __resolveDataOptions(options) {
+  if (!options || !options.data) return options;
+  if (typeof SGDataLoader !== 'undefined') SGDataLoader.assertValid(options.data);
+  var legacyOptions = __fromPack(options.data);
+  var merged = {};
+  Object.keys(options).forEach(function (key) { if (key !== 'data') merged[key] = options[key]; });
+  Object.keys(legacyOptions).forEach(function (key) { merged[key] = legacyOptions[key]; });
+  return merged;
+}
+
+function readDomDefaults() {
+  var element = document.getElementById('sg-data');
+  if (!element || !element.textContent) throw new Error('Missing #sg-data JSON defaults');
+  return JSON.parse(element.textContent);
+}
+
+function mount(root, options) {
+  options = __resolveDataOptions(options);
+  var data = options && options.items ? options : readDomDefaults();
+  // Original rendering logic continues unchanged and consumes `data`.
+}
+```
+
+The extraction equivalence mapping compares the sliced JSON object with `__fromPack(pack)`. It does
+**not** execute `mount`, parse the live DOM, collect browser errors, or compare pixels. Those are
+separate runtime/visual assurances and remain `NOT_ASSESSED` until evidence is supplied.
+
+## Plain collection adapter
+
+A collection library does not need graph-shaped variables:
+
+```js
+function __fromPack(pack) {
+  return {
+    cards: Object.keys(pack.entities || {}).map(function (id) {
+      var entity = pack.entities[id];
+      return { key: id, title: entity.title, summary: entity.summary };
+    })
+  };
+}
+```
+
+Return the exact legacy collection names consumed by the engine. Do not manufacture `chars`,
+`allEdges`, or `storyModules` unless those are real engine inputs.
+
 ## Variants
 
 | Scenario | Approach |
@@ -113,7 +179,7 @@ global.MyLib = { mount: mount, create: create, __fromPack: __fromPack };
 
 1. **Zero rendering-logic changes** — all edits live at the data entry point
 2. **Byte-identical behavior without options.data** — `__resolveDataOptions` is a pass-through
-3. **Equivalence is a hard gate** — `__fromPack(pack)` deep-equals the embedded defaults; never skip it
+3. **Configured equivalence is a hard gate** — every extracted literal is mapped or explicitly ignored with evidence; mapped `__fromPack(pack)` fields deep-equal the embedded defaults
 4. **No silent data anomalies** — dangling refs/duplicates in source data are reported, never filtered away
 5. The loader must be copied to `lib/src/sg-data-loader.js` (`node scripts/sg-data-pack loader` prints its path)
 

@@ -1,0 +1,46 @@
+{
+  "experimentVersion": "1.0",
+  "experimentId": "experiment:352bdabeddb1a9ce24430e6c482249da01a4c22e0bdc7bf66c36d6449a399f62",
+  "title": "codex-cli-0.139.0 agent task benchmark",
+  "agent": {
+    "kind": "ai",
+    "provider": "codex-cli-0.139.0",
+    "model": "gpt-5.5 (provider-reported)",
+    "argv": [
+      "{node}",
+      "{adapter}",
+      "{workspace}",
+      "{patch}",
+      "{prompt}"
+    ],
+    "adapter": {
+      "path": "providers/codex-patch-agent.js",
+      "sha256": "sha256:03539068e04f8e82cf0757a670e8e799e8860aaa9f6abe7a912df2b8ef12559e"
+    },
+    "infraExitCodes": [
+      3
+    ]
+  },
+  "tasks": [
+    {
+      "id": "field-update",
+      "manifest": "tasks/field-update/task.json",
+      "taskId": "sha256:618930ecee265100be229a2d2efa73e733f70c7131e00b0ed7a4bbb8ba75a18f",
+      "manifestSha256": "sha256:27b37bf28fd1fcd4e0d160caef426afbaf27f9a4258e3e92b7795609b249798a"
+    },
+    {
+      "id": "alias-relation",
+      "manifest": "tasks/alias-relation/task.json",
+      "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+      "manifestSha256": "sha256:ac33ff5e0049324b56141ea0687442ed5e344fb6305390f8257b02f2cd17a630"
+    },
+    {
+      "id": "pattern-c-runtime",
+      "manifest": "tasks/pattern-c-runtime/task.json",
+      "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+      "manifestSha256": "sha256:9220e12596b83dbc1619f4859c54d2c3847b733b700818a50fb97aa88df3f8c7"
+    }
+  ],
+  "repetitions": 5,
+  "seed": "fixed-task-order-v1"
+}

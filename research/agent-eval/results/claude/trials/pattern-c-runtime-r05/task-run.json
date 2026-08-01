@@ -1,0 +1,223 @@
+{
+  "runVersion": "1.0",
+  "runId": "task-run:07e9c45767c9629be80216750400fa6df478397e9d3bca19e06fe327616100a7",
+  "task": {
+    "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+    "taskFileSha256": "sha256:9220e12596b83dbc1619f4859c54d2c3847b733b700818a50fb97aa88df3f8c7",
+    "sourceRevision": "pattern-c-runtime-fixture-v1",
+    "contractTreeSha256": "sha256:0e1e4d837256995597bcf684eb3a2c613df90918e21bfdf7e8f3998a8f5e554c",
+    "runnerSnapshotBeforeSha256": "sha256:2f5a60bc694ee969c17914c85b53df4960565372eb274588e287a2715478b865",
+    "runnerSnapshotFinalSha256": "sha256:2f5a60bc694ee969c17914c85b53df4960565372eb274588e287a2715478b865",
+    "sourceUnchanged": true,
+    "sourceFinalError": null,
+    "trialId": "pattern-c-runtime-r05"
+  },
+  "agent": {
+    "provider": "claude-code-2.1.185",
+    "model": "sonnet alias (provider metadata recorded)",
+    "argv": [
+      "/Users/tangyaoyue/.hermes/node/bin/node",
+      "/Users/tangyaoyue/DEV/sg-data-pack/research/agent-eval/providers/claude-patch-agent.js",
+      "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-mzh4Hq/workspace",
+      "/private/tmp/sg-agent-claude-final-release/trials/pattern-c-runtime-r05/agent.patch",
+      "/private/tmp/sg-agent-claude-final-release/trials/pattern-c-runtime-r05/TASK.md"
+    ],
+    "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-mzh4Hq/workspace",
+    "exitCode": 0,
+    "signal": null,
+    "timedOut": false,
+    "durationMs": 199414.87625,
+    "stdoutSha256": "sha256:77c5d7c684ddcaa577d51271c8e482339575c3081e15bda51cf3fe163ad3b4c5",
+    "stderrSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout": "{\"provider\":\"claude-code\",\"declaredModel\":\"sonnet\",\"modelUsage\":{\"MiniMax-M3[1M]\":{\"inputTokens\":2444,\"outputTokens\":16845,\"cacheReadInputTokens\":128,\"cacheCreationInputTokens\":0,\"webSearchRequests\":0,\"costUSD\":0.433409,\"contextWindow\":1000000,\"maxOutputTokens\":32000}},\"usage\":{\"input_tokens\":2444,\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":128,\"output_tokens\":16845,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"totalCostUsd\":0.433409,\"durationApiMs\":198830,\"stopReason\":\"end_turn\",\"permissionDenials\":[]}\n",
+    "stderr": "",
+    "stdoutTruncated": false,
+    "stderrTruncated": false,
+    "error": null,
+    "providerMetadata": {
+      "provider": "claude-code",
+      "declaredModel": "sonnet",
+      "modelUsage": {
+        "MiniMax-M3[1M]": {
+          "inputTokens": 2444,
+          "outputTokens": 16845,
+          "cacheReadInputTokens": 128,
+          "cacheCreationInputTokens": 0,
+          "webSearchRequests": 0,
+          "costUSD": 0.433409,
+          "contextWindow": 1000000,
+          "maxOutputTokens": 32000
+        }
+      },
+      "usage": {
+        "input_tokens": 2444,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 128,
+        "output_tokens": 16845,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 0
+        },
+        "inference_geo": "",
+        "iterations": [],
+        "speed": "standard"
+      },
+      "totalCostUsd": 0.433409,
+      "durationApiMs": 198830,
+      "stopReason": "end_turn",
+      "permissionDenials": []
+    }
+  },
+  "patch": {
+    "auditVersion": "1.0",
+    "auditId": "patch-audit:3596347f157a38d17316843de64d66c921dfb4a34e364eb2279d7dfa4baea45c",
+    "kind": "patch-audit",
+    "taskId": "sha256:3c621ced615d86b4b1c9e8ea644b1045fd762b71675f5c82acc54737f9182670",
+    "status": "rejected",
+    "patchSha256": "sha256:2649706bf415a7b28cf09ce7075f9d6d3017a869cf66e8015c13dda437d174e8",
+    "patchBytes": 2537,
+    "beforeTreeSha256": "sha256:2f5a60bc694ee969c17914c85b53df4960565372eb274588e287a2715478b865",
+    "afterTreeSha256": null,
+    "declaredOperations": [
+      {
+        "operation": "modify",
+        "path": "lib/data/data.json",
+        "hunks": 4,
+        "modes": {},
+        "policy": {
+          "allowed": true,
+          "reason": null,
+          "deniedBy": null,
+          "allowedBy": "lib/data/data.json"
+        }
+      },
+      {
+        "operation": "modify",
+        "path": "lib/data/data.js",
+        "hunks": 1,
+        "modes": {},
+        "policy": {
+          "allowed": true,
+          "reason": null,
+          "deniedBy": null,
+          "allowedBy": "lib/data/data.js"
+        }
+      }
+    ],
+    "actualOperations": [],
+    "preflight": {
+      "allowed": true,
+      "violations": []
+    },
+    "postflight": null,
+    "commands": {
+      "check": {
+        "argv": [
+          "git",
+          "apply",
+          "--check",
+          "--whitespace=error-all",
+          "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-83564-1785575176925-f9951cf8b0d45.diff"
+        ],
+        "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-mzh4Hq/workspace",
+        "exitCode": 128,
+        "signal": null,
+        "timedOut": false,
+        "durationMs": 26.0165,
+        "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "sha256:62ccebd4d1a58360a0ab84d7032ef868076a6b813b79dd5f2292710f327e0bcb",
+        "error": null
+      },
+      "apply": null
+    },
+    "failure": {
+      "kind": "patch-invalid",
+      "name": "PatchError",
+      "message": "git apply --check rejected the patch",
+      "details": {
+        "checkRun": {
+          "argv": [
+            "git",
+            "apply",
+            "--check",
+            "--whitespace=error-all",
+            "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-83564-1785575176925-f9951cf8b0d45.diff"
+          ],
+          "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-mzh4Hq/workspace",
+          "status": 128,
+          "exitCode": 128,
+          "exit": 128,
+          "signal": null,
+          "timedOut": false,
+          "durationMs": 26.0165,
+          "duration": 26.0165,
+          "stdout": "",
+          "stderr": "error: patch fragment without header at line 20: @@ -22,5 +27,6 @@\n",
+          "stdoutTruncated": false,
+          "stderrTruncated": false,
+          "truncated": false
+        }
+      }
+    },
+    "capabilities": {
+      "osSandbox": false,
+      "networkIsolation": false,
+      "processIsolation": false,
+      "sourceTreeVerifiedByRunner": true,
+      "disposableWorkspace": true
+    }
+  },
+  "grades": [],
+  "secondaryErrors": [],
+  "artifacts": [
+    {
+      "id": "agent-patch",
+      "path": "agent.patch",
+      "mediaType": "text/x-diff",
+      "bytes": 2537,
+      "sha256": "sha256:2649706bf415a7b28cf09ce7075f9d6d3017a869cf66e8015c13dda437d174e8"
+    },
+    {
+      "id": "patch-audit",
+      "path": "patch-audit.json",
+      "mediaType": "application/json",
+      "bytes": 2944,
+      "sha256": "sha256:35032c8e0365fd89860318ae676e064da3375c6494dd87f9f8c8e6183e940cb6"
+    },
+    {
+      "id": "task-prompt",
+      "path": "TASK.md",
+      "mediaType": "text/markdown",
+      "bytes": 368,
+      "sha256": "sha256:8d6d410df008eb20405838885369f435267b07b38267305d013cd4661c971d29"
+    }
+  ],
+  "verdict": "patch-invalid",
+  "termination": {
+    "kind": "completed",
+    "processExitCode": 1,
+    "semanticVerdict": "patch-invalid",
+    "message": "git apply --check rejected the patch"
+  },
+  "capabilities": {
+    "sourceCopy": true,
+    "disposableWorkspace": true,
+    "completeSecuritySnapshots": true,
+    "postAgentSourceTreeCheck": true,
+    "postPatchTreePolicy": true,
+    "postGraderTreeCheck": true,
+    "verifiedGraderStaging": true,
+    "verifiedToolStaging": true,
+    "candidateExtractionWorker": true,
+    "osSandbox": false,
+    "filesystemIsolation": false,
+    "networkIsolation": false,
+    "processIsolation": false,
+    "maliciousAgentGraderSecrecy": false
+  }
+}

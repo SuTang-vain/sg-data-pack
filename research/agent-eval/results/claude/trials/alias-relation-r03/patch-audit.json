@@ -1,0 +1,87 @@
+{
+  "auditVersion": "1.0",
+  "auditId": "patch-audit:3d130ebe764c4a36cf67102e04a369f1e56cce7141353b97109c3706b04d87d7",
+  "kind": "patch-audit",
+  "taskId": "sha256:295709a674170fcf6188e9ae793fbd2f42e8f57c95287f3fc27a0e5556f1e118",
+  "status": "rejected",
+  "patchSha256": "sha256:5d251043d5b64a4c55b9677c59c4d99f0d343140a638738fe3f27741f1195e9c",
+  "patchBytes": 489,
+  "beforeTreeSha256": "sha256:6243526415fa11e029c8205e3ee3ddb2f0cb824e7e561c733480c3c8ecabb6c5",
+  "afterTreeSha256": null,
+  "declaredOperations": [
+    {
+      "operation": "modify",
+      "path": "lib/data/data.json",
+      "hunks": 1,
+      "modes": {},
+      "policy": {
+        "allowed": true,
+        "reason": null,
+        "deniedBy": null,
+        "allowedBy": "lib/data/data.json"
+      }
+    }
+  ],
+  "actualOperations": [],
+  "preflight": {
+    "allowed": true,
+    "violations": []
+  },
+  "postflight": null,
+  "commands": {
+    "check": {
+      "argv": [
+        "git",
+        "apply",
+        "--check",
+        "--whitespace=error-all",
+        "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-83564-1785574024447-85bba020679ec.diff"
+      ],
+      "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-omgCH1/workspace",
+      "exitCode": 1,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 33.42575,
+      "stdoutSha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "sha256:8e43234eaee96c9af409afb02af9666486ade6b792af89b79edf8a553711bc25",
+      "error": null
+    },
+    "apply": null
+  },
+  "failure": {
+    "kind": "patch-invalid",
+    "name": "PatchError",
+    "message": "git apply --check rejected the patch",
+    "details": {
+      "checkRun": {
+        "argv": [
+          "git",
+          "apply",
+          "--check",
+          "--whitespace=error-all",
+          "/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-patch-83564-1785574024447-85bba020679ec.diff"
+        ],
+        "cwd": "/private/var/folders/r0/2xc529t10dz2lk4749f0rh540000gn/T/sg-agent-task-omgCH1/workspace",
+        "status": 1,
+        "exitCode": 1,
+        "exit": 1,
+        "signal": null,
+        "timedOut": false,
+        "durationMs": 33.42575,
+        "duration": 33.42575,
+        "stdout": "",
+        "stderr": "error: patch failed: lib/data/data.json:11\nerror: lib/data/data.json: patch does not apply\n",
+        "stdoutTruncated": false,
+        "stderrTruncated": false,
+        "truncated": false
+      }
+    }
+  },
+  "capabilities": {
+    "osSandbox": false,
+    "networkIsolation": false,
+    "processIsolation": false,
+    "sourceTreeVerifiedByRunner": true,
+    "disposableWorkspace": true
+  }
+}

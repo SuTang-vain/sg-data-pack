@@ -1,0 +1,31 @@
+{
+  "graderVersion": "1.0",
+  "graderId": "agent-field-update-grader",
+  "title": "Field update contract and hidden property grader",
+  "checks": [
+    {
+      "id": "data-pack-contract",
+      "type": "data-pack-contract",
+      "weight": 1,
+      "required": true,
+      "path": "lib/data/data.json",
+      "strict": true
+    },
+    {
+      "id": "hidden-property",
+      "type": "command",
+      "weight": 2,
+      "required": true,
+      "argv": [
+        "{node}",
+        "{grader}/assert-task.js",
+        "{workspace}",
+        "field-update"
+      ],
+      "expectedExit": 0,
+      "infraExitCodes": [
+        3
+      ]
+    }
+  ]
+}

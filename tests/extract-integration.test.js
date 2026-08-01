@@ -52,7 +52,8 @@ test('real Qinshihuang engine passes extract, strict validation, rules, types, a
     const check = run(['extract', config, '--check']);
     assertSuccessful(check, 'extract --check');
     assert.match(check.stdout, /entities: 15, relations: 11, stages: 7, assets: 21/);
-    assert.match(check.stdout, /all 1 deep comparisons passed; data is lossless/);
+    assert.match(check.stdout, /all 1 deep comparisons passed; configured equivalence surface is lossless/);
+    assert.match(check.stdout, /coverage: 1 mapped, 0 explicitly ignored, 0 unmapped/);
     assert.doesNotMatch(check.stdout + check.stderr, /\[warn\]/);
 
     const extract = run(['extract', config]);
