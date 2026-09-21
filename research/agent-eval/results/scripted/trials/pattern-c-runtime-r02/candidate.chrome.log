@@ -1,0 +1,10 @@
+Trying to load the allocator multiple times. This is *not* supported.
+91725 bytes written to file /private/tmp/sg-agent-scripted-final-release/trials/pattern-c-runtime-r02/candidate.png
+
+Trying to load the allocator multiple times. This is *not* supported.
+[82053:11230392:0801/164226.598004:ERROR:gpu/command_buffer/service/shared_image/shared_image_manager.cc:395] SharedImageManager::ProduceMemory: Trying to Produce a Memory representation from a non-existent mailbox.
+[82053:11230392:0801/164226.598939:ERROR:gpu/command_buffer/service/shared_image/shared_image_manager.cc:395] SharedImageManager::ProduceMemory: Trying to Produce a Memory representation from a non-existent mailbox.
+[82053:11230392:0801/164226.598960:ERROR:gpu/command_buffer/service/shared_image/shared_image_manager.cc:395] SharedImageManager::ProduceMemory: Trying to Produce a Memory representation from a non-existent mailbox.
+[82053:11230392:0801/164226.598964:ERROR:gpu/command_buffer/service/shared_image/shared_image_manager.cc:395] SharedImageManager::ProduceMemory: Trying to Produce a Memory representation from a non-existent mailbox.
+[82053:11230392:0801/164226.598966:ERROR:gpu/command_buffer/service/shared_image/shared_image_manager.cc:395] SharedImageManager::ProduceMemory: Trying to Produce a Memory representation from a non-existent mailbox.
+[82053:11230392:0801/164226.598969:ERROR:gpu/command_buffer/service/shared_image/shared_image_manager.cc:395] SharedImageManager::ProduceMemory: Trying to Produce a Memory representation from a non-existent mailbox.

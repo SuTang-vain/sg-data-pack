@@ -1,3 +1,16 @@
 .DS_Store
 node_modules/
 *.log
+
+# Frozen audit artifacts are inputs, not disposable runtime logs.
+!research/agent-eval/results/scripted/trials/*/*.chrome.log
+!research/agent-eval/results/claude/trials/*/*.chrome.log
+
+# Local credentials and optional documentation environment/output.
+.env
+.env.*
+!.env.example
+.venv/
+__pycache__/
+*.pyc
+.doc-build/output/

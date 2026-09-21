@@ -1,0 +1,6 @@
+Trying to load the allocator multiple times. This is *not* supported.
+91725 bytes written to file /private/tmp/sg-agent-claude-final-release/trials/pattern-c-runtime-r04/candidate-stability.png
+
+[92963:11277808:0801/170256.304234:ERROR:base/process/process_mac.cc:53] task_policy_set TASK_CATEGORY_POLICY: (os/kern) invalid argument (4)
+[92963:11277808:0801/170256.304248:ERROR:base/process/process_mac.cc:98] task_policy_set TASK_SUPPRESSION_POLICY: (os/kern) invalid argument (4)
+Trying to load the allocator multiple times. This is *not* supported.

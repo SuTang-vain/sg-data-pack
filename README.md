@@ -177,6 +177,16 @@ A scripted run proves the harness only. A real-provider success rate is reported
 
 ---
 
+## Environment handoff / 环境交接
+
+Start with [`HANDOFF.md`](HANDOFF.md) when moving to another machine or handing this repository to a new maintainer. It describes the handoff tag, directory ownership, offline acceptance, optional dependencies, and known limits.
+
+```bash
+node scripts/verify-handoff.js
+```
+
+This checks the full test suite, frozen experiment artifacts and deterministic pilots without running an AI provider or a live browser experiment.
+
 ## Quick Start
 
 ```bash

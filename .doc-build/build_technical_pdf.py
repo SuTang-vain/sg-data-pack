@@ -9,10 +9,18 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.pdfgen import canvas
 from reportlab.lib.colors import HexColor
 from pathlib import Path
+import os
 
-OUT=Path('/Users/tangyaoyue/Desktop/SG-Data-Pack-技术产品解说.pdf')
-BUILD=Path('/Users/tangyaoyue/DEV/sg-data-pack/.doc-build')
-FONT='/System/Library/AssetsV2/com_apple_MobileAsset_Font7/eb257c12d1a51c8c661b89f30eec56cacf9b8987.asset/AssetData/STHEITI.ttf'
+SOURCE=Path(__file__).resolve().parent
+BUILD=Path(os.environ.get('SG_DOC_OUTPUT_DIR', str(SOURCE / 'output'))).expanduser().resolve()
+BUILD.mkdir(parents=True, exist_ok=True)
+OUT=BUILD/'SG-Data-Pack-技术产品解说.pdf'
+font_path=os.environ.get('SG_DOC_FONT')
+if not font_path:
+    raise SystemExit('Set SG_DOC_FONT to a licensed Chinese-capable TrueType (.ttf) font; see .doc-build/README.md.')
+FONT=str(Path(font_path).expanduser().resolve())
+# Prefer diagrams regenerated with the selected font, otherwise use the archived diagrams.
+IMAGES=BUILD if all((BUILD / name).is_file() for name in ('architecture.png', 'pack-anatomy.png', 'assurance.png')) else SOURCE
 pdfmetrics.registerFont(TTFont('Heiti',FONT))
 
 NAVY=HexColor('#16324F'); BLUE=HexColor('#3A7CA5'); CYAN=HexColor('#DCEEF5'); LIGHT=HexColor('#F4F7F9'); DARK=HexColor('#1E2933'); MUTED=HexColor('#5F6B75'); CORAL=HexColor('#E76F51'); GREEN=HexColor('#2A9D8F'); YELLOW=HexColor('#F4D35E'); BORDER=HexColor('#CBD5DC'); WHITE=colors.white
@@ -107,14 +115,14 @@ story += [S(4),H2('典型风险'),table(['风险','发生方式','最终后果']
 
 # 3 architecture
 story += H1('02  产品架构：可信数据变更链','Architecture')
-story += [Image(str(BUILD/'architecture.png'),width=164*mm,height=83.8*mm),S(3),H2('三条主链路'),table(['链路','输入','输出','主要保证'],[
+story += [Image(str(IMAGES/'architecture.png'),width=164*mm,height=83.8*mm),S(3),H2('三条主链路'),table(['链路','输入','输出','主要保证'],[
 ('迁移链','引擎字面量、HTML、JSON script','规范化 Data Pack','声明范围内无损、旧引擎兼容'),('演化链','Baseline + crawl records + 人工 Decisions','Candidate + Audit','不自动猜测身份，不允许静默覆盖'),('交付链','Validation + Rules + Diff + Evidence','RunReport','人和 CI 共享同一结论模型')],[23,46,43,51]),S(4),H2('架构思想')]
 for x in ['反腐层：Data Pack 不直接侵入旧 renderer，而由 __fromPack 还原旧 options。','Fail closed：输入不完整、来源漂移、审核缺失或引用不唯一时拒绝继续。','内容寻址：关键输入输出使用 SHA-256 绑定，确保“审核的就是最终应用的”。','证据分层：数据契约、无损等价、运行时和视觉验证互不替代。','严格核心、开放领域：统一身份与引用规则，业务差异进入 domain。']: story.append(bullet(x))
 story.append(PageBreak())
 
 # 4 pack
 story += H1('03  Data Pack：统一数据契约','Data Model')
-story += [Image(str(BUILD/'pack-anatomy.png'),width=164*mm,height=94.5*mm),S(2),H2('核心字段与职责'),table(['区域','作用','设计价值'],[
+story += [Image(str(IMAGES/'pack-anatomy.png'),width=164*mm,height=94.5*mm),S(2),H2('核心字段与职责'),table(['区域','作用','设计价值'],[
 ('entities','以稳定 ID 保存唯一实体','显示名可变，关系和来源保持稳定'),('aliases','外部名称到 canonical ID 的入口','隔离抓取名称和内部主键'),('relationTypes / relations','关系枚举与 master edge','边只保存一次，可验证、可复用'),('stages / overlay','阶段成员、布局、关系引用和上下文覆盖','共享事实不复制，阶段差异不污染实体'),('contents / domain','长文内容与库级业务扩展','通用契约不膨胀'),('assets','资源存在性、大小与 hash','资源成为可验证数据的一部分'),('provenance','记录级和字段级来源','支持审核、置信度和追责'),('derivations','数据到展示的非平凡推导','把隐藏在引擎中的影响面显式化')],[36,62,65],True),PageBreak()]
 
 # 5 identity
@@ -147,7 +155,7 @@ story += [H2('为什么 provenance 独立于实体'),P('来源信息放在平行
 
 # 9 assurance
 story += H1('08  验证策略：不夸大任何一层证据','Assurance Model')
-story += [Image(str(BUILD/'assurance.png'),width=164*mm,height=73.3*mm),S(3),H2('为什么这种分层很重要'),P('数据驱动组件最常见的错误结论，是把“JSON 可解析”“Schema 通过”或“字段 deepEqual”直接等价为“页面正确”。SG Data Pack 把结论拆成独立 assurances，并允许未评估状态存在。'),H2('当前项目的验证事实'),table(['验证项','本次结果','说明'],[
+story += [Image(str(IMAGES/'assurance.png'),width=164*mm,height=73.3*mm),S(3),H2('为什么这种分层很重要'),P('数据驱动组件最常见的错误结论，是把“JSON 可解析”“Schema 通过”或“字段 deepEqual”直接等价为“页面正确”。SG Data Pack 把结论拆成独立 assurances，并允许未评估状态存在。'),H2('当前项目的验证事实'),table(['验证项','本次结果','说明'],[
 ('完整测试套件','188 / 188 通过','0 failed，执行约 5.88 秒'),('三类 v1.3 Pilot','全部 0 error / 0 warning','ID-based、中文名称、Collection'),('演化影响','成功识别 entity + asset + derivation','work-beta.cover 案例'),('模板化','byte-exact 通过','重复 HTML 实例可重建'),('覆盖率','行 70.01%，分支 66.56%，函数 71.06%','整体受 6333 行 vendored Acorn 拉低')],[39,48,76]),S(4),callout('验证成熟度判断','核心 library 模块的行覆盖率多数在约 78%–100%；但覆盖率不能替代真实生产组件的 runtime/visual 场景。Pilot 主要证明契约能覆盖三种数据形态，不等于证明任意组件库都可自动迁移。',CORAL),PageBreak()]
 
 # 10 candidate
@@ -205,7 +213,7 @@ for x in ['Core 可以成为稳定、可复制的组件数据契约；','Evoluti
 story += [S(12),P('规范化不是终点。','Quote'),P('可验证、可审核、可解释的持续演化，才是 SG Data Pack 的真正产品价值。','Quote'),PageBreak()]
 
 story += H1('附录  代码导航与设计评分','Appendix')
-base='/Users/tangyaoyue/DEV/sg-data-pack/'
+base=''  # Paths in the appendix are relative to the repository.
 story += [table(['主题','路径'],[
 ('项目入口',base+'README.md'),('Agent Skill',base+'SKILL.md'),('Data Pack 契约',base+'references/data-pack-contract.md'),('引擎适配规范',base+'references/engine-integration.md'),('运行时验证器',base+'scripts/lib/sg-data-loader.js'),('抽取与等价性',base+'scripts/lib/sg-pack-extract-core.js'),('Candidate',base+'scripts/lib/sg-pack-candidate.js'),('统一报告',base+'scripts/sg-pack-report.js'),('Agent Task Runner',base+'scripts/lib/sg-task-runner.js')],[39,124],True),S(6),H2('设计评分（主观评估）'),table(['维度','评分','说明'],[
 ('数据模型','9 / 10','稳定身份、引用优先、阶段 overlay 设计成熟'),('遗留迁移策略','9 / 10','反腐适配层显著降低渲染回归风险'),('正确性与审计','9 / 10','Fail closed、digest binding 和 evidence 边界清晰'),('扩展性','7 / 10','domain 灵活，但跨库语义较弱'),('可维护性','6.5 / 10','大型函数与多份契约实现形成压力'),('安全隔离','6 / 10','边界表达诚实，但没有 OS 级 sandbox'),('产品内聚性','6.5 / 10','Agent Eval 扩张后边界需要重新拆分')],[40,27,96])]

@@ -11,8 +11,10 @@ from PIL import Image, ImageDraw, ImageFont
 from pathlib import Path
 import os, textwrap
 
-BUILD = Path('/Users/tangyaoyue/DEV/sg-data-pack/.doc-build')
-OUT = Path('/Users/tangyaoyue/Desktop/SG-Data-Pack-技术产品解说.docx')
+SOURCE = Path(__file__).resolve().parent
+BUILD = Path(os.environ.get('SG_DOC_OUTPUT_DIR', str(SOURCE / 'output'))).expanduser().resolve()
+BUILD.mkdir(parents=True, exist_ok=True)
+OUT = BUILD / 'SG-Data-Pack-技术产品解说.docx'
 
 NAVY = '16324F'
 BLUE = '3A7CA5'
@@ -26,26 +28,20 @@ YELLOW = 'F4D35E'
 WHITE = 'FFFFFF'
 BORDER = 'CBD5DC'
 
-FONT_CN = 'Arial Unicode MS'
+FONT_CN = os.environ.get('SG_DOC_FONT_NAME', 'Noto Sans CJK SC')
 FONT_EN = 'Helvetica Neue'
 FONT_MONO = 'Courier New'
 
 # ---------- image helpers ----------
 def find_font(size=36, bold=False):
-    candidates = [
-        '/System/Library/Fonts/Hiragino Sans GB.ttc',
-        '/System/Library/Fonts/STHeiti Medium.ttc',
-        '/System/Library/Fonts/Supplemental/Arial Unicode.ttf',
-        '/System/Library/Fonts/Supplemental/Arial Bold.ttf' if bold else '/System/Library/Fonts/Supplemental/Arial.ttf',
-    ]
-    for p in candidates:
-        if os.path.exists(p):
-            try:
-                return ImageFont.truetype(p, size=size, index=0)
-            except Exception:
-                try: return ImageFont.truetype(p, size=size)
-                except Exception: pass
-    return ImageFont.load_default()
+    explicit_font = os.environ.get('SG_DOC_FONT')
+    if not explicit_font:
+        raise RuntimeError(
+            'Set SG_DOC_FONT to a licensed Chinese-capable TrueType/OpenType font; '
+            'see .doc-build/README.md.'
+        )
+    # An invalid explicit font must fail rather than silently produce missing glyphs.
+    return ImageFont.truetype(str(Path(explicit_font).expanduser()), size=size)
 
 def rounded_box(draw, xy, fill, outline=None, radius=22, width=3):
     draw.rounded_rectangle(xy, radius=radius, fill=fill, outline=outline, width=width)
@@ -687,7 +683,7 @@ page_break(doc)
 
 # appendix
 add_heading(doc,'附录 A  代码与文档导航',1,'Appendix')
-base='/Users/tangyaoyue/DEV/sg-data-pack/'
+base=''  # Repository-relative paths remain meaningful after moving the checkout.
 add_table(doc,['主题','路径'],[
     ('项目入口',base+'README.md'),
     ('Agent Skill',base+'SKILL.md'),

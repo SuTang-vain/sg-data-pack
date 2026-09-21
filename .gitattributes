@@ -1,0 +1,9 @@
+# Keep checkout bytes stable across hosts; digests depend on exact contents.
+* text=auto eol=lf
+*.png -text
+*.pdf -text
+*.docx -text
+
+# Frozen inputs, patches, raw reports, logs and tooling must never be normalized.
+research/agent-eval/** -text
+research/fixtures/** -text
